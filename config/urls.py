@@ -21,4 +21,5 @@ from aplicaciones.views import hola_mundo
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', hola_mundo, name='hola_mundo'),  # La página de prueba será nuestra página principal por ahora
+    #quien haga el login tiene que cambiar el hola mundo por la del login
 ]
