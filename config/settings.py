@@ -33,10 +33,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Apps locales
-    'empleos',
-    'empresas',
+    #'empleos',
+    #'empresas',
     'usuarios',
-    'aplicaciones',
+    'ofertas',
+    'perfiles',
+    'postulaciones',
+    'mensajeria',
+    'adminpanel',
+    'core'
+    #'aplicaciones',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +126,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model (si lo van a usar)
-# AUTH_USER_MODEL = 'usuarios.Usuario'
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Messages tags para Bootstrap
 from django.contrib.messages import constants as messages
