@@ -29,7 +29,9 @@
                 name="{{ campo.name }}"
                 placeholder="{{ campo.label }}"
                 rows="4">{{ campo.value | default:'' }}</textarea>
-        
+
+        <!--NO ES NECESARIO PERO POR SI ACASO SE IMPLEMENTA FUNCION PARA AGREGAR ARCHIVOS-->
+        <!--#############################################################################-->
         {% elif campo.field.widget.input_type == 'file' %}
             <!-- Campo para archivos -->
             <input 
