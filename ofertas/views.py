@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 
 def ofertas_List(request):
     ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
-           # Filtrar por ubicación si se proporciona
+           # Filtrar por ubicación
     ubicacion = request.GET.get('ubicacion')
     if ubicacion:
         ofert = ofert.filter(ubicacion__icontains=ubicacion)
@@ -18,7 +18,7 @@ def ofertas_List(request):
     page_number = request.GET.get('page')
     # Obtener la página actual
     ofertas = paginator.get_page(page_number)
-    # Obtener ubicaciones únicas para el filtro (opcional)
+    # Obtener ubicaciones únicas para el filtro
     ubicaciones = OfertaLaboral.objects.values_list('ubicacion', flat=True).distinct()
 
     return render(request, 'ofertas/index.html',{'ofertas': ofertas,'ubicaciones': ubicaciones })
@@ -40,3 +40,9 @@ def editar_Campo(request,id):
         formulario.save()
         return redirect('ofertas')
     return render(request, 'ofertas/edit.html',{'formulario':formulario})
+
+#funcion para eliminar un campo o registro
+def eliminar(request, id):
+    ofert = OfertaLaboral.objects.get(id=id)
+    ofert.delete()
+    return redirect('ofertas')
