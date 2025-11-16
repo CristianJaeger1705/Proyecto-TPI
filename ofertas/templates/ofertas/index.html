@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %} Lista de Ofertas {% endblock %}
+
+ {% block content %}
+ <div class="card">
+    <div class="card-header">
+        <a class="btn btn-success" href="{% url 'agregar' %}" role="button">Agregar</a>
+    </div>
+
+    <div class="card-body">
+        <h4 class="card-title">ofertas</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titulo</th>
+                    <th>Tipo Empleo</th>
+                    <th>Descripcion</th>
+                    <th>Salario</th>
+                    <th>Ubicacion</th>
+                    <th>Fecha publicacion</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for ofert in ofertas %}
+                <tr>
+                    <td>{{ ofert.id }}</td>
+                    <td>{{ ofert.titulo }}</td>
+                    <td>{{ ofert.tipo_empleo }}</td>
+                    <td>{{ ofert.descripcion }}</td>
+                    <td>{{ ofert.salario }}</td>
+                    <td>{{ ofert.ubicacion }}</td>
+                    <td>{{ ofert.fecha_publicacion }}</td>
+                    <td>{{ ofert.estado }}</td>
+                    <td>
+                         <a class="btn btn-info" href="{% url 'editar' ofert.id %}" role="button">Editar</a>
+                         |
+                        <a class="btn btn-danger" href="" role="button">Eliminar</a>
+                    </td>
+                </tr>
+                 {% empty %}
+                 <div class="alert alert-warning">No se encontraron ofertas. La BD está vacía.</div>
+              {% endfor %} 
+            </tbody>
+        </table>
+    </div>
+ </div>
+
+ {% endblock %}
