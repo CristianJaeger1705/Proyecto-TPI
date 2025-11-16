@@ -7,13 +7,21 @@ from django.core.paginator import Paginator
 
 def ofertas_List(request):
     ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
+           # Filtrar por ubicación si se proporciona
+    ubicacion = request.GET.get('ubicacion')
+    if ubicacion:
+        ofert = ofert.filter(ubicacion__icontains=ubicacion)
+    
     # Paginar - 10 registros por página
     paginator = Paginator(ofert, 10)
     # Obtener el número de página desde la URL
     page_number = request.GET.get('page')
     # Obtener la página actual
     ofertas = paginator.get_page(page_number)
-    return render(request, 'ofertas/index.html',{'ofertas': ofertas })
+    # Obtener ubicaciones únicas para el filtro (opcional)
+    ubicaciones = OfertaLaboral.objects.values_list('ubicacion', flat=True).distinct()
+
+    return render(request, 'ofertas/index.html',{'ofertas': ofertas,'ubicaciones': ubicaciones })
 
 #Funcion para agregar una nueva vacante
 def agregar_Campos(request):
