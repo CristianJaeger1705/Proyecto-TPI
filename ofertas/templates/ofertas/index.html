@@ -3,10 +3,10 @@
 {% block title %} Lista de Ofertas {% endblock %}
 
  {% block content %}
- <div class="card">
+ 
+ <div class="card mx-3">
     <div class="card-header d-flex justify-content-between align-items-center">
         <a class="btn btn-success" href="{% url 'agregar' %}" role="button">Agregar</a>
-         <!-- Filtro dinámico con ubicaciones de la BD -->
     <!-- Filtro dinámico con ubicaciones de la BD -->
     <div class="col-md-3">
         <form method="get" class="d-flex">
@@ -66,14 +66,14 @@
                         </span>
                     </td>
                     <td>
-                        <div class="btn-group" role="group">
-                            <a class="btn btn-sm btn-info" href="{% url 'editar' ofert.id %}" title="Editar">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a class="btn btn-sm btn-danger" href="{% url 'eliminar' ofert.id %}" title="Eliminar">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
+ <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'editar' ofert.id %}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
                     </td>
                 </tr>
                  {% empty %}
