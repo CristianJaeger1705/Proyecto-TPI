@@ -5,3 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     tooltipTriggerList.forEach(function (el) { new bootstrap.Tooltip(el); });
   } catch (e) {}
 });
+
+
+
