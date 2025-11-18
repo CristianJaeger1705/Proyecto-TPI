@@ -77,12 +77,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
+#Se modifico para enlazar a mi bd local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  'ProyectoTPI',
         'USER': 'postgres',
-        'PASSWORD': 'admin',   
+        'PASSWORD': '1234',   
         'HOST': 'localhost',
         'PORT': '5432',
 
