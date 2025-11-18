@@ -18,7 +18,8 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-    
+        <!-- SweetAlert2 CSS personalizado -->
+    <link rel="stylesheet" href="{% static 'css/swal-boostrap.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -41,7 +42,11 @@
     
     <!-- Custom JS -->
     <script src="{% static 'js/custom.js' %}"></script>
-    
+        
+    <!--###########################################################3-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/confirmacion.js' %}"></script>
+    <script src="{% static 'js/geolocation.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
