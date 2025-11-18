@@ -3,7 +3,6 @@
 {% block title %} Lista de Ofertas {% endblock %}
 
  {% block content %}
- 
  <div class="card mx-3">
     <div class="card-header d-flex justify-content-between align-items-center">
         <a class="btn btn-success" href="{% url 'agregar' %}" role="button">Agregar</a>
@@ -49,7 +48,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-group-divider">
 
                 {% for ofert in ofertas %}
                 <tr>
@@ -61,19 +60,20 @@
                     <td>{{ ofert.ubicacion }}</td>
                     <td>{{ ofert.fecha_publicacion|date:"d/m/Y" }}</td>
                     <td>
-                        <span class="badge {% if ofert.estado == 'Activa' %} bg-success {% else %}bg-secondary{% endif %}">
+                        <span class="badge {% if ofert.estado == 'activa' %} bg-success {% else %}bg-secondary{% endif %}">
                             {{ ofert.estado }}
                         </span>
                     </td>
                     <td>
- <div class="btn-group btn-group-sm">
-                                    <a href="{% url 'editar' ofert.id %}" class="btn btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                </div>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'editar' ofert.id %}" class="btn btn-outline-primary" title="Editar oferta">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger"
+                                onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
                     </td>
                 </tr>
                  {% empty %}
@@ -133,4 +133,5 @@
         {% endif %}
     </div>
  </div>
+
  {% endblock %}
