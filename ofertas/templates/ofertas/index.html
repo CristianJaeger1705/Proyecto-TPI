@@ -3,9 +3,23 @@
 {% block title %} Lista de Ofertas {% endblock %}
 
  {% block content %}
+
+     <!-- Mensajes de Django (se convertirán a SweetAlert) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
  <div class="card mx-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <a class="btn btn-success" href="{% url 'agregar' %}" role="button">Agregar</a>
+                <button type="button" class="btn btn-success" onclick="abrirModalCreacion()">
+            <i class="bi bi-plus-circle"></i> Nueva Oferta
+        </button>
     <!-- Filtro dinámico con ubicaciones de la BD -->
     <div class="col-md-3">
         <form method="get" class="d-flex">
@@ -66,9 +80,12 @@
                     </td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <a href="{% url 'editar' ofert.id %}" class="btn btn-outline-primary" title="Editar oferta">
-                                <i class="bi bi-pencil"></i>
-                            </a>
+                                    <button type="button" 
+                                            class="btn btn-outline-primary btn-editar"
+                                            data-id="{{ ofert.id }}"
+                                            title="Editar oferta">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
                             <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger"
                                 onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
                                 <i class="bi bi-trash"></i>
@@ -134,4 +151,5 @@
     </div>
  </div>
 
+ {% include 'ofertas/modal.html' %}
  {% endblock %}
