@@ -20,7 +20,16 @@
                     </option>
                 {% endfor %}
             </select>
-        
+        {% elif campo.name == 'salario' %}
+        <input 
+        id="id_{{ campo.name }}"
+        type="number" 
+        class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+        name="{{ campo.name }}"
+        placeholder="{{ campo.label }}"
+        step="0.01"
+        min="0"
+        value="{% if campo.value %}{{ campo.value|floatformat:'.2f' }}{% endif %}">
         {% elif campo.field.widget.input_type == 'textarea' %}
             <!-- Campo de texto largo -->
             <textarea 
@@ -40,7 +49,6 @@
                 class="form-control {% if campo.errors %}is-invalid{% endif %}" 
                 name="{{ campo.name }}"
                 aria-describedby="helpId">
-        
         {% else %}
             <!-- Campos de input normales -->
             <input 
