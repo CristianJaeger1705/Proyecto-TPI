@@ -4,7 +4,10 @@ from . import views
 urlpatterns=[
     
     path('ofertas',views.ofertas_List,name='ofertas'),
-    path('ofertas/agregar',views.agregar_Campos,name="agregar"),
-    path('ofertas/editar/<int:id>',views.editar_Campo,name="editar"),
     path('eliminar/<int:id>',views.eliminar,name="eliminar"),
+       # URLs nuevas para modal
+    path('obtener-formulario-creacion/', views.obtener_formulario_creacion, name='obtener_formulario_creacion'),
+    path('obtener-formulario-edicion/<int:id>/', views.obtener_formulario_edicion, name='obtener_formulario_edicion'),
+    path('guardar-creacion/', views.guardar_creacion_modal, name='guardar_creacion_modal'),
+    path('guardar-edicion/<int:id>/', views.guardar_edicion_modal, name='guardar_edicion_modal'),
 ]
