@@ -14,3 +14,5 @@ class Ofertasform(forms.ModelForm):
             'salario': forms.NumberInput(attrs={'class': 'form-control'}),
             'ubicacion': forms.TextInput(attrs={'class': 'form-control'}),
         }
+    def __init__(self, *args, **kwargs):
+     super().__init__(*args, **kwargs)
