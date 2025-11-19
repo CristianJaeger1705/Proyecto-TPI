@@ -1,4 +1,4 @@
-<form action="" enctype="multipart/form-data" method="post">
+<form action="" enctype="multipart/form-data" method="post" id="{% if es_modal %}{% if es_creacion %}form-crear-oferta{% else %}form-editar-oferta{% endif %}{% else %}form-normal-oferta{% endif %}">
     {% csrf_token %}
     
     {% for campo in formulario %}
@@ -68,6 +68,5 @@
     </div>
     {% endfor %}
     
-    <input class="btn btn-success" type="submit" value="Enviar">
-    <a class="btn btn-primary" href="{% url 'ofertas' %}" role="button">Cancelar</a>
+
 </form>
