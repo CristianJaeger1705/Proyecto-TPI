@@ -40,7 +40,7 @@
     </div>
 
     <div class="card-body">
-        <h4 class="card-title">ofertas</h4>
+        <h4 class="card-title">LISTA DE OFERTAS</h4>
                 <!-- Información de paginación -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <p class="mb-0 text-muted">
@@ -68,9 +68,9 @@
                 <tr>
                     <td>{{ ofert.id }}</td>
                     <td>{{ ofert.titulo }}</td>
-                    <td>{{ ofert.tipo_empleo }}</td>
+                    <td>{{ ofert.get_tipo_empleo_display }}</td>
                     <td>{{ ofert.descripcion }}</td>
-                    <td>{{ ofert.salario }}</td>
+                    <td>{{ ofert.salario}}</td>
                     <td>{{ ofert.ubicacion }}</td>
                     <td>{{ ofert.fecha_publicacion|date:"d/m/Y" }}</td>
                     <td>
