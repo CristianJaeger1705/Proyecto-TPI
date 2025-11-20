@@ -1,0 +1,7 @@
+1 se agrego geolocation.js en la carpeta static, requiere permisos admitidos por el usuario en el navegador
+2 se agrego sweetalert2 en la carpeta static para simple confirmacion de eliminacion de dato
+3 se agrego modales para el uso de edicion y creacion de nuevos registros, 
+  archivo modal.html agregado en ofertas/templates/ofertas/modal.html,y en index.html se mando a llamar la 
+  plantilla base modal.html para su posterior uso.
+4 en archivo base.html solo se agrego el cdn de sweetalert2 y la llamda del archivo js descrito en opcion 2.
+5 
