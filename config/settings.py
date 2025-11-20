@@ -36,12 +36,6 @@ INSTALLED_APPS = [
     #'empleos',
     #'empresas',
     'usuarios',
-    'ofertas',
-    'perfiles',
-    'postulaciones',
-    'mensajeria',
-    'adminpanel',
-    'core'
     #'aplicaciones',
 ]
 
