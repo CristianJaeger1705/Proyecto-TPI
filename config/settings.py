@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'empresas',
     'usuarios',
     'aplicaciones',
+    'administracion',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  'ProyectoTPI',
         'USER': 'postgres',
-        'PASSWORD': 'admin',   
+        'PASSWORD': 'alkaponixxx508',   
         'HOST': 'localhost',
         'PORT': '5432',
 
