@@ -4,9 +4,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 #Lista todos las vacantes disponibles
-
+@login_required(login_url='login')
 def ofertas_List(request):
     ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
            # Filtrar por ubicación
@@ -25,6 +26,7 @@ def ofertas_List(request):
 
     return render(request, 'ofertas/index.html',{'ofertas': ofertas,'ubicaciones': ubicaciones })
 #funcion para eliminar un campo o registro
+@login_required(login_url='login')
 def eliminar(request, id):
     ofert = OfertaLaboral.objects.get(id=id)
     nombre_oferta=ofert.titulo
@@ -35,6 +37,7 @@ def eliminar(request, id):
 # =============================================================================
 # VISTAS PARA UTILIZAR EL MODAL EDITAR Y AGREGAR NUEVO
 # =============================================================================
+@login_required(login_url='login')
 def obtener_formulario_creacion(request):
     """Obtener formulario de creación para modal - NUEVA VISTA"""
     try:
@@ -55,7 +58,8 @@ def obtener_formulario_creacion(request):
             'success': False,
             'error': str(e)
         }, status=500)
-
+    
+@login_required(login_url='login')
 def obtener_formulario_edicion(request, id):
     #Obtener formulario de edición para modal
     try:
@@ -80,6 +84,7 @@ def obtener_formulario_edicion(request, id):
             'error': str(e)
         }, status=500)
 
+@login_required(login_url='login')
 def guardar_creacion_modal(request):
     #Guardar nueva oferta desde modal 
     if request.method == 'POST':
@@ -116,6 +121,7 @@ def guardar_creacion_modal(request):
             'error': 'Método no permitido'
         }, status=405)
 
+@login_required(login_url='login')
 def guardar_edicion_modal(request, id):
     #Guardar cambios desde el modal
     if request.method == 'POST':
@@ -153,6 +159,8 @@ def guardar_edicion_modal(request, id):
             'error': 'Método no permitido'
         }, status=405)
 #VISTAS PARA AGREGAR NUEVO DATO 
+
+@login_required(login_url='login')
 def crear_oferta(request):
     if request.method == 'POST':
         formulario = Ofertasform(request.POST, request.FILES)

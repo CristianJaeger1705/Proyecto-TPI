@@ -3,13 +3,13 @@ function inicializarGeolocalizacion() {
     const campo = document.getElementById("id_ubicacion");
     
     if (!campo) {
-        console.warn("⚠ Campo id_ubicacion no existe en el DOM actual.");
+        console.warn("Campo id_ubicacion no existe en el DOM actual.");
         return false;
     }
 
     // Si el campo ya tiene un valor, no hacer nada
     if (campo.value && campo.value.trim() !== "") {
-        console.log("📍 Campo ya tiene valor:", campo.value);
+        console.log("Campo ya tiene valor:", campo.value);
         return true;
     }
 
@@ -18,7 +18,7 @@ function inicializarGeolocalizacion() {
     // --- FUNCIÓN PARA RELLENAR UBICACIÓN ---
     function setUbicacion(texto) {
         campo.value = texto;
-        console.log("📍 Ubicación establecida:", texto);
+        console.log("Ubicación establecida:", texto);
         
         // Disparar evento personalizado para notificar que la ubicación se estableció
         const event = new CustomEvent('ubicacionEstablecida', { detail: { ubicacion: texto } });
@@ -28,7 +28,7 @@ function inicializarGeolocalizacion() {
     // --- FALLBACK SI FALLA EL GPS ---
     async function obtenerPorIP() {
         try {
-            console.warn("🟡 Intentando obtener ciudad desde IP…");
+            console.warn("Intentando obtener ciudad desde IP…");
             const resp = await fetch("https://ipapi.co/json/");
             const data = await resp.json();
 
@@ -38,7 +38,7 @@ function inicializarGeolocalizacion() {
                 setUbicacion("Ubicación no disponible");
             }
         } catch (e) {
-            console.error("❌ Error usando fallback por IP:", e);
+            console.error("Error usando fallback por IP:", e);
             setUbicacion("Ubicación no disponible");
         }
     }
@@ -82,16 +82,16 @@ function inicializarGeolocalizacion() {
                     }
 
                 } catch (err) {
-                    console.error("❌ Error obteniendo ciudad por GPS:", err);
+                    console.error("Error obteniendo ciudad por GPS:", err);
                     obtenerPorIP();
                 }
             },
 
             function (error) {
-                console.error("❌ Error al obtener GPS:", error);
+                console.error("Error al obtener GPS:", error);
 
                 if (error.code === 1) {
-                    console.warn("🔒 El usuario denegó la ubicación. Usando IP.");
+                    console.warn("El usuario denegó la ubicación. Usando IP.");
                 }
 
                 obtenerPorIP();
@@ -117,16 +117,16 @@ function forzarGeolocalizacion() {
     const campo = document.getElementById("id_ubicacion");
     
     if (!campo) {
-        console.warn("⚠ Campo id_ubicacion no existe en el DOM actual.");
+        console.warn("Campo id_ubicacion no existe en el DOM actual.");
         return false;
     }
 
-    console.log("🔄 Forzando geolocalización...");
+    console.log("Forzando geolocalización...");
 
     // Resto del código es igual que inicializarGeolocalizacion pero sin la verificación de valor
     function setUbicacion(texto) {
         campo.value = texto;
-        console.log("📍 Ubicación establecida:", texto);
+        console.log("Ubicación establecida:", texto);
         
         const event = new CustomEvent('ubicacionEstablecida', { detail: { ubicacion: texto } });
         document.dispatchEvent(event);
@@ -134,7 +134,7 @@ function forzarGeolocalizacion() {
 
     async function obtenerPorIP() {
         try {
-            console.warn("🟡 Intentando obtener ciudad desde IP…");
+            console.warn("Intentando obtener ciudad desde IP…");
             const resp = await fetch("https://ipapi.co/json/");
             const data = await resp.json();
 
@@ -144,7 +144,7 @@ function forzarGeolocalizacion() {
                 setUbicacion("Ubicación no disponible");
             }
         } catch (e) {
-            console.error("❌ Error usando fallback por IP:", e);
+            console.error("Error usando fallback por IP:", e);
             setUbicacion("Ubicación no disponible");
         }
     }
@@ -152,7 +152,7 @@ function forzarGeolocalizacion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             async function (pos) {
-                console.log("✔ GPS Obtenido:", pos);
+                console.log("GPS Obtenido:", pos);
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
 
@@ -179,20 +179,20 @@ function forzarGeolocalizacion() {
                     if (ciudad) {
                         setUbicacion(ciudad);
                     } else {
-                        console.warn("⚠ No se encontró ciudad. Usando IP...");
+                        console.warn("No se encontró ciudad. Usando IP...");
                         obtenerPorIP();
                     }
 
                 } catch (err) {
-                    console.error("❌ Error obteniendo ciudad por GPS:", err);
+                    console.error("Error obteniendo ciudad por GPS:", err);
                     obtenerPorIP();
                 }
             },
 
             function (error) {
-                console.error("❌ Error al obtener GPS:", error);
+                console.error("Error al obtener GPS:", error);
                 if (error.code === 1) {
-                    console.warn("🔒 El usuario denegó la ubicación. Usando IP.");
+                    console.warn("El usuario denegó la ubicación. Usando IP.");
                 }
                 obtenerPorIP();
             },
@@ -212,7 +212,7 @@ function forzarGeolocalizacion() {
 
 // Ejecutar cuando se carga la página (para formularios normales)
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("🔄 Inicializando geolocalización en carga de página...");
+    console.log("Inicializando geolocalización en carga de página...");
     inicializarGeolocalizacion();
 });
 

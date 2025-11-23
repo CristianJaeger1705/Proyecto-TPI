@@ -70,7 +70,7 @@
                     <td>{{ ofert.titulo }}</td>
                     <td>{{ ofert.get_tipo_empleo_display }}</td>
                     <td>{{ ofert.descripcion }}</td>
-                    <td>{{ ofert.salario}}</td>
+                    <td>${{ ofert.salario}} </td>
                     <td>{{ ofert.ubicacion }}</td>
                     <td>{{ ofert.fecha_publicacion|date:"d/m/Y" }}</td>
                     <td>
@@ -97,7 +97,7 @@
                 <tr>
                     <td colspan="9">
                         <div class="alert alert-warning text-center mb-0">
-                            No se encontraron ofertas. La BD está vacía.
+                            No se encontraron ofertas, realiza tu primera oferta presionando el boton Nueva Oferta.
                         </div>
                     </td>
                 </tr>

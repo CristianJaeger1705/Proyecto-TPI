@@ -74,7 +74,7 @@ function abrirModalCreacion() {
     });
     
     // Cargar el formulario
-    fetch('/obtener-formulario-creacion/')
+    fetch('/ofertas/obtener-formulario-creacion/')
         .then(response => {
             if (!response.ok) throw new Error('Error en la respuesta del servidor');
             return response.json();
@@ -120,7 +120,7 @@ function guardarCreacion() {
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creando...';
     submitBtn.disabled = true;
     
-    fetch('/guardar-creacion/', {
+    fetch('/ofertas/guardar-creacion/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -165,7 +165,7 @@ function abrirModalEdicion(ofertaId) {
     currentModalType = 'editar';
     currentOfertaId = ofertaId;
     
-    // GUARDAR EL ID EN EL MODAL - ESTA ES LA LÍNEA CRÍTICA QUE FALTABA
+    // GUARDAR EL ID EN EL MODAL
     document.getElementById('editarOfertaModal').setAttribute('data-current-id', ofertaId);
     
     // Mostrar loading
@@ -190,7 +190,7 @@ function abrirModalEdicion(ofertaId) {
     });
     
     // Cargar el formulario
-    fetch(`/obtener-formulario-edicion/${ofertaId}/`)
+    fetch(`obtener-formulario-edicion/${ofertaId}/`)
         .then(response => {
             if (!response.ok) throw new Error('Error en la respuesta del servidor');
             return response.json();
@@ -251,7 +251,7 @@ function guardarEdicion() {
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
     submitBtn.disabled = true;
     
-    fetch(`/guardar-edicion/${ofertaId}/`, {
+    fetch(`guardar-edicion/${ofertaId}/`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -313,32 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
         currentModalType = null;
         currentOfertaId = null;
         this.removeAttribute('data-current-id');
-    });
-
-    // Mostrar mensajes de Django con SweetAlert
-    const messages = document.querySelectorAll('.alert');
-    messages.forEach(message => {
-        if (message.textContent.includes('eliminada correctamente') || 
-            message.textContent.includes('actualizada correctamente') ||
-            message.textContent.includes('creada correctamente')) {
-            
-            const iconType = message.classList.contains('alert-success') ? 'success' : 'info';
-            
-            Swal.fire({
-                title: '¡Éxito!',
-                text: message.textContent,
-                icon: iconType,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
-            
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 100);
-        }
     });
 });
 

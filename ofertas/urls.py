@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns=[
     
-    path('ofertas',views.ofertas_List,name='ofertas'),
+    path('listaofertas',views.ofertas_List,name='ofertas'),
     path('eliminar/<int:id>',views.eliminar,name="eliminar"),
        # URLs nuevas para modal
     path('obtener-formulario-creacion/', views.obtener_formulario_creacion, name='obtener_formulario_creacion'),
