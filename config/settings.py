@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4$y#(k8v1z@=+s8v3q3u&!l5v1
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 DATABASE_NAME = os.getenv('DB_NAME', 'ProyectoTPI')
-DATABASE_USER = os.getenv('DB_USER', 'ProyectoTPI')
+DATABASE_USER = os.getenv('DB_USER', 'postgres')
 DATABASE_PASSWORD = os.getenv('DB_PASSWORD', 'admin')
 DATABASE_HOST = os.getenv('DB_HOST', 'localhost')
 DATABASE_PORT = os.getenv('DB_PORT', '5432')
