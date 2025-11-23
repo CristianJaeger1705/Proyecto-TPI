@@ -11,11 +11,7 @@ class Ofertasform(forms.ModelForm):
             'empresa': forms.Select(attrs={'class': 'form-control'}),
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'salario': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'step': '0.01',
-                'min': '0'
-            }),
+            'salario': forms.NumberInput(attrs={'class': 'form-control','step': '0.01','min': '0'}),
             'ubicacion': forms.TextInput(attrs={'class': 'form-control'}),
         }
     def __init__(self, *args, **kwargs):
