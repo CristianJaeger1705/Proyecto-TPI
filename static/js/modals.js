@@ -9,36 +9,35 @@ let currentOfertaId = null;
 // =============================================================================
 
 function inicializarGeolocalizacionEnModal() {
-    console.log("🔄 Inicializando geolocalización en modal...");
     
     // Tiempo para renderizado de formulario
     setTimeout(() => {
         if (typeof window.inicializarGeolocalizacion === 'function') {
             const success = window.inicializarGeolocalizacion();
             if (success) {
-                console.log("✅ Geolocalización inicializada en modal");
+                console.log("Geolocalización inicializada en modal");
             } else {
-                console.log("❌ No se pudo inicializar geolocalización en modal");
+                console.log("No se pudo inicializar geolocalización en modal");
             }
         } else {
-            console.log("❌ Función de geolocalización no disponible");
+            console.log("Función de geolocalización no disponible");
         }
     }, 300);
 }
 
 function forzarGeolocalizacionEnModal() {
-    console.log("🔄 Forzando geolocalización en modal...");
+    console.log("Forzando geolocalización en modal...");
     
     setTimeout(() => {
         if (typeof window.forzarGeolocalizacion === 'function') {
             const success = window.forzarGeolocalizacion();
             if (success) {
-                console.log("✅ Geolocalización forzada en modal");
+                console.log("Geolocalización forzada en modal");
             } else {
-                console.log("❌ No se pudo forzar geolocalización en modal");
+                console.log("No se pudo forzar geolocalización en modal");
             }
         } else {
-            console.log("❌ Función de geolocalización forzada no disponible");
+            console.log("Función de geolocalización forzada no disponible");
         }
     }, 300);
 }
@@ -286,38 +285,6 @@ function guardarEdicion() {
         submitBtn.disabled = false;
     });
 }
-
-// =============================================================================
-// EVENT LISTENERS
-// =============================================================================
-
-/*document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado - inicializando event listeners');
-    
-    // Botones de editar en modal
-    document.querySelectorAll('.btn-editar').forEach(button => {
-        button.addEventListener('click', function() {
-            const ofertaId = this.getAttribute('data-id');
-            console.log('Botón editar clickeado, ID:', ofertaId);
-            abrirModalEdicion(ofertaId);
-        });
-    });
-
-    // Limpiar variables cuando se cierren los modales
-    document.getElementById('crearOfertaModal').addEventListener('hidden.bs.modal', function() {
-        currentModalType = null;
-        currentOfertaId = null;
-    });
-    
-    document.getElementById('editarOfertaModal').addEventListener('hidden.bs.modal', function() {
-        currentModalType = null;
-        currentOfertaId = null;
-        this.removeAttribute('data-current-id');
-    });
-});
-
-*/
-
 //MANEJO DE VISTA MODAL
 // =============================================================================
 // FUNCIONES PARA VER OFERTAS EN MODAL (SOLO LECTURA)
@@ -440,13 +407,3 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     });
 });
-
-// Función auxiliar para mostrar loading (si la necesitas)
-function mostrarLoading(mostrar) {
-    // Puedes implementar un spinner global si lo necesitas
-    if (mostrar) {
-        console.log('Mostrando loading...');
-    } else {
-        console.log('Ocultando loading...');
-    }
-}
