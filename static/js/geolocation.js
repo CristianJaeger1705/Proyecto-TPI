@@ -48,7 +48,7 @@ function inicializarGeolocalizacion() {
 
         navigator.geolocation.getCurrentPosition(
             async function (pos) {
-                console.log("✔ GPS Obtenido:", pos);
+                console.log("GPS Obtenido:", pos);
 
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
@@ -65,7 +65,7 @@ function inicializarGeolocalizacion() {
                     });
 
                     const data = await resp.json();
-                    console.log("📦 Datos Nominatim:", data);
+                    console.log("Datos Nominatim:", data);
 
                     const ciudad =
                         data.address.city ||
@@ -77,7 +77,7 @@ function inicializarGeolocalizacion() {
                     if (ciudad) {
                         setUbicacion(ciudad);
                     } else {
-                        console.warn("⚠ No se encontró ciudad. Usando IP...");
+                        console.warn("No se encontró ciudad. Usando IP...");
                         obtenerPorIP();
                     }
 
@@ -167,7 +167,7 @@ function forzarGeolocalizacion() {
                     });
 
                     const data = await resp.json();
-                    console.log("📦 Datos Nominatim:", data);
+                    console.log("Datos Nominatim:", data);
 
                     const ciudad =
                         data.address.city ||
