@@ -173,3 +173,26 @@ def guardar_edicion_modal(request, id):
     #    formulario = Ofertasform()
     
    # return render(request, 'ofertas/create.html', {'formulario': formulario})
+
+   # views.py
+def obtener_datos_visualizacion(request, id):
+    """Obtener datos de oferta para modal de visualización"""
+    try:
+        oferta = get_object_or_404(OfertaLaboral, id=id)
+        
+        # Renderizar un template específico para visualización
+        form_html = render(request, 'ofertas/ofertview.html', {
+            'oferta': oferta,
+            'es_modal': True
+        }).content.decode('utf-8')
+        
+        return JsonResponse({
+            'success': True,
+            'form_html': form_html,
+            'titulo': f"Visualizando: {oferta.titulo}"
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
