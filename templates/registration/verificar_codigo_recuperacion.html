@@ -9,16 +9,16 @@
             <!-- Card con sombra -->
             <div class="card shadow-lg">
                 <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <h1 class="display-4 mb-4">Verificar Codigo</h1>
-                            <div class="form-group">
-                                <input type="text" name="codigo" placeholder="Ingresa el código" required style="width:100%;padding:8px;margin-bottom:10px;">    
-                            </div>
-                            <button type="submit" class="btn btn-primary me-md-2">
-                                Verificar código
-                            </button>
-                        </form>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <h2 class="mb-1">Verificar Codigo</h2>
+                        <p class="text-muted mb-4">Hemos enviado un código de verificación (OTP) al correo electrónico asociado a su cuenta.</p>
+                        <div class="input-group mb-4">
+                            <span class="input-group-text">#</i></span>
+                            <input type="text" name="codigo" placeholder="Ingresa el código" required class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">Verificar Código</button>
+                    </form>
                 </div>
             </div>
         </div>
