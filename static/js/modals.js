@@ -358,7 +358,6 @@ function inicializarBotonesVer() {
         if (e.target.closest('.btn-ver')) {
             const boton = e.target.closest('.btn-ver');
             const ofertaId = boton.getAttribute('data-id');
-            console.log('Botón ver clickeado, ID:', ofertaId);
             abrirModalVer(ofertaId);
         }
     });
