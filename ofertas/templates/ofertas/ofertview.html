@@ -1,11 +1,11 @@
-<!-- templates/ofertas/ver_oferta_modal.html - Versión Simplificada -->
+
 <div class="container-fluid">
     <!-- Header -->
     <div class="text-center mb-4 pb-3 border-bottom">
         <h3 class="text-primary mb-2">{{ oferta.titulo }}</h3>
         <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
-            <span class="badge {% if oferta.estado == 'activa' %}bg-success{% else %}bg-secondary{% endif %} fs-6">
-                <i class="bi bi-circle-fill me-1"></i>{{ oferta.estado|title }}
+            <span class="badge {% if oferta.estado == 'activa' %} bg-success {% elif oferta.estado == 'cerrada' %} bg-danger {% else %} bg-secondary {% endif %} fs-7">
+                {{ oferta.estado|title }}
             </span>
             <span class="text-muted">
                 <i class="bi bi-geo-alt me-1"></i>{{ oferta.ubicacion }}
