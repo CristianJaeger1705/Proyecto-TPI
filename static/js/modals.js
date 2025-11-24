@@ -291,7 +291,7 @@ function guardarEdicion() {
 // EVENT LISTENERS
 // =============================================================================
 
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM cargado - inicializando event listeners');
     
     // Botones de editar en modal
@@ -316,3 +316,137 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+*/
+
+//MANEJO DE VISTA MODAL
+// =============================================================================
+// FUNCIONES PARA VER OFERTAS EN MODAL (SOLO LECTURA)
+// =============================================================================
+
+function abrirModalVer(ofertaId) {
+    console.log('Abriendo modal de visualización para oferta ID:', ofertaId);
+    
+    // Mostrar loading
+    document.getElementById('verOfertaModalBody').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando información...</p>
+        </div>
+    `;
+    
+    // Configurar el botón "Ir a Editar" antes de mostrar el modal
+    const btnEditar = document.getElementById('btn-editar-desde-ver');
+    if (btnEditar) {
+        btnEditar.onclick = function() {
+            const modalVer = bootstrap.Modal.getInstance(document.getElementById('verOfertaModal'));
+            if (modalVer) {
+                modalVer.hide();
+            }
+            // Abrir modal de edición
+            abrirModalEdicion(ofertaId);
+        };
+    }
+    
+    // Mostrar el modal
+    const modalElement = document.getElementById('verOfertaModal');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+    
+    // Cargar los datos de visualización
+    fetch(`obtener-visualizacion/${ofertaId}/`)
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la respuesta del servidor');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                document.getElementById('verOfertaModalBody').innerHTML = data.form_html;
+                document.getElementById('verOfertaModalLabel').textContent = data.titulo;
+                console.log('Datos de visualización cargados correctamente');
+            } else {
+                document.getElementById('verOfertaModalBody').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6>Error</h6>
+                        <p>${data.error}</p>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar datos de visualización:', error);
+            document.getElementById('verOfertaModalBody').innerHTML = `
+                <div class="alert alert-danger">
+                    <h6>Error de conexión</h6>
+                    <p>No se pudieron cargar los datos. Intente nuevamente.</p>
+                </div>
+            `;
+        });
+}
+
+// Inicializar botones de ver
+function inicializarBotonesVer() {
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-ver')) {
+            const boton = e.target.closest('.btn-ver');
+            const ofertaId = boton.getAttribute('data-id');
+            console.log('Botón ver clickeado, ID:', ofertaId);
+            abrirModalVer(ofertaId);
+        }
+    });
+}
+
+// =============================================================================
+// EVENT LISTENERS - ACTUALIZADO
+// =============================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado - inicializando event listeners');
+    
+    // Botones de editar en modal
+    document.querySelectorAll('.btn-editar').forEach(button => {
+        button.addEventListener('click', function() {
+            const ofertaId = this.getAttribute('data-id');
+            console.log('Botón editar clickeado, ID:', ofertaId);
+            abrirModalEdicion(ofertaId);
+        });
+    });
+
+    // Botones de ver en modal
+    inicializarBotonesVer();
+
+    // Limpiar variables cuando se cierren los modales
+    document.getElementById('crearOfertaModal').addEventListener('hidden.bs.modal', function() {
+        currentModalType = null;
+        currentOfertaId = null;
+    });
+    
+    document.getElementById('editarOfertaModal').addEventListener('hidden.bs.modal', function() {
+        currentModalType = null;
+        currentOfertaId = null;
+        this.removeAttribute('data-current-id');
+    });
+    
+    document.getElementById('verOfertaModal').addEventListener('hidden.bs.modal', function() {
+        // Limpiar contenido del modal al cerrar
+        document.getElementById('verOfertaModalBody').innerHTML = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2">Cargando información...</p>
+            </div>
+        `;
+    });
+});
+
+// Función auxiliar para mostrar loading (si la necesitas)
+function mostrarLoading(mostrar) {
+    // Puedes implementar un spinner global si lo necesitas
+    if (mostrar) {
+        console.log('Mostrando loading...');
+    } else {
+        console.log('Ocultando loading...');
+    }
+}

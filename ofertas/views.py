@@ -161,20 +161,6 @@ def guardar_edicion_modal(request, id):
     
 #VISTAS PARA AGREGAR NUEVO DATO - Funcionalidad simple
 
-#@login_required(login_url='login')
-#def crear_oferta(request):
- #   if request.method == 'POST':
-  #      formulario = Ofertasform(request.POST, request.FILES)
-   #     if formulario.is_valid():
-    #        formulario.save()
-     #       messages.success(request, 'Oferta creada correctamente')
-      #      return redirect('ofertas')
-   # else:
-    #    formulario = Ofertasform()
-    
-   # return render(request, 'ofertas/create.html', {'formulario': formulario})
-
-   # views.py
 def obtener_datos_visualizacion(request, id):
     """Obtener datos de oferta para modal de visualización"""
     try:
