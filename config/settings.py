@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  'ProyectoTPI',
         'USER': 'postgres',
-        'PASSWORD': '1234',   
+        'PASSWORD': 'admin',   
         'HOST': 'localhost',
         'PORT': '5432',
 
@@ -152,4 +152,4 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "laburosv@gmail.com"
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_PASSWORD = "whfe iqpb zeao vqwv"
