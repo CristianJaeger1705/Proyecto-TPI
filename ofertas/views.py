@@ -43,7 +43,7 @@ def obtener_formulario_creacion(request):
     try:
         formulario = Ofertasform()
         
-        form_html = render(request, 'ofertas/form.html', {
+        form_html = render(request,'ofertas/form.html', {
             'formulario': formulario,
             'es_modal': True,
             'es_creacion': True  # Nueva variable para identificar creación
