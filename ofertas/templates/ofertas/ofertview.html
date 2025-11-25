@@ -13,7 +13,18 @@
             <span class="text-muted">
                 <i class="bi bi-calendar me-1"></i>{{ oferta.fecha_publicacion|date:"d/m/Y" }}
             </span>
-            <span class="text-muted">ID: #{{ oferta.id }}</span>
+            <div>
+              {% if acciones.puedePostular %}
+                <a href="{% url 'postular_con_id' oferta.id %}" class="btn btn-primary btn-sm me-2">
+                    <i class="bi bi-send me-1"></i> Postularme a esta oferta
+                </a>
+              {% endif %}
+              {% if acciones.puedeCancelarPostulacion %}
+                <a href="{% url 'cancelar_postulacion' oferta.id %}" class="btn btn-danger btn-sm">
+                    <i class="bi bi-x-circle me-1"></i> Cancelar mi postulación
+                </a>
+              {% endif %}
+            </div>
         </div>
     </div>
     <!-- Información en cards -->
