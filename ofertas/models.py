@@ -1,4 +1,5 @@
 # Create your models here.
+from django import forms
 from django.db import models
 from perfiles.models import PerfilEmpresa
 
@@ -10,7 +11,7 @@ class OfertaLaboral(models.Model):
         ('pasantia', 'Pasantía'),
         ('primer_empleo', 'Primer Empleo'),
     ]
-
+    
     empresa = models.ForeignKey(PerfilEmpresa, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=150)
     tipo_empleo = models.CharField(max_length=50, choices=TIPOS)

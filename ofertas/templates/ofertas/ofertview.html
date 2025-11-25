@@ -1,0 +1,66 @@
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="text-center mb-4 pb-3 border-bottom">
+        <h3 class="text-primary mb-2">{{ oferta.titulo }}</h3>
+        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+            <span class="badge {% if oferta.estado == 'activa' %} bg-success {% elif oferta.estado == 'cerrada' %} bg-danger {% else %} bg-secondary {% endif %} fs-7">
+                {{ oferta.estado|title }}
+            </span>
+            <span class="text-muted">
+                <i class="bi bi-geo-alt me-1"></i>{{ oferta.ubicacion }}
+            </span>
+            <span class="text-muted">
+                <i class="bi bi-calendar me-1"></i>{{ oferta.fecha_publicacion|date:"d/m/Y" }}
+            </span>
+            <span class="text-muted">ID: #{{ oferta.id }}</span>
+        </div>
+    </div>
+    <!-- Información en cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-primary border-2 text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-briefcase fs-1 text-primary mb-2"></i>
+                    <h5 class="card-title">{{ oferta.get_tipo_empleo_display }}</h5>
+                    <p class="text-muted mb-0">Tipo de Empleo</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success border-2 text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-currency-dollar fs-1 text-success mb-2"></i>
+                    <h4 class="card-title text-success">${{ oferta.salario }}</h4>
+                    <p class="text-muted mb-0">Salario Ofrecido</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-info border-2 text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-geo-alt fs-1 text-info mb-2"></i>
+                    <h5 class="card-title">{{ oferta.ubicacion }}</h5>
+                    <p class="text-muted mb-0">Ubicación</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="card border-0 shadow">
+        <div class="card-header bg-white border-bottom">
+            <h5 class="card-title mb-0 text-dark">
+                <i class="bi bi-file-text me-2 text-primary"></i>
+                Descripción del Puesto
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="bg-light rounded p-4">
+                <div class="text-dark lh-lg">
+                    {{ oferta.descripcion|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

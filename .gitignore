@@ -1,4 +1,32 @@
+# Python
 __pycache__/
 *.pyc
-.env*
+*.pyo
+*.pyd
+__pycache__/
+*.py[cod]
+# Django
+*.log
+*.pot
+*.mo
+*.pyc
+*.sqlite3
+db.sqlite3
+
+# Media y archivos generados
+/media/
+staticfiles/
+
+# Entornos virtuales
 venv/
+env/
+.venv/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración local
+.env
+*.env
+.env*

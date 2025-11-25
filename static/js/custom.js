@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', function () {
       new bootstrap.Tooltip(el); 
     });
   } catch (e) {}
+});
+
+
+
 
   // -------------------------------
   // Inicializar mensajes tipo Toast
@@ -21,4 +25,4 @@ document.addEventListener('DOMContentLoaded', function () {
       toast.show();
     });
   } catch (e) {}
-});
+
