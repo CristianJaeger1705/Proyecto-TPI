@@ -5,6 +5,8 @@ from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from postulaciones.permissions import puede_postular_con_id, puede_cancelar_postulacion, puede_actualizar_postulacion
+
 # Create your views here.
 #Lista todos las vacantes disponibles
 @login_required(login_url='login')
@@ -165,11 +167,16 @@ def obtener_datos_visualizacion(request, id):
     """Obtener datos de oferta para modal de visualización"""
     try:
         oferta = get_object_or_404(OfertaLaboral, id=id)
-        
-        # Renderizar un template específico para visualización
+
+        acciones = {
+            'puedePostular': puede_postular_con_id(request.user, id),
+            'puedeCancelarPostulacion': puede_cancelar_postulacion(request.user, id),
+        }
+
         form_html = render(request, 'ofertas/ofertview.html', {
             'oferta': oferta,
-            'es_modal': True
+            'es_modal': True,
+            'acciones': acciones
         }).content.decode('utf-8')
         
         return JsonResponse({
