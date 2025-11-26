@@ -1,54 +1,67 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Gestión de Usuarios</h1>
+<div class="container mt-4">
 
-<table border="1" cellpadding="10" cellspacing="0">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Verificado</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+    <h1 class="mb-4">Gestión de Usuarios</h1>
 
-    <tbody>
-        {% for u in usuarios %}
-        <tr>
-            <td>{{ u.id }}</td>
-            <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
-            <td>{{ u.get_rol_display }}</td>
+    <!-- BOTÓN: Crear Usuario -->
+    <a href="{% url 'crear_usuario' %}" class="btn btn-primary mb-3">Crear Usuario</a>
 
-            <td>
-                {% if u.verificado %}
-                    ✔ Verificado
-                {% else %}
-                    ❌ No verificado
-                {% endif %}
-            </td>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Verificado</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
-            <td>
-                {% if u.is_active %}
-                    Activo
-                {% else %}
-                    Desactivado
-                {% endif %}
-            </td>
+        <tbody>
+            {% if usuarios %}
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.get_rol_display }}</td>
 
-            <td>
-                <a href="{% url 'activar_usuario' u.id %}">Activar</a> |
-                <a href="{% url 'desactivar_usuario' u.id %}">Desactivar</a> |
-                <a href="{% url 'verificar_usuario' u.id %}">Verificar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                    <td>
+                        {% if u.verificado %}
+                            ✔ Verificado
+                        {% else %}
+                            ❌ No verificado
+                        {% endif %}
+                    </td>
 
+                    <td>
+                        {% if u.is_active %}
+                            Activo
+                        {% else %}
+                            Desactivado
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'activar_usuario' u.id %}">Activar</a> |
+                        <a href="{% url 'desactivar_usuario' u.id %}">Desactivar</a> |
+                        <a href="{% url 'verificar_usuario' u.id %}">Verificar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay usuarios registrados.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+
+    </table>
+
+</div>
 {% endblock %}
 

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Usuarios registrados</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.get_rol_display }}</td>
+        <td>{% if u.is_active %}Activo{% else %}Inactivo{% endif %}</td>
+        <td>
+            <a href="{% url 'usuario_detalle' u.id %}">Ver</a> |
+            <a href="{% url 'usuario_editar' u.id %}">Editar</a> |
+            <a href="{% url 'usuario_eliminar' u.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -25,5 +25,13 @@ urlpatterns = [
     path('', hola_mundo, name='hola_mundo'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     path('administracion/', include('administracion.urls')),
+    path("usuarios/", include("usuarios.urls")),
 
+
+
+
+
+    path('', hola_mundo, name='hola_mundo'), 
+    path('usuarios/',include('usuarios.urls')),
+    path('accounts/',include('django.contrib.auth.urls')),
 ]

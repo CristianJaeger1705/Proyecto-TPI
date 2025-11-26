@@ -25,19 +25,26 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+'django.contrib.admin',
+'django.contrib.auth',
+'django.contrib.contenttypes',
+'django.contrib.sessions',
+'django.contrib.messages',
+'django.contrib.staticfiles',
     
     # Apps locales
-    'empleos',
-    'empresas',
+    #'empleos',
+    #'empresas',
     'usuarios',
     'aplicaciones',
     'administracion',
+    'ofertas',
+    'perfiles',
+    'postulaciones',
+    'mensajeria',
+    'adminpanel',
+    'core'
+    #'aplicaciones',
 ]
 AUTH_USER_MODEL = 'usuarios.Usuario'
 MIDDLEWARE = [
@@ -121,7 +128,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model (si lo van a usar)
-# AUTH_USER_MODEL = 'usuarios.Usuario'
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 # Messages tags para Bootstrap
 from django.contrib.messages import constants as messages
@@ -132,8 +139,26 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
+
 
 # Login/Logout URLs
-LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+#LOGIN_URL = 'login'
+#LOGIN_REDIRECT_URL = 'hola_mundo'
+#LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login' 
+LOGIN_REDIRECT_URL = '/administracion/'
+LOGOUT_REDIRECT_URL = 'login'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "laburosv@gmail.com"
+EMAIL_HOST_PASSWORD = "whfe iqpb zeao vqwv"
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
