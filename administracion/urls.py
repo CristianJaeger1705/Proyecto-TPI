@@ -22,4 +22,10 @@ urlpatterns = [
     path('usuarios/desactivar/<int:user_id>/', views.desactivar_usuario, name='desactivar_usuario'),
     path('usuarios/verificar/<int:user_id>/', views.verificar_usuario, name='verificar_usuario'),
     path('crear/', views.crear_usuario, name='crear_usuario'),
+    # OFERTAS - ADMINISTRACIÓN
+path('ofertas/', views.admin_lista_ofertas, name='admin_ofertas'),
+path('ofertas/<int:id>/ver/', views.admin_ver_oferta, name='admin_ver_oferta'),
+path('ofertas/<int:id>/activar/', views.admin_activar_oferta, name='admin_activar_oferta'),
+path('ofertas/<int:id>/desactivar/', views.admin_desactivar_oferta, name='admin_desactivar_oferta'),
+path('ofertas/<int:id>/eliminar/', views.admin_eliminar_oferta, name='admin_eliminar_oferta'),
 ]

@@ -5,6 +5,11 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UsuarioAdminForm
+from ofertas.models import OfertaLaboral
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+
 
 
 # Solo permite acceso a usuarios administradores
@@ -14,7 +19,13 @@ def es_admin(user):
 @login_required
 @user_passes_test(es_admin)
 def panel_admin(request):
-    return render(request, 'administracion/panel_admin.html')
+    total_ofertas = OfertaLaboral.objects.count()
+    total_usuarios = Usuario.objects.count()
+
+    return render(request, 'administracion/panel_admin.html',{
+    'total_usuarios': total_usuarios,
+    'total_ofertas': total_ofertas,})
+
 @user_passes_test(es_admin)
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -114,3 +125,45 @@ def crear_usuario(request):
     else:
         form = UsuarioAdminForm()
     return render(request, 'administracion/usuarios/usuario_forms.html', {'form': form})
+
+#trabajo del area de ofertas
+
+#lista de ofertas
+@login_required
+def admin_lista_ofertas(request):
+    ofertas = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
+    return render(request, 'administracion/ofertas/ofertas_admin.html', {
+        'ofertas': ofertas
+    })
+#ver oferta 
+@login_required
+def admin_ver_oferta(request, id):
+    oferta = get_object_or_404(OfertaLaboral, id=id)
+    return render(request, 'administracion/ofertas/oferta_detalle.html', {
+        'oferta': oferta
+    })
+#activar oferta 
+@login_required
+def admin_activar_oferta(request, id):
+    oferta = get_object_or_404(OfertaLaboral, id=id)
+    oferta.estado = "Activa"
+    oferta.save()
+    messages.success(request, "Oferta activada correctamente.")
+    return redirect('admin_ofertas')
+
+#desactivar oferta 
+@login_required
+def admin_desactivar_oferta(request, id):
+    oferta = get_object_or_404(OfertaLaboral, id=id)
+    oferta.estado = "Inactiva"
+    oferta.save()
+    messages.warning(request, "Oferta desactivada.")
+    return redirect('admin_ofertas')
+#eliminar ofertas 
+@login_required
+def admin_eliminar_oferta(request, id):
+    oferta = get_object_or_404(OfertaLaboral, id=id)
+    oferta.delete()
+    messages.error(request, "Oferta eliminada.")
+    return redirect('admin_ofertas')
+

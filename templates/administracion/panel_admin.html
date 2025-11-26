@@ -18,16 +18,15 @@
     </div>
 
     <div class="card">
-        <h2>Ofertas Publicadas</h2>
-        <p>{{ total_ofertas }}</p>
-        <a href="{% url 'admin_ofertas' %}" class="btn">Administrar</a>
-    </div>
-
-    <div class="card">
         <h2>Postulaciones</h2>
         <p>{{ total_postulaciones }}</p>
         <a href="{% url 'admin_postulaciones' %}" class="btn">Administrar</a>
     </div>
+    <div class="card">
+    <h2>Ofertas publicadas</h2>
+    <p>{{ total_ofertas }}</p>
+    <a href="{% url 'admin_ofertas' %}" class="btn">Administrar</a>
+</div>
 
 </div>
 

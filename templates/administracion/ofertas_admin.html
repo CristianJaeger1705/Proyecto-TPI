@@ -1,4 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Administrar Usuarios</h1>
+
+<h1>Gestión de Ofertas</h1>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Empresa</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for o in ofertas %}
+        <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.titulo }}</td>
+            <td>{{ o.empresa.nombre }}</td>
+            <td>{{ o.estado }}</td>
+
+            <td>
+                <a href="{% url 'activar_oferta_admin' o.id %}">Activar</a> |
+                <a href="{% url 'desactivar_oferta_admin' o.id %}">Desactivar</a> |
+                <a href="{% url 'eliminar_oferta_admin' o.id %}" style="color:red;">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
