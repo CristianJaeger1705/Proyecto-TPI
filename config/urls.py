@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 #from aplicaciones.views import hola_mundo
-from ofertas.views import obtener_datos_visualizacion
-
+#from ofertas.views import obtener_datos_visualizacion
+from ofertas.views import lista_ofertas_publicas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', obtener_datos_visualizacion, name='pagina_principal'), 
+    path('', lista_ofertas_publicas, name='pagina_principal'), 
     #path('', hola_mundo, name='hola_mundo'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
