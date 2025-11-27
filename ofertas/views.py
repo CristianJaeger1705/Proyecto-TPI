@@ -11,8 +11,13 @@ from .decorators import empresa_o_admin_required
 #Lista todos las vacantes disponibles
 @empresa_o_admin_required
 def ofertas_List(request):
-    ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
-           # Filtrar por ubicación
+    # ❌ ANTES: Esto muestra TODAS las ofertas
+    # ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
+    
+    # ✅ AHORA: Filtrar solo las ofertas de la empresa logueada
+    ofert = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).order_by('-fecha_publicacion')
+    
+    # Filtrar por ubicación (solo dentro de las ofertas de la empresa)
     ubicacion = request.GET.get('ubicacion')
     if ubicacion:
         ofert = ofert.filter(ubicacion__icontains=ubicacion)
@@ -23,10 +28,11 @@ def ofertas_List(request):
     page_number = request.GET.get('page')
     # Obtener la página actual
     ofertas = paginator.get_page(page_number)
-    # Obtener ubicaciones únicas para el filtro
-    ubicaciones = OfertaLaboral.objects.values_list('ubicacion', flat=True).distinct()
+    
+    # ✅ Obtener ubicaciones únicas SOLO de las ofertas de esta empresa
+    ubicaciones = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).values_list('ubicacion', flat=True).distinct()
 
-    return render(request, 'ofertas/index.html',{'ofertas': ofertas,'ubicaciones': ubicaciones })
+    return render(request, 'ofertas/index.html', {'ofertas': ofertas, 'ubicaciones': ubicaciones})
 #funcion para eliminar un campo o registro
 @empresa_o_admin_required
 def eliminar(request, id):
@@ -88,10 +94,11 @@ def obtener_formulario_edicion(request, id):
 
 @empresa_o_admin_required
 def guardar_creacion_modal(request):
-    #Guardar nueva oferta desde modal 
+    # Guardar nueva oferta desde modal 
     if request.method == 'POST':
         try:
-            formulario = Ofertasform(request.POST, request.FILES)
+            # ✅ PASAR EL REQUEST al formulario para que asigne automáticamente la empresa
+            formulario = Ofertasform(request.POST, request.FILES, request=request)
             
             if formulario.is_valid():
                 nueva_oferta = formulario.save()
@@ -122,7 +129,6 @@ def guardar_creacion_modal(request):
             'success': False,
             'error': 'Método no permitido'
         }, status=405)
-
 @empresa_o_admin_required
 def guardar_edicion_modal(request, id):
     #Guardar cambios desde el modal
@@ -193,6 +199,7 @@ def obtener_datos_visualizacion(request, id):
 
     ####################################################################################
     # VISTA DE OFERTAS ABIERTAS AL PUBLICO NO REQUIERE INICIAR SESION
+    # CUALQUIER PERSONA PUEDE VERLO
     #####################################################################################
 
 def lista_ofertas_publicas(request):
