@@ -12,82 +12,63 @@
             <!-- Card con sombra -->
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form class="login-form" action="{% url 'register' %}" method="POST">
+                    <form action="{% url 'register' %}" method="POST">
                         {% csrf_token %}
-                        <h2 class="h3 mb-3">Registrar Cuenta</h2>
-
+                        <div class="text-center">
+                            <h2 class="mb-1">Registrar Cuenta</h2>
+                            <p class="text-muted">Seleccione su rol para iniciar con su registro.</p>
+                        </div>
                         <!-- Selección de Rol -->
-                        <div class="form-group">
-                                <select name="rol" id="rol" required>
-                                    <option value="" disabled {% if not rol %}selected{% endif %}>Selecciona tu rol</option>
-                                    <option value="candidato" {% if rol == 'candidato' %}selected{% endif %}>Candidato</option>
-                                    <option value="empresa" {% if rol == 'empresa' %}selected{% endif %}>Empresa</option>
-                                </select>
-                        </div>
-
+                         <label for="basic-url" class="form-label">Datos de Usuario:</label>
+                        <select name="rol" id="rol" required class="form-select mb-2" aria-label="Default select example">
+                            <option value="" disabled {% if not rol %}selected{% endif %}>Selecciona tu rol</option>
+                            <option value="candidato" {% if rol == 'candidato' %}selected{% endif %}>Candidato</option>
+                            <option value="empresa" {% if rol == 'empresa' %}selected{% endif %}>Empresa</option>
+                        </select>
                         <!-- CAMPOS PARA CANDIDATO -->
-        
-                        <div id="candidatoFields" style="display: none;">
-                            <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-2">
-                                    <div class="input-group">
-                                        <span class="input-group-text custom-icon-prepend">
-                                            <i class="bi bi-person-fill"></i> 
-                                        </span>
-                                        <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{ nombre|default:'' }}">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group mb-2">
-                                    <div class="input-group">
-                                        <input type="text" name="apellidos" class="form-control" placeholder="Apellidos" value="{{ apellidos|default:'' }}">
-                                    </div>
-                                </div>
-                            </div>
-                            
+                         <div id="candidatoFields" style="display: none;">
+                            <div class="input-group mb-4">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{ nombre|default:'' }}" >
+                                <input type="text" name="apellidos" class="form-control" placeholder="Apellidos" value="{{ apellidos|default:'' }}" >
+                            </div> 
                         </div>
-                        </div>
-
+                    
                         <!-- CAMPOS PARA EMPRESA -->
                         <div id="empresaFields" style="display: none;">
-                            <div class="form-group mb-2">
-                                <div class="input-group">
-                                    <span class="input-group-text custom-icon-prepend">
-                                        <i class="bi bi-building-fill"></i> 
-                                    </span>
-                                    <input type="text" name="nombre_empresa" class="form-control" placeholder="Nombre de la Empresa" value="{{ nombre_empresa|default:'' }}">
-                                </div>
-                            </div>
+                            <div class="input-group mb-4">
+                                <span class="input-group-text"><i class="bi bi-building-fill"></i></span>
+                                <input type="text" name="nombre_empresa" class="form-control" placeholder="Nombre de la Empresa" value="{{ nombre_empresa|default:'' }}" >
+                            </div> 
                         </div>
-
+                        
                         <!-- CAMPOS COMUNES -->
                         <div id="comunes" style="display:none;">
-                            <div class="form-group">
-                                <input type="text" name="usuario" placeholder="Usuario" value="{{ username|default:'' }}">
+                            <label for="basic-url" class="form-label">Datos de Cuenta:</label>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                                <input type="text" name="usuario"  id="validationCustomUsername" placeholder="Usuario"  class="form-control" value="{{ username|default:'' }}" >
                             </div>
+                            <div class="input-group mb-4">
+                                <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                                <input type="email" name="email" placeholder="Correo Electrónico" class="form-control" value="{{ email|default:'' }}" >
+                            </div> 
 
-                            <div class="form-group">
-                                <i class="fas fa-envelope icon"></i>
-                                <input type="email" name="email" placeholder="Correo Electrónico" value="{{ email|default:'' }}">
-                            </div>
-
-                            <div class="form-group">
-                                <i class="fas fa-lock icon"></i>
-                                <input type="password" name="contrasena" id="password" placeholder="Contraseña">
-                            </div>
-                            <div class="form-group">
-                                <i class="fas fa-lock icon"></i>
-                                <input type="password" name="confirmar_contrasena" placeholder="Confirmar contraseña" required>
-                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" name="contrasena" id="password" placeholder="Contraseña" class="form-control" >
+                            </div> 
+                            <div class="input-group mb-4">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                <input type="password" name="confirmar_contrasena" placeholder="Repite Contraseña" class="form-control" >
+                            </div>  
+                            <button type="submit" class="btn btn-primary me-md- text-aling-center">Registrarse</button>          
                         </div>
-                        <button type="submit" class="btn btn-primary me-md-">Registrarse</button>
-
-                        <div class="login-link">
-                            <p>¿Ya tienes cuenta?  
-                                <a href="{% url 'login' %}" class="login-text">¡Inicia sesión aquí!</a>
+                        <div class="text-center mt-3">
+                            <p class="mb-0">¿Ya tienes cuenta? 
+                                <a href="{% url 'login' %}" class="fw-bold text-dark text-decoration-none">
+                                    ¡Inicia sesión aquí!
+                                </a>
                             </p>
                         </div>
                     </form>
