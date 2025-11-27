@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil - Empresa - Laburo SV{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar con logo -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {% if perfil.logo %}
+                        <img src="{{ perfil.logo.url }}" 
+                             alt="Logo empresa" 
+                             class="img-fluid mb-3" 
+                             style="max-height: 150px;">
+                    {% else %}
+                        <div class="bg-secondary mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 150px; height: 150px;">
+                            <i class="bi bi-building text-white" style="font-size: 4rem;"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <h4>{{ perfil.nombre_empresa }}</h4>
+                    <p class="text-muted">{{ perfil.get_rubro_display|default:"Sin rubro definido" }}</p>
+                    
+                    {% if perfil.perfil_completo %}
+                        <span class="badge bg-success mb-3 d-block">
+                            <i class="bi bi-check-circle"></i> Perfil Completo
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning mb-3 d-block">
+                            <i class="bi bi-exclamation-triangle"></i> Perfil Incompleto
+                        </span>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{% url 'usuarios:editar_perfil_empresa' %}" class="btn btn-success">
+                            <i class="bi bi-pencil"></i> Editar Perfil
+                        </a>
+                        <a href="{% url 'hola_mundo' %}" class="btn btn-outline-success">
+                            <i class="bi bi-house"></i> Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estado de Verificación -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-3">Estado de Verificación</h6>
+                    {% if perfil.es_verificada %}
+                        <div class="mb-2">
+                            <i class="bi bi-patch-check-fill text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                        <span class="badge bg-primary mb-2">
+                            <i class="bi bi-check-circle"></i> Empresa Verificada
+                        </span>
+                        <p class="small text-muted mb-0">Tu empresa ha sido verificada oficialmente</p>
+                    {% else %}
+                        <div class="mb-2">
+                            <i class="bi bi-hourglass-split text-secondary" style="font-size: 3rem;"></i>
+                        </div>
+                        <span class="badge bg-secondary mb-2">
+                            Sin verificar
+                        </span>
+                        <p class="small text-muted mb-0">Contacta con un administrador para verificar tu empresa</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Información de Contacto -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">
+                        <i class="bi bi-telephone-fill text-success"></i> Información de Contacto
+                    </h6>
+                    {% if perfil.correo_contacto %}
+                    <p class="mb-2">
+                        <i class="bi bi-envelope"></i> {{ perfil.correo_contacto }}
+                    </p>
+                    {% else %}
+                    <p class="mb-2">
+                        <i class="bi bi-envelope"></i> {{ user.email }}
+                    </p>
+                    {% endif %}
+                    {% if perfil.telefono_contacto %}
+                    <p class="mb-2">
+                        <i class="bi bi-telephone"></i> {{ perfil.telefono_contacto }}
+                    </p>
+                    {% endif %}
+                    {% if perfil.departamento %}
+                    <p class="mb-2">
+                        <i class="bi bi-geo-alt"></i> {{ perfil.get_departamento_display }}
+                        {% if perfil.municipio %}, {{ perfil.municipio }}{% endif %}
+                    </p>
+                    {% endif %}
+                    {% if perfil.direccion %}
+                    <p class="mb-2">
+                        <i class="bi bi-map"></i> {{ perfil.direccion }}
+                    </p>
+                    {% endif %}
+                    {% if perfil.sitio_web %}
+                    <p class="mb-0">
+                        <i class="bi bi-globe"></i> 
+                        <a href="{{ perfil.sitio_web }}" target="_blank" rel="noopener noreferrer">Sitio Web</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Redes Sociales -->
+            {% if perfil.facebook or perfil.instagram or perfil.linkedin or perfil.twitter %}
+            <div class="card shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">
+                        <i class="bi bi-share-fill text-info"></i> Redes Sociales
+                    </h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if perfil.facebook %}
+                        <a href="{{ perfil.facebook }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+                        {% endif %}
+                        {% if perfil.instagram %}
+                        <a href="{{ perfil.instagram }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                        {% endif %}
+                        {% if perfil.linkedin %}
+                        <a href="{{ perfil.linkedin }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-linkedin"></i> LinkedIn
+                        </a>
+                        {% endif %}
+                        {% if perfil.twitter %}
+                        <a href="{{ perfil.twitter }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-twitter"></i> Twitter
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="col-md-8">
+            <!-- Descripción -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-building text-success"></i> Sobre la Empresa
+                    </h5>
+                    {% if perfil.descripcion %}
+                        <p class="card-text">{{ perfil.descripcion }}</p>
+                    {% else %}
+                        <p class="text-muted">No has agregado una descripción aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Información (Misión y Visión) -->
+            {% if perfil.mision or perfil.vision %}
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle text-primary"></i> Información
+                    </h5>
+                    
+                    <div class="row">
+                        {% if perfil.mision %}
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-success">
+                                <i class="bi bi-bullseye"></i> Misión
+                            </h6>
+                            <p class="text-muted">{{ perfil.mision }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if perfil.vision %}
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-primary">
+                                <i class="bi bi-eye"></i> Visión
+                            </h6>
+                            <p class="text-muted">{{ perfil.vision }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Ofertas de Trabajo -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-briefcase-fill text-warning"></i> Ofertas de Trabajo
+                        </h5>
+                        <a href="#" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus-circle"></i> Publicar Oferta
+                        </a>
+                    </div>
+                    
+                    <!-- Aquí irán las ofertas cuando se implemente ese módulo -->
+                    <div class="text-center py-5">
+                        <i class="bi bi-briefcase" style="font-size: 4rem; color: #dee2e6;"></i>
+                        <h5 class="text-muted mt-3 mb-2">No has publicado ofertas aún</h5>
+                        <p class="text-muted mb-4">Publica tu primera oferta de trabajo para encontrar candidatos</p>
+                        <a href="#" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Publicar Primera Oferta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

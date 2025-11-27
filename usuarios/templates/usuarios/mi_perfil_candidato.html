@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil - Laburo SV{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar con foto -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {% if perfil.foto_perfil %}
+                        <img src="{{ perfil.foto_perfil.url }}" 
+                             alt="Foto de perfil" 
+                             class="rounded-circle mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 150px; height: 150px;">
+                            <i class="bi bi-person-fill text-white" style="font-size: 4rem;"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <h4>{{ user.get_full_name|default:user.username }}</h4>
+                    <p class="text-muted">{{ perfil.profesion|default:"Sin profesión definida" }}</p>
+                    
+                    {% if perfil.perfil_completo %}
+                        <span class="badge bg-success mb-3">
+                            <i class="bi bi-check-circle"></i> Perfil Completo
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning mb-3">
+                            <i class="bi bi-exclamation-triangle"></i> Perfil Incompleto
+                        </span>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{% url 'usuarios:editar_perfil_candidato' %}" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Editar Perfil
+                        </a>
+                        <a href="{% url 'hola_mundo' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-house"></i> Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info rápida -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">Información de Contacto</h6>
+                    <p class="mb-2">
+                        <i class="bi bi-envelope"></i> {{ user.email }}
+                    </p>
+                    {% if perfil.telefono %}
+                    <p class="mb-2">
+                        <i class="bi bi-telephone"></i> {{ perfil.telefono }}
+                    </p>
+                    {% endif %}
+                    {% if perfil.departamento %}
+                    <p class="mb-0">
+                        <i class="bi bi-geo-alt"></i> {{ perfil.get_departamento_display }}
+                        {% if perfil.municipio %}, {{ perfil.municipio }}{% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="col-md-8">
+            <!-- Biografía -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sobre mí</h5>
+                    {% if perfil.biografia %}
+                        <p class="card-text">{{ perfil.biografia }}</p>
+                    {% else %}
+                        <p class="text-muted">No has agregado una biografía aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Habilidades -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Habilidades</h5>
+                    {% if habilidades_lista %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for habilidad in habilidades_lista %}
+                                <span class="badge bg-primary">{{ habilidad }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No has agregado habilidades aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Experiencia Laboral -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-briefcase-fill text-primary"></i> Experiencia Laboral
+                        </h5>
+                        <a href="{% url 'usuarios:agregar_experiencia' %}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-plus-circle"></i> Agregar Experiencia
+                        </a>
+                    </div>
+                    
+                    {% if perfil.experiencias.all %}
+                        <div class="accordion" id="accordionExperiencias">
+                            {% for exp in perfil.experiencias.all %}
+                                <div class="accordion-item border-0 mb-2">
+                                    <h2 class="accordion-header" id="heading{{ exp.id }}">
+                                        <button class="accordion-button collapsed bg-light border-start border-primary border-3" 
+                                                type="button" 
+                                                data-bs-toggle="collapse" 
+                                                data-bs-target="#collapse{{ exp.id }}" 
+                                                aria-expanded="false" 
+                                                aria-controls="collapse{{ exp.id }}"
+                                                style="box-shadow: none;">
+                                            <div class="w-100">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong class="text-dark">{{ exp.titulo_cargo }}</strong>
+                                                        <span class="text-muted ms-2">· {{ exp.empresa }}</span>
+                                                    </div>
+                                                    {% if exp.trabajo_actual %}
+                                                        <span class="badge bg-success me-2">Actualidad</span>
+                                                    {% endif %}
+                                                </div>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-calendar"></i> 
+                                                    {{ exp.fecha_inicio|date:"M Y" }} - 
+                                                    {% if exp.trabajo_actual %}
+                                                        Actualidad
+                                                    {% else %}
+                                                        {{ exp.fecha_fin|date:"M Y" }}
+                                                    {% endif %}
+                                                    · {{ exp.duracion }}
+                                                </small>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ exp.id }}" 
+                                         class="accordion-collapse collapse" 
+                                         aria-labelledby="heading{{ exp.id }}" 
+                                         data-bs-parent="#accordionExperiencias">
+                                        <div class="accordion-body bg-light">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="bi bi-building"></i> Información General
+                                                    </h6>
+                                                    <p class="mb-1">
+                                                        <strong>Empresa:</strong> {{ exp.empresa }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Cargo:</strong> {{ exp.titulo_cargo }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Tipo:</strong> 
+                                                        <span class="badge bg-secondary">{{ exp.get_tipo_empleo_display }}</span>
+                                                    </p>
+                                                    {% if exp.sector_industria %}
+                                                        <p class="mb-1">
+                                                            <strong>Sector:</strong> 
+                                                            <span class="badge bg-info">{{ exp.get_sector_industria_display }}</span>
+                                                        </p>
+                                                    {% endif %}
+                                                    {% if exp.ubicacion %}
+                                                        <p class="mb-0">
+                                                            <strong>Ubicación:</strong> 
+                                                            <i class="bi bi-geo-alt"></i> {{ exp.ubicacion }}
+                                                        </p>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <div class="col-md-6 mb-3">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="bi bi-calendar-range"></i> Período
+                                                    </h6>
+                                                    <p class="mb-1">
+                                                        <strong>Inicio:</strong> {{ exp.fecha_inicio|date:"d/m/Y" }}
+                                                    </p>
+                                                    {% if not exp.trabajo_actual %}
+                                                        <p class="mb-1">
+                                                            <strong>Fin:</strong> {{ exp.fecha_fin|date:"d/m/Y" }}
+                                                        </p>
+                                                    {% endif %}
+                                                    <p class="mb-0">
+                                                        <strong>Duración:</strong> {{ exp.duracion }}
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="col-12">
+                                                    <h6 class="text-primary mb-2">
+                                                        <i class="bi bi-file-text"></i> Descripción del Puesto
+                                                    </h6>
+                                                    <p class="mb-0" style="white-space: pre-line; text-align: justify;">{{ exp.descripcion }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No has agregado experiencias laborales aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Educación -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Educación</h5>
+                    {% if perfil.nivel_educacion %}
+                        <p class="mb-1"><strong>Nivel:</strong> {{ perfil.get_nivel_educacion_display }}</p>
+                    {% endif %}
+                    {% if perfil.institucion_educativa %}
+                        <p class="mb-0"><strong>Institución:</strong> {{ perfil.institucion_educativa }}</p>
+                    {% endif %}
+                    {% if not perfil.nivel_educacion and not perfil.institucion_educativa %}
+                        <p class="text-muted">No has agregado información educativa aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- CV -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Curriculum Vitae</h5>
+                    {% if perfil.cv %}
+                        <p>
+                            <i class="bi bi-file-earmark-pdf text-danger"></i>
+                            <a href="{{ perfil.cv.url }}" target="_blank">Ver mi CV</a>
+                        </p>
+                    {% else %}
+                        <p class="text-muted">No has subido tu CV aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Preferencias -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Preferencias Laborales</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Disponibilidad:</strong><br>{{ perfil.get_disponibilidad_display }}</p>
+                        </div>
+                        {% if perfil.salario_esperado %}
+                        <div class="col-md-6">
+                            <p><strong>Pretención Salarial:</strong><br>${{ perfil.salario_esperado }} USD/mes</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: #e7f3ff !important;
+        color: #0d6efd;
+    }
+    
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: #0d6efd;
+    }
+    
+    .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230d6efd'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+    
+    .accordion-item {
+        border-radius: 0.375rem;
+        overflow: hidden;
+    }
+    
+    .accordion-button {
+        padding: 1rem 1.25rem;
+    }
+    
+    .accordion-body {
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %}

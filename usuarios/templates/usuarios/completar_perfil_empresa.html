@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Completa tu Perfil de Empresa - Laburo SV{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-building"></i> Completa tu Perfil de Empresa
+                    </h3>
+                    <p class="mb-0 mt-2 small">Llena la información para que los candidatos puedan conocerte</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Información Básica -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-info-circle"></i> Información Básica
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.nombre_empresa.id_for_label }}" class="form-label">
+                                        {{ form.nombre_empresa.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.nombre_empresa }}
+                                    {% if form.nombre_empresa.errors %}
+                                        <div class="text-danger small">{{ form.nombre_empresa.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.tipo_empresa.id_for_label }}" class="form-label">
+                                        {{ form.tipo_empresa.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.tipo_empresa }}
+                                    {% if form.tipo_empresa.errors %}
+                                        <div class="text-danger small">{{ form.tipo_empresa.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.rubro.id_for_label }}" class="form-label">
+                                        {{ form.rubro.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.rubro }}
+                                    {% if form.rubro.errors %}
+                                        <div class="text-danger small">{{ form.rubro.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.logo.id_for_label }}" class="form-label">
+                                        {{ form.logo.label }}
+                                    </label>
+                                    {{ form.logo }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.descripcion.id_for_label }}" class="form-label">
+                                    {{ form.descripcion.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.descripcion }}
+                                {% if form.descripcion.errors %}
+                                    <div class="text-danger small">{{ form.descripcion.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.mision.id_for_label }}" class="form-label">
+                                        {{ form.mision.label }}
+                                    </label>
+                                    {{ form.mision }}
+                                    <small class="form-text text-muted">{{ form.mision.help_text }}</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.vision.id_for_label }}" class="form-label">
+                                        {{ form.vision.label }}
+                                    </label>
+                                    {{ form.vision }}
+                                    <small class="form-text text-muted">{{ form.vision.help_text }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ubicación -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-geo-alt"></i> Ubicación
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.departamento.id_for_label }}" class="form-label">
+                                        {{ form.departamento.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.departamento }}
+                                    {% if form.departamento.errors %}
+                                        <div class="text-danger small">{{ form.departamento.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.municipio.id_for_label }}" class="form-label">
+                                        {{ form.municipio.label }}
+                                    </label>
+                                    {{ form.municipio }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.cantidad_empleados.id_for_label }}" class="form-label">
+                                        {{ form.cantidad_empleados.label }}
+                                    </label>
+                                    {{ form.cantidad_empleados }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.direccion.id_for_label }}" class="form-label">
+                                    {{ form.direccion.label }}
+                                </label>
+                                {{ form.direccion }}
+                            </div>
+                        </div>
+
+                        <!-- Contacto -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-telephone"></i> Información de Contacto
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.telefono_contacto.id_for_label }}" class="form-label">
+                                        {{ form.telefono_contacto.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.telefono_contacto }}
+                                    {% if form.telefono_contacto.errors %}
+                                        <div class="text-danger small">{{ form.telefono_contacto.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.correo_contacto.id_for_label }}" class="form-label">
+                                        {{ form.correo_contacto.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.correo_contacto }}
+                                    {% if form.correo_contacto.errors %}
+                                        <div class="text-danger small">{{ form.correo_contacto.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.sitio_web.id_for_label }}" class="form-label">
+                                        {{ form.sitio_web.label }}
+                                    </label>
+                                    {{ form.sitio_web }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.año_fundacion.id_for_label }}" class="form-label">
+                                        {{ form.año_fundacion.label }}
+                                    </label>
+                                    {{ form.año_fundacion }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Redes Sociales -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-share"></i> Redes Sociales (Opcional)
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.facebook.id_for_label }}" class="form-label">
+                                        <i class="bi bi-facebook text-primary"></i> {{ form.facebook.label }}
+                                    </label>
+                                    {{ form.facebook }}
+                                    <small class="form-text text-muted">{{ form.facebook.help_text }}</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.instagram.id_for_label }}" class="form-label">
+                                        <i class="bi bi-instagram text-danger"></i> {{ form.instagram.label }}
+                                    </label>
+                                    {{ form.instagram }}
+                                    <small class="form-text text-muted">{{ form.instagram.help_text }}</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.linkedin.id_for_label }}" class="form-label">
+                                        <i class="bi bi-linkedin text-primary"></i> {{ form.linkedin.label }}
+                                    </label>
+                                    {{ form.linkedin }}
+                                    <small class="form-text text-muted">{{ form.linkedin.help_text }}</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.twitter.id_for_label }}" class="form-label">
+                                        <i class="bi bi-twitter text-info"></i> {{ form.twitter.label }}
+                                    </label>
+                                    {{ form.twitter }}
+                                    <small class="form-text text-muted">{{ form.twitter.help_text }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Legal -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-file-earmark-text"></i> Información Legal (Opcional)
+                            </h5>
+                            <div class="mb-3">
+                                <label for="{{ form.numero_registro.id_for_label }}" class="form-label">
+                                    {{ form.numero_registro.label }}
+                                </label>
+                                {{ form.numero_registro }}
+                                <small class="form-text text-muted">Opcional para MYPEs en proceso de formalización</small>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'usuarios:mi_perfil_empresa' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Guardar Perfil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

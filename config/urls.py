@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from aplicaciones.views import hola_mundo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', hola_mundo, name='hola_mundo'), 
-    path('usuarios/',include('usuarios.urls')),
-    path('accounts/',include('django.contrib.auth.urls')),
+    path('usuarios/', include('usuarios.urls', namespace='usuarios')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
+
+# Servir archivos media en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
