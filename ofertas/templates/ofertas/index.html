@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %} Lista de Ofertas {% endblock %}
 
 {% block content %}
@@ -95,7 +95,7 @@
                                     onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                                <!-- Botón Ver simplificado -->
+                                <!-- Botón Ver -->
                                 <button type="button" class="btn btn-outline-info btn-ver" data-id="{{ ofert.id }}" title="Ver detalles">
                                     <i class="bi bi-eye"></i>
                                 </button>

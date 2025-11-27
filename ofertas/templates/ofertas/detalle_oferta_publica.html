@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Ver oferta {% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- HEADER DE LA OFERTA -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3 mb-4">
+                        <div class="bg-light border rounded p-2" style="width: 100px; height: 100px;">
+                            {% if oferta.imagen %}
+                                <img src="{{ oferta.imagen.url }}" alt="{{ oferta.empresa }}" class="img-fluid">
+                            {% else %}
+                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex-grow-1">
+                            <h1 class="h3 fw-bold mb-2">{{ oferta.titulo }}</h1>
+                            <h5 class="text-primary mb-3">{{ oferta.empresa }}</h5>
+                            
+                            <div class="d-flex flex-wrap gap-3 text-muted">
+                                <div>
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                    {{ oferta.ubicacion }}
+                                </div>
+                                <div>
+                                    {% if oferta.fecha_expiracion %}
+                                    <i class="bi bi-clock-fill"></i>
+                                    Expira {{ oferta.fecha_expiracion }}
+                                    {% else %}
+                                      <i class="bi bi-clock-fill"></i>
+                                    Expira : no especificado
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    ########################################################################
+                    AQUI SE SUPONE QUE TENDRIA QUE IR EL BOTON POSTULARME
+                    ########################################################################
+                    -->
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-success btn-lg flex-grow-1">
+                            <i class="bi bi-send-fill me-2"></i>
+                            BOTON PARA POSTULARME
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DESCRIPCIÓN -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Descripción del puesto</h5>
+                    <div class="text-secondary">
+                        {{ oferta.descripcion|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            <!--POR SI SE ACTUALIZA LA BD CON OTRO CAMPO REQUISITO-->
+            <!-- REQUISITOS -->
+            {% if oferta.requisitos %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Requisitos</h5>
+                    <div class="text-secondary">
+                        {{ oferta.requisitos|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-4">
+            <!-- INFORMACIÓN ADICIONAL -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">Información adicional</h6>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1">Salario</small>
+                        <strong>{{ oferta.salario|default:"A convenir" }}</strong>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1">Tipo de empleo</small>
+                        <strong>{{ oferta.tipo_empleo|default:"No especificado" }}</strong>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1">Publicado</small>
+                        <strong>{{ oferta.fecha_publicacion|date:"d/m/Y" }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OFERTAS SIMILARES -->
+            {% if ofertas_similares %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">Ofertas similares</h6>
+                    
+                    {% for similar in ofertas_similares %}
+                    <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                        <a href="{% url 'ofertas:detalle' slug=similar.slug %}" class="text-decoration-none text-dark">
+                            <h6 class="mb-1">{{ similar.titulo }}</h6>
+                            <small class="text-muted">{{ similar.empresa }}</small>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

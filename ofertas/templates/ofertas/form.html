@@ -14,7 +14,7 @@
                 aria-describedby="helpId">
                 <option value="">--- Seleccione {{ campo.label }} ---</option>
                 {% for value, label in campo.field.choices %}
-                    <option value="{{ value }}" 
+                    <option value="{{ value }}"
                         {% if campo.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
                         {{ label }}
                     </option>

@@ -2,92 +2,167 @@
 {% load static %}
 {% block title %} Ofertas publicadas - LaburoSv {% endblock %}
 {% block content %}
-<div class="container my-4">
-    <div class="row">
+{% load static %}
+{% load static %}
 
-        <!-- CATEGORÍAS / FILTROS -->
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3">
-                <h5 class="mb-3">MOSTRAR RESULTADOS POR</h5>
-                <h6 class="text-success">Áreas</h6>
-                <ul class="list-unstyled">
-                    {% for cat in categorias %}
-                        <li class="my-1">
-                            <a href="#" class="text-dark">
-                                {{ cat.nombre }} ({{ cat.ofertas.count }})
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+<!-- HERO SECTION -->
+<div class="bg-success bg-gradient text-white py-5 mb-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="display-5 fw-bold mb-3">BIENVENID@ A LABUROSV</h1>
+                <p class="lead mb-0">Explora tu primer oportunidad laboral en El Salvador</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        
+        <!-- SIDEBAR DE FILTROS -->
+        <div class="col-lg-3 col-md-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h6 class="text-uppercase fw-bold text-secondary mb-3 d-flex align-items-center">
+                        <i class="bi bi-funnel-fill me-2"></i>
+                        Filtrar por tipo de empleo
+                    </h6>
+                    
+                    <div class="list-group list-group-flush">
+                        {% for cat in categorias %}
+                        <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center py-2 px-0">
+                            <span class="text-dark">{{ cat.nombre }}</span>
+                            <span class="badge bg-light text-dark rounded-pill">{{ cat.ofertas.count }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- LISTA DE OFERTAS -->
-        <div class="col-md-9">
-
-            <!-- ENCABEZADO -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5>Total de ofertas activas: {{ total_ofertas }}</h5>
-
-                <div class="d-flex gap-3">
-                    <div>
-                        <label>Ordenar por</label>
-                        <select class="form-select form-select-sm">
-                            <option>MÁS RECIENTES</option>
-                            <option>PRÓXIMAS A VENCER</option>
-                            <option>POR EMPRESA</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Mostrar</label>
-                        <select class="form-select form-select-sm">
-                            <option>40</option>
-                            <option>80</option>
-                            <option>100</option>
-                        </select>
+        <div class="col-lg-9 col-md-8">
+            
+            <!-- HEADER CON CONTROLES -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-4">
+                            <h5 class="mb-0 fw-bold">
+                                <span class="text-primary">{{ total_ofertas }}</span> 
+                                <span class="text-secondary">ofertas disponibles</span>
+                            </h5>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="row g-2">
+                                <div class="col-sm-6">
+                                    <label class="form-label small text-muted mb-1">Ordenar por</label>
+                                    <select class="form-select form-select-sm">
+                                        <option>Más recientes</option>
+                                        <option>Próximas a vencer</option>
+                                        <option>Por empresa</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-sm-6">
+                                    <label class="form-label small text-muted mb-1">Mostrar</label>
+                                    <select class="form-select form-select-sm">
+                                        <option>20</option>
+                                        <option>40</option>
+                                        <option>80</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- TARJETAS DE OFERTAS -->
             {% for o in ofertas %}
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body d-flex justify-content-between">
+            <div class="card border-0 shadow-sm mb-3 hover-card">
+                <div class="card-body p-4">
+                    <div class="row align-items-center g-3">
+                        
+                        <!-- LOGO EMPRESA -->
+                        <div class="col-auto">
+                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                {% if o.imagen %}
+                                    <img src="{{ o.imagen.url }}" alt="{{ o.empresa }}" class="img-fluid" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                {% else %}
+                                    <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                {% endif %}
+                            </div>
+                        </div>
 
-                    <!-- LOGO -->
-                    <div class="me-3">
-                        {% if o.imagen %}
-                            <img src="{{ o.imagen.url }}" style="width:100px; height:100px; object-fit:contain;">
-                        {% else %}
-                            <img src="{% static 'img/no-logo.png' %}" style="width:100px; opacity:0.4;">
-                        {% endif %}
+                        <!-- CONTENIDO -->
+                        <div class="col">
+                            <h5 class="card-title fw-bold mb-2">{{ o.titulo }}</h5>
+                            <h6 class="text-muted mb-3">{{ o.empresa }}</h6>
+                            
+                            <div class="d-flex flex-wrap gap-3 text-secondary small">
+                                <div>
+                                    <i class="bi bi-geo-alt-fill me-1"></i>
+                                    <span>{{ o.ubicacion }}</span>
+                                </div>
+                                <div>
+                                    <i class="bi bi-clock-fill me-1"></i>
+                                    <span>Publicada el {{ o.fecha_publicacion }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ACCIONES -->
+                        <div class="col-auto">
+                            <div class="d-flex flex-column gap-2">
+                                <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                                    <i class="bi bi-heart"></i>
+                                    <span class="d-none d-sm-inline">Guardar</span>
+                                </button>
+                                <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                                    <span>Ver oferta</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <!-- INFORMACIÓN -->
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold">{{ o.titulo }}</h5>
-                        <p class="mb-1 text-secondary">{{ o.empresa }}</p>
-                        <p class="mb-1"><i class="bi bi-hourglass-split"></i> Expira {{ o.fecha_expiracion }}</p>
-                        <p class="mb-1"><i class="bi bi-geo-alt"></i> {{ o.ubicacion }}</p>
-                    </div>
-
-                    <!-- BOTONES -->
-                    <div class="text-end">
-                        <button class="btn btn-outline-success btn-sm mb-2">
-                            ☆ AGREGAR A FAVORITOS
-                        </button>
-                        <br>
-                        <a href="#" class="btn btn-success btn-sm">
-                            VER OFERTA →
-                        </a>
-                    </div>
-
+                </div>
+            </div>
+            {% empty %}
+            <!-- ESTADO VACÍO -->
+            <div class="card border-0 shadow-sm text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-search display-1 text-muted mb-3"></i>
+                    <h4 class="fw-bold mb-2">No se encontraron ofertas</h4>
+                    <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
                 </div>
             </div>
             {% endfor %}
 
+            <!-- PAGINACIÓN (OPCIONAL) -->
+            <nav aria-label="Navegación de páginas" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+
         </div>
     </div>
 </div>
+
+<style>
+/* Solo algunos ajustes mínimos que Bootstrap no cubre */
+
+</style>
 {% endblock %}
