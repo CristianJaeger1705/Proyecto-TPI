@@ -133,7 +133,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 
 LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'hola_mundo'
+LOGIN_REDIRECT_URL = 'pagina_principal'
 LOGOUT_REDIRECT_URL = 'home'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

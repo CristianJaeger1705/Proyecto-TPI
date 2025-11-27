@@ -38,7 +38,7 @@ def mi_perfil_empresa(request):
 
 def exit(request):
     logout(request)
-    return redirect("hola_mundo")
+    return redirect("login")
 
 Usuario = get_user_model()
 
