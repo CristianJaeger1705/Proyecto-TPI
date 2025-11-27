@@ -1,13 +1,13 @@
-from pyexpat.errors import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from .decorators import empresa_o_admin_required
 # Create your views here.
 #Lista todos las vacantes disponibles
-@login_required(login_url='login')
+@empresa_o_admin_required
 def ofertas_List(request):
     ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
            # Filtrar por ubicación
@@ -26,7 +26,7 @@ def ofertas_List(request):
 
     return render(request, 'ofertas/index.html',{'ofertas': ofertas,'ubicaciones': ubicaciones })
 #funcion para eliminar un campo o registro
-@login_required(login_url='login')
+@empresa_o_admin_required
 def eliminar(request, id):
     ofert = OfertaLaboral.objects.get(id=id)
     nombre_oferta=ofert.titulo
@@ -37,7 +37,7 @@ def eliminar(request, id):
 # =============================================================================
 # VISTAS PARA UTILIZAR EL MODAL EDITAR Y AGREGAR NUEVO
 # =============================================================================
-@login_required(login_url='login')
+@empresa_o_admin_required
 def obtener_formulario_creacion(request):
     """Obtener formulario de creación para modal - NUEVA VISTA"""
     try:
@@ -59,7 +59,7 @@ def obtener_formulario_creacion(request):
             'error': str(e)
         }, status=500)
     
-@login_required(login_url='login')
+@empresa_o_admin_required
 def obtener_formulario_edicion(request, id):
     #Obtener formulario de edición para modal
     try:
@@ -84,7 +84,7 @@ def obtener_formulario_edicion(request, id):
             'error': str(e)
         }, status=500)
 
-@login_required(login_url='login')
+@empresa_o_admin_required
 def guardar_creacion_modal(request):
     #Guardar nueva oferta desde modal 
     if request.method == 'POST':
@@ -121,7 +121,7 @@ def guardar_creacion_modal(request):
             'error': 'Método no permitido'
         }, status=405)
 
-@login_required(login_url='login')
+@empresa_o_admin_required
 def guardar_edicion_modal(request, id):
     #Guardar cambios desde el modal
     if request.method == 'POST':
@@ -160,7 +160,7 @@ def guardar_edicion_modal(request, id):
         }, status=405)
     
 #VISTAS PARA AGREGAR NUEVO DATO - Funcionalidad simple
-
+@empresa_o_admin_required
 def obtener_datos_visualizacion(request, id):
     """Obtener datos de oferta para modal de visualización"""
     try:
@@ -182,3 +182,17 @@ def obtener_datos_visualizacion(request, id):
             'success': False,
             'error': str(e)
         }, status=500)
+    
+
+    ####################################################################################
+    # VISTA DE OFERTAS ABIERTAS AL PUBLICO 
+    #####################################################################################
+
+def lista_ofertas_publicas(request):
+    ofertas = OfertaLaboral.objects.filter(estado='activa').order_by('-fecha_publicacion')
+
+    contexto = {
+        'ofertas': ofertas,
+        'total_ofertas': ofertas.count()
+    }
+    return render(request, 'ofertas/ofertas_publicadas.html', contexto)
