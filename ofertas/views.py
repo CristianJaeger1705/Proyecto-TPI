@@ -185,7 +185,7 @@ def obtener_datos_visualizacion(request, id):
     
 
     ####################################################################################
-    # VISTA DE OFERTAS ABIERTAS AL PUBLICO 
+    # VISTA DE OFERTAS ABIERTAS AL PUBLICO NO REQUIERE INICIAR SESION
     #####################################################################################
 
 def lista_ofertas_publicas(request):
@@ -196,3 +196,7 @@ def lista_ofertas_publicas(request):
         'total_ofertas': ofertas.count()
     }
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
+def ver_oferta_publica(request, oferta_id):
+    # Obtener la oferta específica por ID
+    oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
+    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta})

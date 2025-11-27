@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4$y#(k8v1z@=+s8v3q3u&!l5v1
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 DATABASE_NAME = os.getenv('DB_NAME', 'ProyectoTPI')
-DATABASE_USER = os.getenv('DB_USER', 'ProyectoTPI')
+DATABASE_USER = os.getenv('DB_USER', 'postgres')
 DATABASE_PASSWORD = os.getenv('DB_PASSWORD', 'admin')
 DATABASE_HOST = os.getenv('DB_HOST', 'localhost')
 DATABASE_PORT = os.getenv('DB_PORT', '5432')
@@ -133,12 +133,13 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 
 LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'hola_mundo'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'lista_ofertas_publicas'
+LOGOUT_REDIRECT_URL = 'lista_ofertas_publicas'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = 'testigcorreo920@gmail.com'
+EMAIL_HOST_PASSWORD = 'pygl rahh sjpy qecj'
+

@@ -185,3 +185,18 @@ body{
     margin-bottom: 10px;
     width: 100%;
 }
+/*ESTILOS QUE BOOTSTRAP NO CUBRE */
+.hover-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+
+.list-group-item-action:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+    border-left: 3px solid var(--bs-primary);
+    padding-left: 0.75rem !important;
+}

@@ -12,4 +12,5 @@ urlpatterns=[
     path('guardar-edicion/<int:id>/', views.guardar_edicion_modal, name='guardar_edicion_modal'),
     path('obtener-visualizacion/<int:id>/', views.obtener_datos_visualizacion, name='obtener_visualizacion'),
     path('', views.lista_ofertas_publicas, name='lista_ofertas_publicas'),
+    path('oferta/<int:oferta_id>/', views.ver_oferta_publica, name='detalleoferta'),
 ]

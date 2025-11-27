@@ -33,9 +33,11 @@
     
     <!-- Main Content -->
     <main class="{% block main_class %}main-content{% endblock %}">
-        {% block content %}{% endblock %}
+        {% block content %}
+        
+        {% endblock %}
     </main>
-    
+   
     <!-- Footer -->
     {% include 'components/footer.html' %}
     
