@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+RENDER = os.environ.get('RENDER', None)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4$y#(k8v1z@=+s8v3q3u&!l5v1zj3x8h9&0&k3z8v1zj3x')
@@ -90,6 +91,16 @@ DATABASES = {
         'PORT': DATABASE_PORT,
     }
 }
+
+# Forzar base de datos de Render en producción
+if RENDER:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
