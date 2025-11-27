@@ -47,7 +47,6 @@ function forzarGeolocalizacionEnModal() {
 // =============================================================================
 
 function abrirModalCreacion() {
-    console.log('Abriendo modal de creación...');
     currentModalType = 'crear';
     currentOfertaId = null;
     
@@ -65,12 +64,7 @@ function abrirModalCreacion() {
     const modalElement = document.getElementById('crearOfertaModal');
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
-    
-    // Configurar geolocalización cuando el modal se muestre
-    modalElement.addEventListener('shown.bs.modal', function() {
-        console.log('Modal de creación mostrado - configurando geolocalización');
-        setTimeout(inicializarGeolocalizacionEnModal, 500);
-    });
+     
     
     // Cargar el formulario
     fetch('/ofertas/obtener-formulario-creacion/')
@@ -81,10 +75,9 @@ function abrirModalCreacion() {
         .then(data => {
             if (data.success) {
                 document.getElementById('crearOfertaModalBody').innerHTML = data.form_html;
-                console.log('Formulario de creación cargado correctamente');
                 
                 // Inicializar geolocalización después de cargar el formulario
-                setTimeout(inicializarGeolocalizacionEnModal, 100);
+                setTimeout(inicializarGeolocalizacionEnModal, 500);
             } else {
                 document.getElementById('crearOfertaModalBody').innerHTML = `
                     <div class="alert alert-danger">
@@ -374,7 +367,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.btn-editar').forEach(button => {
         button.addEventListener('click', function() {
             const ofertaId = this.getAttribute('data-id');
-            console.log('Botón editar clickeado, ID:', ofertaId);
             abrirModalEdicion(ofertaId);
         });
     });

@@ -11,4 +11,5 @@ urlpatterns=[
     path('guardar-creacion/', views.guardar_creacion_modal, name='guardar_creacion_modal'),
     path('guardar-edicion/<int:id>/', views.guardar_edicion_modal, name='guardar_edicion_modal'),
     path('obtener-visualizacion/<int:id>/', views.obtener_datos_visualizacion, name='obtener_visualizacion'),
+    path('', views.lista_ofertas_publicas, name='lista_ofertas_publicas'),
 ]

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Ofertas publicadas - LaburoSv {% endblock %}
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+
+        <!-- CATEGORÍAS / FILTROS -->
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3">
+                <h5 class="mb-3">MOSTRAR RESULTADOS POR</h5>
+                <h6 class="text-success">Áreas</h6>
+                <ul class="list-unstyled">
+                    {% for cat in categorias %}
+                        <li class="my-1">
+                            <a href="#" class="text-dark">
+                                {{ cat.nombre }} ({{ cat.ofertas.count }})
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- LISTA DE OFERTAS -->
+        <div class="col-md-9">
+
+            <!-- ENCABEZADO -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>Total de ofertas activas: {{ total_ofertas }}</h5>
+
+                <div class="d-flex gap-3">
+                    <div>
+                        <label>Ordenar por</label>
+                        <select class="form-select form-select-sm">
+                            <option>MÁS RECIENTES</option>
+                            <option>PRÓXIMAS A VENCER</option>
+                            <option>POR EMPRESA</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Mostrar</label>
+                        <select class="form-select form-select-sm">
+                            <option>40</option>
+                            <option>80</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TARJETAS DE OFERTAS -->
+            {% for o in ofertas %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body d-flex justify-content-between">
+
+                    <!-- LOGO -->
+                    <div class="me-3">
+                        {% if o.imagen %}
+                            <img src="{{ o.imagen.url }}" style="width:100px; height:100px; object-fit:contain;">
+                        {% else %}
+                            <img src="{% static 'img/no-logo.png' %}" style="width:100px; opacity:0.4;">
+                        {% endif %}
+                    </div>
+
+                    <!-- INFORMACIÓN -->
+                    <div class="flex-grow-1">
+                        <h5 class="fw-bold">{{ o.titulo }}</h5>
+                        <p class="mb-1 text-secondary">{{ o.empresa }}</p>
+                        <p class="mb-1"><i class="bi bi-hourglass-split"></i> Expira {{ o.fecha_expiracion }}</p>
+                        <p class="mb-1"><i class="bi bi-geo-alt"></i> {{ o.ubicacion }}</p>
+                    </div>
+
+                    <!-- BOTONES -->
+                    <div class="text-end">
+                        <button class="btn btn-outline-success btn-sm mb-2">
+                            ☆ AGREGAR A FAVORITOS
+                        </button>
+                        <br>
+                        <a href="#" class="btn btn-success btn-sm">
+                            VER OFERTA →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

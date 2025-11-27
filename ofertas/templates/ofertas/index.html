@@ -69,7 +69,9 @@
                     {% for ofert in ofertas %}
                     <tr>
                         <td>{{ ofert.id }}</td>
-                        <td>{{ ofert.titulo }}</td>
+                        <td style="max-width: 200px;"><div class="text-truncate" title="{{ ofert.titulo }}">
+                                {{ ofert.titulo }}
+                            </div></td>
                         <td>{{ ofert.get_tipo_empleo_display }}</td>
                         <td style="max-width: 200px;">
                             <div class="text-truncate" title="{{ ofert.descripcion }}">
@@ -113,7 +115,7 @@
             </table>
         </div>
 
-        <!-- CARDS PARA DISPOSITIVOS MÓVILES (hasta md) -->
+        <!-- CARDS PARA DISPOSITIVOS MÓVILES (hasta md) CARDS FUNCIONAL-->
         <div class="d-md-none">
             {% for ofert in ofertas %}
             <div class="card mb-3 shadow-sm">
