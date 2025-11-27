@@ -53,7 +53,7 @@ def postular_con_id(request, id):
         return redirect("redirigir")
 
     messages.success(request, "Postulación creada exitosamente.")
-    return render(request, 'hola_mundo.html')
+    return redirect("ofertas")
 
 def cancelar_postulacion(request, id):
     try:
@@ -98,7 +98,7 @@ def cancelar_postulacion(request, id):
         return redirect("redirigir")
 
     messages.success(request, "Postulación cancelada exitosamente.")
-    return render(request, 'hola_mundo.html')
+    return redirect("ofertas")
 
 
 @login_required

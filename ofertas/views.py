@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from postulaciones.permissions import puede_cancelar_postulacion, puede_postular_con_id
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
@@ -165,11 +167,16 @@ def obtener_datos_visualizacion(request, id):
     """Obtener datos de oferta para modal de visualización"""
     try:
         oferta = get_object_or_404(OfertaLaboral, id=id)
-        
-        # Renderizar un template específico para visualización
+
+        acciones = {
+            'puedePostular': puede_postular_con_id(request.user, id),
+            'puedeCancelarPostulacion': puede_cancelar_postulacion(request.user, id),
+        }
+
         form_html = render(request, 'ofertas/ofertview.html', {
             'oferta': oferta,
-            'es_modal': True
+            'es_modal': True,
+            'acciones': acciones
         }).content.decode('utf-8')
         
         return JsonResponse({
