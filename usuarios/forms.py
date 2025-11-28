@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import PerfilCandidato, PerfilEmpresa, ExperienciaLaboral
+from perfiles.models import PerfilCandidato, PerfilEmpresa, ExperienciaLaboral
 
 
 class FormularioPerfilCandidato(forms.ModelForm):
