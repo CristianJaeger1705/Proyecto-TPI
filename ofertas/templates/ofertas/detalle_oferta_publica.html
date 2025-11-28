@@ -11,8 +11,8 @@
                 <div class="card-body p-4">
                     <div class="d-flex align-items-start gap-3 mb-4">
                         <div class="bg-light border rounded p-2" style="width: 100px; height: 100px;">
-                            {% if oferta.imagen %}
-                                <img src="{{ oferta.imagen.url }}" alt="{{ oferta.empresa }}" class="img-fluid">
+                            {% if oferta.empresa.logo %}
+                                <img src="{{ oferta.empresa.logo.url }}" alt="{{ oferta.empresa.logo.url }}" class="img-fluid">
                             {% else %}
                                 <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50">
                             {% endif %}
