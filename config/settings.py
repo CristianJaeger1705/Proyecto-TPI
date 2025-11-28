@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+RENDER = os.environ.get('RENDER', None)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4$y#(k8v1z@=+s8v3q3u&!l5v1zj3x8h9&0&k3z8v1zj3x')
@@ -25,7 +26,11 @@ DATABASE_PASSWORD = os.getenv('DB_PASSWORD', 'admin')
 DATABASE_HOST = os.getenv('DB_HOST', 'localhost')
 DATABASE_PORT = os.getenv('DB_PORT', '5432')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+     'proyecto-tpi-jtgf.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,6 +80,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
+#Se modifico para enlazar a mi bd local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -85,6 +91,16 @@ DATABASES = {
         'PORT': DATABASE_PORT,
     }
 }
+
+# Forzar base de datos de Render en producción
+if RENDER:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -132,7 +148,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 
 LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'hola_mundo'
+LOGIN_REDIRECT_URL = 'pagina_principal'
 LOGOUT_REDIRECT_URL = 'home'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -141,3 +157,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
