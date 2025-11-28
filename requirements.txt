@@ -9,3 +9,7 @@ sqlparse==0.5.3
 typing_extensions==4.15.0
 gunicorn==21.2.0
 dj-database-url
+cryptography==41.0.7
+django-allauth==65.13.1
+PyJWT==2.10.1
+requests==2.32.3
