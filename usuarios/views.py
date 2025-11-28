@@ -38,7 +38,7 @@ def mi_perfil_candidato(request):
         perfil = request.user.perfil_candidato
     except:
         # Si no existe el perfil, crear uno automáticamente
-        from .models import PerfilCandidato
+        from perfiles.models import PerfilCandidato
         perfil = PerfilCandidato.objects.create(usuario=request.user)
     
     context = {
@@ -54,7 +54,7 @@ def mi_perfil_empresa(request):
         perfil = request.user.perfil_empresa
     except:
         # Si no existe el perfil, crear uno automáticamente
-        from .models import PerfilEmpresa
+        from perfiles.models import PerfilEmpresa
         perfil = PerfilEmpresa.objects.create(
             usuario=request.user,
             nombre_empresa=request.user.first_name or 'Mi Empresa'
@@ -78,7 +78,7 @@ def completar_perfil_candidato(request):
     try:
         perfil = request.user.perfil_candidato
     except:
-        from .models import PerfilCandidato
+        from perfiles.models import PerfilCandidato
         perfil = PerfilCandidato.objects.create(usuario=request.user)
     
     if request.method == 'POST':
@@ -109,7 +109,7 @@ def completar_perfil_empresa(request):
     try:
         perfil = request.user.perfil_empresa
     except:
-        from .models import PerfilEmpresa
+        from perfiles.models import PerfilEmpresa
         perfil = PerfilEmpresa.objects.create(
             usuario=request.user,
             nombre_empresa=request.user.first_name or 'Mi Empresa'
@@ -147,7 +147,7 @@ def editar_perfil_candidato(request):
     try:
         perfil = request.user.perfil_candidato
     except:
-        from .models import PerfilCandidato
+        from perfiles.models import PerfilCandidato
         perfil = PerfilCandidato.objects.create(usuario=request.user)
     
     if request.method == 'POST':
@@ -177,7 +177,7 @@ def editar_perfil_empresa(request):
     try:
         perfil = request.user.perfil_empresa
     except:
-        from .models import PerfilEmpresa
+        from perfiles.models import PerfilEmpresa
         perfil = PerfilEmpresa.objects.create(
             usuario=request.user,
             nombre_empresa=request.user.first_name or 'Mi Empresa'
@@ -298,7 +298,7 @@ def redirigir_según_rol(request):
                 return redirect("usuarios:completar_perfil_candidato")
         except:
             # Si no existe perfil (por alguna razón), obtener o crear
-            from .models import PerfilCandidato
+            from perfiles.models import PerfilCandidato
             perfil, created = PerfilCandidato.objects.get_or_create(usuario=user)
             return redirect("usuarios:completar_perfil_candidato")
         
@@ -313,7 +313,7 @@ def redirigir_según_rol(request):
                 return redirect("usuarios:completar_perfil_empresa")
         except:
             # Si no existe perfil (por alguna razón), obtener o crear
-            from .models import PerfilEmpresa
+            from perfiles.models import PerfilEmpresa
             perfil, created = PerfilEmpresa.objects.get_or_create(
                 usuario=user,
                 defaults={'nombre_empresa': user.first_name or 'Mi Empresa'}
@@ -482,7 +482,7 @@ def agregar_experiencia(request):
 @login_required
 def editar_experiencia(request, experiencia_id):
     """Vista para editar una experiencia laboral existente"""
-    from .models import ExperienciaLaboral
+    from perfiles.models import ExperienciaLaboral
     from django.shortcuts import get_object_or_404
     
     experiencia = get_object_or_404(ExperienciaLaboral, id=experiencia_id)
@@ -519,7 +519,7 @@ def editar_experiencia(request, experiencia_id):
 @login_required
 def eliminar_experiencia(request, experiencia_id):
     """Vista para eliminar una experiencia laboral"""
-    from .models import ExperienciaLaboral
+    from perfiles.models import ExperienciaLaboral
     from django.shortcuts import get_object_or_404
     
     experiencia = get_object_or_404(ExperienciaLaboral, id=experiencia_id)
@@ -551,7 +551,7 @@ def eliminar_experiencia(request, experiencia_id):
 
 def obtener_municipios(request, departamento):
     """API para obtener municipios según el departamento seleccionado"""
-    from .models import MUNICIPIOS_POR_DEPARTAMENTO
+    from perfiles.models import MUNICIPIOS_POR_DEPARTAMENTO
     
     municipios = MUNICIPIOS_POR_DEPARTAMENTO.get(departamento, [])
     return JsonResponse({'municipios': municipios})
