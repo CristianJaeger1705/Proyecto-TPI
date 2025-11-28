@@ -1,5 +1,6 @@
 from django.shortcuts import render ,redirect
 from django.contrib.auth.decorators import login_required
+from .models import SolicitudEmpresa
 from django.contrib.auth import get_user_model,logout
 import random
 from django.core.mail import send_mail
@@ -45,7 +46,6 @@ Usuario = get_user_model()
 def registro(request):
     if request.method == "POST":
         # Obtener datos
-        rol = request.POST.get("rol")
         username = request.POST.get("usuario")
         email = request.POST.get("email")
         password = request.POST.get("contrasena")
@@ -56,12 +56,10 @@ def registro(request):
 
         # Preparar context para rellenar campos en caso de error
         context = {
-            "rol": rol,
             "username": username,
             "email": email,
             "nombre": nombre,
             "apellidos": apellidos,
-            "nombre_empresa": nombre_empresa
         }
 
         # Validaciones
@@ -77,20 +75,14 @@ def registro(request):
             messages.error(request, "Ya existe una cuenta con este correo.")
             return render(request, "registration/register.html", context)
 
-        # Procesar nombres
-        if rol == "candidato":
-            first_name = nombre
-            last_name = apellidos
-        else:
-            first_name = nombre_empresa
-            last_name = ""
+        first_name = nombre
+        last_name = apellidos
 
         # Generar código
         codigo = str(random.randint(100000, 999999))
 
         # Guardar datos en session
         request.session["registro_data"] = {
-            "rol": rol,
             "username": username,
             "email": email,
             "password": password,
@@ -113,6 +105,31 @@ def registro(request):
 
     return render(request, "registration/register.html")
 
+def crear_cuenta_empresa(request, token):
+    solicitud = SolicitudEmpresa.objects.filter(token=token, estado="aprobada").first()
+
+    if not solicitud:
+        return render(request, "registration/token_invalido.html")
+
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["contrasena"]
+
+        user = Usuario.objects.create_user(
+                username=username,
+                email=solicitud.correo,
+                password=password,
+                rol="empresa",
+                first_name=solicitud.nombre_empresa,
+                verificado=False
+            )
+
+        return redirect("login")
+
+    return render(request, "registration/registrar_empresa.html", {
+        "nombre_empresa": solicitud.nombre_empresa,
+        "correo": solicitud.correo,
+    })
 
 
 def redirigir_según_rol(request):
@@ -148,7 +165,7 @@ def verificar_codigo(request):
                 rol=data["rol"],
                 first_name=data["first_name"],
                 last_name=data["last_name"],
-                verificado=True
+                verificado=False
             )
 
             # Limpiar session
@@ -240,3 +257,26 @@ def nueva_contrasena_recuperacion(request):
         return redirect("login")
 
     return render(request, "registration/nueva_contrasena_recuperacion.html")
+
+def solicitar_empresa(request):
+    if request.method == "POST":
+        nombre = request.POST.get("nombre_empresa")
+        sitio = request.POST.get("sitio_web")
+        correo = request.POST.get("correo_corporativo")
+        descripcion = request.POST.get("descripcion")
+        telefono = request.POST.get("telefono")
+
+        SolicitudEmpresa.objects.create(
+            nombre_empresa=nombre,
+            telefono=telefono,
+            sitio_web=sitio,
+            correo=correo,
+            descripcion=descripcion,
+            solicitante=request.user if request.user.is_authenticated else None
+        )
+
+        messages.success(request, "Solicitud enviada. Será revisada por un administrador.")
+        return redirect("login")
+
+    return render(request, "registration/solicitar_empresa.html")
+

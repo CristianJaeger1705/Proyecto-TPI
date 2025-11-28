@@ -20,30 +20,14 @@
                         </div>
                         <!-- Selección de Rol -->
                          <label for="basic-url" class="form-label">Datos de Usuario:</label>
-                        <select name="rol" id="rol" required class="form-select mb-2" aria-label="Default select example">
-                            <option value="" disabled {% if not rol %}selected{% endif %}>Selecciona tu rol</option>
-                            <option value="candidato" {% if rol == 'candidato' %}selected{% endif %}>Candidato</option>
-                            <option value="empresa" {% if rol == 'empresa' %}selected{% endif %}>Empresa</option>
-                        </select>
+
                         <!-- CAMPOS PARA CANDIDATO -->
-                         <div id="candidatoFields" style="display: none;">
+                         <div >
                             <div class="input-group mb-4">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
                                 <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{ nombre|default:'' }}" >
                                 <input type="text" name="apellidos" class="form-control" placeholder="Apellidos" value="{{ apellidos|default:'' }}" >
                             </div> 
-                        </div>
-                    
-                        <!-- CAMPOS PARA EMPRESA -->
-                        <div id="empresaFields" style="display: none;">
-                            <div class="input-group mb-4">
-                                <span class="input-group-text"><i class="bi bi-building-fill"></i></span>
-                                <input type="text" name="nombre_empresa" class="form-control" placeholder="Nombre de la Empresa" value="{{ nombre_empresa|default:'' }}" >
-                            </div> 
-                        </div>
-                        
-                        <!-- CAMPOS COMUNES -->
-                        <div id="comunes" style="display:none;">
                             <label for="basic-url" class="form-label">Datos de Cuenta:</label>
                             <div class="input-group mb-2">
                                 <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
@@ -70,6 +54,10 @@
                                     ¡Inicia sesión aquí!
                                 </a>
                             </p>
+                            <p class="mt-3 text-center">
+                                ¿Eres una empresa?  
+                                <a href="{% url 'solicitar_empresa' %}">Solicita tu registro aquí</a>
+                            </p>
                         </div>
                     </form>
                </div>
@@ -77,33 +65,4 @@
         </div>
     </div>
 </div>
-
-<script>
-const rolSelect = document.getElementById("rol");
-const candidatoFields = document.getElementById("candidatoFields");
-const empresaFields = document.getElementById("empresaFields");
-const comunes = document.getElementById("comunes");
-
-function mostrarCampos() {
-    const rol = rolSelect.value;
-    if (!rol) return;
-
-    comunes.style.display = "block";
-
-    if (rol === "candidato") {
-        candidatoFields.style.display = "block";
-        empresaFields.style.display = "none";
-    } else if (rol === "empresa") {
-        candidatoFields.style.display = "none";
-        empresaFields.style.display = "block";
-    }
-}
-
-// Ejecutar al cargar la página
-document.addEventListener("DOMContentLoaded", mostrarCampos);
-
-// Ejecutar también al cambiar el select
-rolSelect.addEventListener("change", mostrarCampos);
-</script>
-
 {% endblock %}

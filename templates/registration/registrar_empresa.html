@@ -1,0 +1,12 @@
+<h2>Crear cuenta para {{ nombre_empresa }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Usuario</label>
+    <input type="text" name="username" required>
+
+    <label>Contraseña</label>
+    <input type="password" name="contrasena" required>
+
+    <button type="submit">Crear cuenta</button>
+</form>

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Solicitud de Registro de Empresa</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Nombre de la empresa</label>
+        <input type="text" class="form-control" name="nombre_empresa" required>
+
+        <label class="mt-2">Sitio web</label>
+        <input type="text" class="form-control" name="telefono">
+
+        <label class="mt-2">Sitio web</label>
+        <input type="url" class="form-control" name="sitio_web">
+
+        <label class="mt-2">Correo corporativo</label>
+        <input type="email" class="form-control" name="correo_corporativo" required>
+
+        <label class="mt-2">Descripción o notas</label>
+        <textarea class="form-control" name="descripcion"></textarea>
+
+        <button class="btn btn-primary mt-3" type="submit">Enviar solicitud</button>
+    </form>
+</div>
+{% endblock %}
