@@ -19,8 +19,8 @@ class Ofertasform(forms.ModelForm):
     
     def save(self,commit=True):
        instance=super().save(commit=False)
-       if self.request and hasattr(self.request.user,'perfilempresa'):
-          instance.empresa=self.request.user.perfilempresa
+       if self.request and hasattr(self.request.user,'perfil_empresa'):
+          instance.empresa=self.request.user.perfil_empresa
        if commit:
           instance.save()
        return instance
