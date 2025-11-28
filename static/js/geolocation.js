@@ -34,7 +34,7 @@
         }
 
         campo.value = texto;
-        console.log(`Ubicación establecida: "${texto}" (método: ${metodo})`);
+       // console.log(`Ubicación establecida: "${texto}" (método: ${metodo})`);
         
         // Disparar evento personalizado
         const event = new CustomEvent('ubicacionEstablecida', { 
@@ -56,7 +56,7 @@
 
         for (const apiUrl of CONFIG.ipAPIs) {
             try {
-                console.log(`   Probando: ${apiUrl}`);
+         //       console.log(`   Probando: ${apiUrl}`);
                 const resp = await fetch(apiUrl, { 
                     signal: AbortSignal.timeout(5000) // Timeout de 5 segundos
                 });
@@ -80,7 +80,7 @@
                 }
 
                 if (ciudad) {
-                    console.log(`Ciudad obtenida: ${ciudad}`);
+                    //console.log(`Ciudad obtenida: ${ciudad}`);
                     setUbicacion(ciudad, 'IP');
                     return true;
                 }
@@ -103,7 +103,7 @@
     async function obtenerCiudadDesdeGPS(lat, lon) {
         try {
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
-            console.log(`   Consultando Nominatim: ${url}`);
+           // console.log(`   Consultando Nominatim: ${url}`);
 
             const resp = await fetch(url, {
                 headers: {
@@ -117,7 +117,7 @@
             }
 
             const data = await resp.json();
-            console.log('   Datos de Nominatim:', data);
+            //console.log('   Datos de Nominatim:', data);
 
             // Buscar ciudad en orden de prioridad
             const ciudad = 
@@ -129,7 +129,7 @@
                 null;
 
             if (ciudad) {
-                console.log(`Ciudad encontrada: ${ciudad}`);
+              //  console.log(`Ciudad encontrada: ${ciudad}`);
                 setUbicacion(ciudad, 'GPS');
                 return true;
             } else {
@@ -154,7 +154,7 @@
                 return;
             }
 
-            console.log('📍 Solicitando permiso de GPS...');
+           // console.log('📍 Solicitando permiso de GPS...');
 
             navigator.geolocation.getCurrentPosition(
                 async function(pos) {
@@ -176,7 +176,7 @@
                     };
                     
                     const mensaje = mensajes[error.code] || `Error desconocido (${error.code})`;
-                    console.error(`❌ Error GPS: ${mensaje}`);
+                    console.error(` Error GPS: ${mensaje}`);
                     reject(new Error(mensaje));
                 },
                 {
@@ -204,22 +204,22 @@
             return true;
         }
 
-        console.log('─'.repeat(50));
+        //console.log('─'.repeat(50));
 
         try {
             // Intentar GPS primero
             await obtenerPorGPS();
-            console.log('─'.repeat(50));
+          //  console.log('─'.repeat(50));
             return true;
 
         } catch (errorGPS) {
-            console.log('─'.repeat(50));
+            //console.log('─'.repeat(50));
             console.warn('⚠️ GPS no disponible, usando IP como fallback...');
-            console.log('─'.repeat(50));
+            //console.log('─'.repeat(50));
 
             // Fallback a IP
             const exitoIP = await obtenerPorIP();
-            console.log('─'.repeat(50));
+            //console.log('─'.repeat(50));
             
             if (exitoIP) {
                 return true;
