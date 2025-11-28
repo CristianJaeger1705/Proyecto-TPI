@@ -1,6 +1,8 @@
+from itertools import count
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from perfiles.models import RUBROS_EMPRESA
 from postulaciones.permissions import puede_cancelar_postulacion, puede_postular_con_id
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
@@ -201,13 +203,34 @@ def obtener_datos_visualizacion(request, id):
     #####################################################################################
 
 def lista_ofertas_publicas(request):
-    ofertas = OfertaLaboral.objects.filter(estado='activa').order_by('-fecha_publicacion')
+    # Ofertas activas
+    ofertas = OfertaLaboral.objects.select_related('empresa').filter(
+        estado='activa'
+    ).order_by('-fecha_publicacion')
+
+    # Crear lista de categorías con conteo
+    categorias = []
+    for rubro_id, rubro_nombre in RUBROS_EMPRESA:
+        count = OfertaLaboral.objects.filter(
+            estado='activa',
+            empresa__rubro=rubro_id
+        ).count()
+        
+        # Solo incluir categorías que tienen ofertas
+        if count > 0:
+            categorias.append({
+                'id': rubro_id,
+                'nombre': rubro_nombre,
+                'total': count
+            })
 
     contexto = {
         'ofertas': ofertas,
+        'categorias': categorias,
         'total_ofertas': ofertas.count()
     }
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
+
 def ver_oferta_publica(request, oferta_id):
     # Obtener la oferta específica por ID
     oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
