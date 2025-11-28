@@ -25,7 +25,7 @@ from ofertas.views import lista_ofertas_publicas
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('', lista_ofertas_publicas, name='pagina_principal'), 
-    #path('', hola_mundo, name='hola_mundo'),  # La página de prueba será nuestra página principal por ahora
+    path('', lista_ofertas_publicas, name='pagina_principal'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
     path('ofertas/',include('ofertas.urls')),
