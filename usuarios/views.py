@@ -203,7 +203,7 @@ def editar_perfil_empresa(request):
 
 def exit(request):
     logout(request)
-    return redirect("hola_mundo")
+    return redirect('pagina_principal')
 
 Usuario = get_user_model()
 
@@ -325,7 +325,7 @@ def redirigir_según_rol(request):
     elif user.rol == "admin":
         return redirect("/admin/")
 
-    return redirect("hola_mundo")  # fallback
+    return redirect("pagina_principal")  # fallback
 
 def verificar_codigo(request):
     if request.method == "POST":
@@ -446,7 +446,7 @@ def agregar_experiencia(request):
     """Vista para agregar una nueva experiencia laboral"""
     if request.user.rol != 'candidato':
         messages.error(request, 'Solo los candidatos pueden agregar experiencias laborales.')
-        return redirect('hola_mundo')
+        return redirect('pagina_principal')
     
     try:
         perfil = request.user.perfil_candidato

@@ -22,7 +22,7 @@ from aplicaciones.views import hola_mundo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', hola_mundo, name='hola_mundo'), 
+    #path('', hola_mundo, name='hola_mundo'), 
     path('usuarios/', include('usuarios.urls', namespace='usuarios')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
