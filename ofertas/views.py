@@ -9,12 +9,10 @@ from django.contrib.auth.decorators import login_required
 from .decorators import empresa_o_admin_required
 # Create your views here.
 #Lista todos las vacantes disponibles
-@empresa_o_admin_required
+#@empresa_o_admin_required
 def ofertas_List(request):
-    # ❌ ANTES: Esto muestra TODAS las ofertas
-    # ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
-    
-    # ✅ AHORA: Filtrar solo las ofertas de la empresa logueada
+
+    # Filtrar solo las ofertas de la empresa logueada
     ofert = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).order_by('-fecha_publicacion')
     
     # Filtrar por ubicación (solo dentro de las ofertas de la empresa)
@@ -29,7 +27,7 @@ def ofertas_List(request):
     # Obtener la página actual
     ofertas = paginator.get_page(page_number)
     
-    # ✅ Obtener ubicaciones únicas SOLO de las ofertas de esta empresa
+    # Obtener ubicaciones únicas SOLO de las ofertas de esta empresa
     ubicaciones = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).values_list('ubicacion', flat=True).distinct()
 
     return render(request, 'ofertas/index.html', {'ofertas': ofertas, 'ubicaciones': ubicaciones})
@@ -97,7 +95,7 @@ def guardar_creacion_modal(request):
     # Guardar nueva oferta desde modal 
     if request.method == 'POST':
         try:
-            # ✅ PASAR EL REQUEST al formulario para que asigne automáticamente la empresa
+            # PASAR EL REQUEST al formulario para que asigne automáticamente la empresa
             formulario = Ofertasform(request.POST, request.FILES, request=request)
             
             if formulario.is_valid():
