@@ -13,14 +13,20 @@
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% if request.user.rol == 'candidato' %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_candidato' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% elif request.user.rol == 'empresa' %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_empresa' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% else %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
                 </li>
                 {% endif %}
 
