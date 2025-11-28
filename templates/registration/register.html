@@ -12,7 +12,7 @@
             <!-- Card con sombra -->
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form action="{% url 'register' %}" method="POST">
+                    <form class="login-form" action="{% url 'usuarios:register' %}" method="POST">
                         {% csrf_token %}
                         <div class="text-center">
                             <h2 class="mb-1">Registrar Cuenta</h2>
@@ -64,11 +64,11 @@
                             </div>  
                             <button type="submit" class="btn btn-primary me-md- text-aling-center">Registrarse</button>          
                         </div>
-                        <div class="text-center mt-3">
-                            <p class="mb-0">¿Ya tienes cuenta? 
-                                <a href="{% url 'login' %}" class="fw-bold text-dark text-decoration-none">
-                                    ¡Inicia sesión aquí!
-                                </a>
+                        <button type="submit" class="btn btn-primary me-md-">Registrarse</button>
+
+                        <div class="login-link">
+                            <p>¿Ya tienes cuenta?  
+                                <a href="{% url 'usuarios:login' %}" class="login-text">¡Inicia sesión aquí!</a>
                             </p>
                         </div>
                     </form>

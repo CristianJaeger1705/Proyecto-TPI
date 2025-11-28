@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }} - Laburo SV{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-briefcase"></i> {{ titulo }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="formExperiencia">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next_url }}">
+                        
+                        <div class="row">
+                            <!-- Título del Cargo -->
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.titulo_cargo.id_for_label }}" class="form-label">
+                                    {{ form.titulo_cargo.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.titulo_cargo }}
+                                {% if form.titulo_cargo.errors %}
+                                    <div class="text-danger small">{{ form.titulo_cargo.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Empresa -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.empresa.id_for_label }}" class="form-label">
+                                    {{ form.empresa.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.empresa }}
+                                {% if form.empresa.errors %}
+                                    <div class="text-danger small">{{ form.empresa.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Tipo de Empleo -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.tipo_empleo.id_for_label }}" class="form-label">
+                                    {{ form.tipo_empleo.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.tipo_empleo }}
+                                {% if form.tipo_empleo.errors %}
+                                    <div class="text-danger small">{{ form.tipo_empleo.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Sector/Industria -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.sector_industria.id_for_label }}" class="form-label">
+                                    {{ form.sector_industria.label }}
+                                </label>
+                                {{ form.sector_industria }}
+                                {% if form.sector_industria.errors %}
+                                    <div class="text-danger small">{{ form.sector_industria.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Ubicación -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.ubicacion.id_for_label }}" class="form-label">
+                                    {{ form.ubicacion.label }}
+                                </label>
+                                {{ form.ubicacion }}
+                                <small class="form-text text-muted">{{ form.ubicacion.help_text }}</small>
+                                {% if form.ubicacion.errors %}
+                                    <div class="text-danger small">{{ form.ubicacion.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Fecha Inicio -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label">
+                                    {{ form.fecha_inicio.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.fecha_inicio }}
+                                {% if form.fecha_inicio.errors %}
+                                    <div class="text-danger small">{{ form.fecha_inicio.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Fecha Fin -->
+                            <div class="col-md-6 mb-3" id="fechaFinContainer">
+                                <label for="{{ form.fecha_fin.id_for_label }}" class="form-label">
+                                    {{ form.fecha_fin.label }}
+                                </label>
+                                {{ form.fecha_fin }}
+                                <small class="form-text text-muted">{{ form.fecha_fin.help_text }}</small>
+                                {% if form.fecha_fin.errors %}
+                                    <div class="text-danger small">{{ form.fecha_fin.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Trabajo Actual -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-check">
+                                    {{ form.trabajo_actual }}
+                                    <label class="form-check-label" for="{{ form.trabajo_actual.id_for_label }}">
+                                        {{ form.trabajo_actual.label }}
+                                    </label>
+                                    <small class="form-text text-muted d-block">{{ form.trabajo_actual.help_text }}</small>
+                                </div>
+                                {% if form.trabajo_actual.errors %}
+                                    <div class="text-danger small">{{ form.trabajo_actual.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.descripcion.id_for_label }}" class="form-label">
+                                    {{ form.descripcion.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.descripcion }}
+                                <small class="form-text text-muted">{{ form.descripcion.help_text }}</small>
+                                {% if form.descripcion.errors %}
+                                    <div class="text-danger small">{{ form.descripcion.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ next_url }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> {{ accion }} Experiencia
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Manejar el checkbox de "Trabajo Actual"
+document.addEventListener('DOMContentLoaded', function() {
+    const trabajoActualCheckbox = document.getElementById('{{ form.trabajo_actual.id_for_label }}');
+    const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+    const fechaFinContainer = document.getElementById('fechaFinContainer');
+    
+    function toggleFechaFin() {
+        if (trabajoActualCheckbox.checked) {
+            fechaFinInput.value = '';
+            fechaFinInput.disabled = true;
+            fechaFinContainer.style.opacity = '0.5';
+        } else {
+            fechaFinInput.disabled = false;
+            fechaFinContainer.style.opacity = '1';
+        }
+    }
+    
+    trabajoActualCheckbox.addEventListener('change', toggleFechaFin);
+    toggleFechaFin(); // Ejecutar al cargar
+});
+</script>
+{% endblock %}
+

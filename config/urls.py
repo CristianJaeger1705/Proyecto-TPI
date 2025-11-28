@@ -16,15 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+#from django.conf import settings
+from django.conf.urls.static import static
 from aplicaciones.views import hola_mundo
+#from ofertas.views import obtener_datos_visualizacion
+from ofertas.views import lista_ofertas_publicas
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', hola_mundo, name='hola_mundo'),  # La página de prueba será nuestra página principal por ahora
+    #path('', lista_ofertas_publicas, name='pagina_principal'), 
+    path('', lista_ofertas_publicas, name='pagina_principal'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
     path('ofertas/',include('ofertas.urls')),
-    path('usuarios/',include('usuarios.urls')),
-    path('accounts/',include('django.contrib.auth.urls')),
+    path('usuarios/', include('usuarios.urls', namespace='usuarios')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path("postulaciones/", include("postulaciones.urls")),
 ]
+
+# Servir archivos media en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

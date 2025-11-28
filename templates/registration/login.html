@@ -25,16 +25,12 @@
                         <button type="submit" class="btn btn-primary mt-3">Iniciar Sesión</button>
 
                         <!-- Enlace para recuperación de contraseña -->
-                        <div class="text-center">
-                            <a href="{% url 'recuperar_contrasena' %}" class=" text-decoration-none">¿Olvidaste tu constraseña?</a>
-                        </div> 
-                        <!-- Enlace para crear cuenta -->   
-                       <div class="text-center mt-3">
-                            <p class="mb-0">¿No tienes cuenta? 
-                                <a href="{% url 'register' %}" class="fw-bold text-dark text-decoration-none">
-                                    ¡Creala aquí!
-                                </a>
-                            </p>
+                        <div class="signup-link">
+                            <p><a href="{% url 'usuarios:recuperar_contrasena' %}">¿Olvidaste tu contraseña?</a></p>
+                        </div>    
+
+                        <div class="signup-link">
+                            <p>¿No tienes cuenta? <a href="{% url 'usuarios:register' %}" class="signup-text">¡Crea una ahora aquí!</a></p>
                         </div>
                     </form>
                </div>

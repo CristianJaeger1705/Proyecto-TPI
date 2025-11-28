@@ -4,6 +4,5 @@ from .models import PerfilEmpresa
 
 # Register your models here.
 admin.site.register(OfertaLaboral)
-admin.site.register(PerfilEmpresa)
 
 # Register your models here.

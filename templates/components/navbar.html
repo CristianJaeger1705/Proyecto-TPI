@@ -1,26 +1,32 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'hola_mundo' %}">Bolsa de Trabajo</a>
+        <a class="navbar-brand" href="{% url 'pagina_principal' %}">Bolsa de Trabajo</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'hola_mundo' %}">Inicio</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'pagina_principal' %}">Inicio</a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% if request.user.rol == 'candidato' %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_candidato' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% elif request.user.rol == 'empresa' %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_empresa' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% else %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
                 </li>
                 {% endif %}
 
