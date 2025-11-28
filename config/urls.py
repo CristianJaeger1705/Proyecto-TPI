@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 from aplicaciones.views import hola_mundo
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
