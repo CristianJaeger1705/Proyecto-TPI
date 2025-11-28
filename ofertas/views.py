@@ -5,7 +5,7 @@ from postulaciones.permissions import puede_cancelar_postulacion, puede_postular
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+
 from .decorators import empresa_o_admin_required
 # Create your views here.
 #Lista todos las vacantes disponibles
@@ -13,7 +13,7 @@ from .decorators import empresa_o_admin_required
 def ofertas_List(request):
 
     # Filtrar solo las ofertas de la empresa logueada
-    ofert = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).order_by('-fecha_publicacion')
+    ofert = OfertaLaboral.objects.filter(empresa=request.user.perfil_empresa).order_by('-fecha_publicacion')
     
     # Filtrar por ubicación (solo dentro de las ofertas de la empresa)
     ubicacion = request.GET.get('ubicacion')
@@ -28,7 +28,7 @@ def ofertas_List(request):
     ofertas = paginator.get_page(page_number)
     
     # Obtener ubicaciones únicas SOLO de las ofertas de esta empresa
-    ubicaciones = OfertaLaboral.objects.filter(empresa=request.user.perfilempresa).values_list('ubicacion', flat=True).distinct()
+    ubicaciones = OfertaLaboral.objects.filter(empresa=request.user.perfil_empresa).values_list('ubicacion', flat=True).distinct()
 
     return render(request, 'ofertas/index.html', {'ofertas': ofertas, 'ubicaciones': ubicaciones})
 #funcion para eliminar un campo o registro
