@@ -88,6 +88,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 #Se modifico para enlazar a mi bd local
+# Detect Render environment
+RENDER = os.getenv("RENDER") == "true"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -99,7 +102,7 @@ DATABASES = {
     }
 }
 
-# Forzar base de datos de Render en producción
+# Force DATABASE_URL when running on Render
 if RENDER:
     import dj_database_url
     DATABASES['default'] = dj_database_url.config(
