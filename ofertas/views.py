@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import empresa_o_admin_required
 # Create your views here.
 #Lista todos las vacantes disponibles
-#@empresa_o_admin_required
+@empresa_o_admin_required
 def ofertas_List(request):
 
     # Filtrar solo las ofertas de la empresa logueada
