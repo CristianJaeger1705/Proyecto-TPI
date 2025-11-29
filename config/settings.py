@@ -162,7 +162,7 @@ LOGIN_URL = 'usuarios:login'
 LOGIN_REDIRECT_URL = 'usuarios:redirigir'
 LOGOUT_REDIRECT_URL = 'home'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -186,6 +186,8 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_EMAIL_VERIFICATION = "none" 
 ACCOUNT_LOGIN_METHODS = {"username"}
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
 
 
 SOCIALACCOUNT_PROVIDERS = {
