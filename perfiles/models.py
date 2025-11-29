@@ -10,6 +10,8 @@ class PerfilCandidato(models.Model):
     departamento = models.CharField(max_length=50, blank=True)
     cv_url = models.TextField(blank=True, null=True)
     disponibilidad = models.BooleanField(default=True)
+    completado = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"Perfil de {self.usuario.username}"
@@ -22,6 +24,8 @@ class PerfilEmpresa(models.Model):
     sitio_web = models.CharField(max_length=200, blank=True)
     contacto = models.CharField(max_length=100, blank=True)
     verificada = models.BooleanField(default=False)
+    completado = models.BooleanField(default=False)
+    logo = models.ImageField(upload_to='logos_empresas/', blank=True, null=True)
 
     def __str__(self):
         return self.nombre_empresa

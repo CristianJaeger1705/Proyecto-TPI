@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load mensajes_extras %}
+{% block title %}Dashboard Empresa{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-card {
+        border-radius: 12px;
+        background: white;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: transform .2s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .dashboard-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .btn-dashboard {
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+
+    .btn-dashboard i {
+        margin-right: 6px;
+    }
+
+    .logo-empresa {
+        max-height: 100px;
+        margin-right: 15px;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="dashboard-card">
+        <div class="dashboard-header d-flex align-items-center">
+            <!-- Mostrar logo si existe -->
+            {% if perfil.logo %}
+                <img src="{{ perfil.logo.url }}" alt="Logo de {{ perfil.nombre_empresa }}" class="logo-empresa">
+            {% endif %}
+            <div>
+                <h2 class="fw-bold">🏢 Bienvenido, {{ perfil.nombre_empresa }}</h2>
+                <p class="text-muted mb-0">Panel de administración empresarial</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <p><strong>🏷 Rubro:</strong> {{ perfil.rubro }}</p>
+                <p><strong>✉ Contacto:</strong> {{ perfil.contacto }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <p><strong>🌐 Sitio Web:</strong> 
+                    {% if perfil.sitio_web %}
+                        <a href="{{ perfil.sitio_web }}" target="_blank">{{ perfil.sitio_web }}</a>
+                    {% else %}
+                        <span class="text-muted">No especificado</span>
+                    {% endif %}
+                </p>
+                <p><strong>📝 Descripción:</strong> {{ perfil.descripcion }}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="mt-4">
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{% url 'ofertas:ofertas' %}" class="btn btn-success btn-dashboard">
+                    <i>➕</i> Crear Oferta
+                </a>
+                <a href="{% url 'ofertas:ofertas' %}" class="btn btn-primary btn-dashboard">
+                    <i>📂</i> Administrar Ofertas
+                </a>
+                <a href="{% url 'mensajeria:lista_conversaciones' %}" class="btn btn-warning btn-dashboard">
+                    <i>💬</i> Administrar Chat
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

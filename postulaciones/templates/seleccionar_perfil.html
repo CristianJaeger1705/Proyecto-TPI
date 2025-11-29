@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-4">Selecciona el perfil con el que deseas postularte</h2>
+
+    {% if perfiles %}
+        <form method="post" action="{% url 'postulaciones:postular' oferta.id %}">
+            {% csrf_token %}
+
+            <div class="list-group">
+                {% for perfil in perfiles %}
+                    <label class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Mi Perfil {{ forloop.counter }}</strong><br>
+                            <small class="text-muted">{{ perfil.nombre }} — {{ perfil.tipo|title }}</small>
+                        </div>
+
+                        <input 
+                            type="radio" 
+                            name="perfil_id"
+                            value="{{ perfil.id }}"
+                            required>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <button class="btn btn-primary mt-4" type="submit">
+                Continuar
+            </button>
+
+            <a href="{% url 'ofertas:detalle_oferta' oferta.id %}" class="btn btn-secondary mt-3">
+                Cancelar
+            </a>
+
+        </form>
+    {% else %}
+        <div class="alert alert-warning">
+            No tienes perfiles configurados. Debes crear uno antes de postularte.
+        </div>
+
+        <a href="{% url 'perfiles:perfil_candidato' %}" class="btn btn-success">Crear perfil</a>
+
+    {% endif %}
+
+</div>
+{% endblock %}

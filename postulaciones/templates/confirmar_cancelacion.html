@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-4 text-danger">Cancelar Postulación</h2>
+
+    <div class="alert alert-warning">
+        ¿Estás seguro de que deseas cancelar tu postulación a:
+        <strong>{{ oferta.titulo }}</strong>?
+    </div>
+
+    <a href="{% url 'cancelar_postulacion' oferta.id %}" class="btn btn-danger">
+        Sí, cancelar
+    </a>
+    <a href="{% url 'redirigir' %}" class="btn btn-secondary">
+        Volver
+    </a>
+
+</div>
+{% endblock %}

@@ -1,45 +1,64 @@
 {% extends 'base.html' %}
 
-{% block title %}Hola Mundo - Prueba Bootstrap{% endblock %}
-
-{% block meta_description %}Página de prueba para verificar Bootstrap{% endblock %}
+{% block title %}LABURO - Tu Portal de Empleo Moderno{% endblock %}
+{% block meta_description %}Encuentra tu próximo empleo o candidato ideal en LABURO{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-8 mx-auto text-center">
-            <!-- Card con sombra -->
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h1 class="display-4 mb-4">¡Hola Mundo!</h1>
-                    <p class="lead text-muted">Esta es una página de prueba para verificar que Bootstrap está funcionando correctamente.</p>
-                    
-                    <!-- Botones de prueba -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                        <button class="btn btn-primary me-md-2">Botón Principal</button>
-                        <button class="btn btn-outline-secondary">Botón Secundario</button>
-                    </div>
+<!-- Hero Section -->
+<section class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-3 fw-bold">Bienvenido a LABURO</h1>
+        <p class="lead mb-4">Conectamos talento con empresas modernas de manera rápida y confiable.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'usuarios:login' %}" class="btn btn-light btn-lg">Iniciar Sesión</a>
+        {% endif %}
+    </div>
+</section>
 
-                    <!-- Alertas de prueba -->
-                    <div class="alert alert-success mt-4" role="alert">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        ¡Bootstrap está funcionando correctamente!
-                    </div>
-
-                    <!-- Progress bar de prueba -->
-                    <div class="progress mt-4" style="height: 25px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                             role="progressbar" 
-                             style="width: 75%;" 
-                             aria-valuenow="75" 
-                             aria-valuemin="0" 
-                             aria-valuemax="100">
-                            75%
-                        </div>
-                    </div>
-                </div>
+<!-- Información sobre LABURO -->
+<section id="info" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Sobre LABURO</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-people-fill display-3 text-primary"></i>
+                <h4 class="mt-3">Talento a tu alcance</h4>
+                <p>Conectamos candidatos con empresas que buscan su perfil ideal de forma rápida y efectiva.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-building display-3 text-primary"></i>
+                <h4 class="mt-3">Empresas modernas</h4>
+                <p>Ofrecemos a las empresas una plataforma intuitiva para publicar ofertas y encontrar talento calificado.</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-lightning-charge-fill display-3 text-primary"></i>
+                <h4 class="mt-3">Rápido y seguro</h4>
+                <p>Todo el proceso es seguro, ágil y confiable, desde el registro hasta la contratación final.</p>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Ofertas destacadas -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Ofertas Recientes</h2>
+        <div class="row">
+            {% for oferta in ofertas_recientes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ oferta.titulo }}</h5>
+                        <p class="card-text">{{ oferta.descripcion|truncatewords:20 }}</p>
+                        <a href="{% url 'ofertas:detalle_oferta' oferta.id %}" class="btn btn-primary">Ver Oferta</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No hay ofertas disponibles por el momento.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
 {% endblock %}

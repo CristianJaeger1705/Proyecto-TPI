@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Verificar Registro{% endblock %}
+
+{% block meta_description %}Página de verificar código de registro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto text-center">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'usuarios:verificar_codigo' %}">
+                        {% csrf_token %}
+                        <h1 class="display-4 mb-4">Verificar Cuenta</h1>
+                        <div class="form-group">
+                            <input type="text" name="codigo" placeholder="Código" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-md-2">Verificar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

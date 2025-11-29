@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Recuperar Contraseña{% endblock %}
+
+{% block meta_description %}Página de recuperar contraseña{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto text-center">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h1 class="display-4 mb-4">Recuperar Contraseña</h1>
+                    <form method="POST" action="{% url 'usuarios:recuperar_contrasena' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="username" placeholder="Usuario" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary me-md-2">Enviar Código</button>
+                    </form>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

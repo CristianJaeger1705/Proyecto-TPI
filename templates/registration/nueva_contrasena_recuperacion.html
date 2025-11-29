@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva Contraseña{% endblock %}
+
+{% block meta_description %}Página para poner otra contraseña{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto text-center">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h1 class="display-4 mb-4">Nueva Contraseña</h1>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="password" name="contrasena" placeholder="Nueva contraseña" required style="width:100%;padding:8px;margin-bottom:10px;">
+                            <input type="password" name="confirmar_contrasena" placeholder="Confirmar contraseña" required style="width:100%;padding:8px;margin-bottom:10px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary me-md-2">
+                            Cambiar contraseña
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

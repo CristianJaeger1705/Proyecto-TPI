@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-4">Actualizar estado de postulación</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Candidato:</label>
+                    <input type="text" class="form-control" value="{{ postulacion.candidato.usuario.username }}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Oferta:</label>
+                    <input type="text" class="form-control" value="{{ postulacion.oferta.titulo }}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Estado:</label>
+                    <select class="form-control" name="estado">
+                        <option value="aceptado">Aceptar</option>
+                        <option value="rechazado">Rechazar</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success mt-3" type="submit">Actualizar</button>
+                <a href="{% url 'redirigir' %}" class="btn btn-secondary mt-3">Cancelar</a>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

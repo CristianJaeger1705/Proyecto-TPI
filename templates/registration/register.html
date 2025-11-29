@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar - LaburoSV{% endblock %}
+
+{% block meta_description %}Página para registrarse en la bolsa de trabajo LaburoSV{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-5 mx-auto text-center">
+            <!-- Card con sombra -->
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form class="login-form" action="{% url 'usuarios:register' %}" method="POST">
+                        {% csrf_token %}
+                        <h2 class="h3 mb-3">Registrar Cuenta</h2>
+
+                        <!-- Selección de Rol -->
+                        <div class="form-group">
+                            <select name="rol" id="rol" required>
+                                <option value="" disabled {% if not rol %}selected{% endif %}>Selecciona tu rol</option>
+                                <option value="candidato" {% if rol == 'candidato' %}selected{% endif %}>Candidato</option>
+                                <option value="empresa" {% if rol == 'empresa' %}selected{% endif %}>Empresa</option>
+                            </select>
+                        </div>
+
+                        <!-- CAMPOS PARA CANDIDATO -->
+                        <div id="candidatoFields" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-2">
+                                        <div class="input-group">
+                                            <span class="input-group-text custom-icon-prepend">
+                                                <i class="bi bi-person-fill"></i> 
+                                            </span>
+                                            <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{ nombre|default:'' }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-2">
+                                        <div class="input-group">
+                                            <input type="text" name="apellidos" class="form-control" placeholder="Apellidos" value="{{ apellidos|default:'' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CAMPOS PARA EMPRESA -->
+                        <div id="empresaFields" style="display: none;">
+                            <div class="form-group mb-2">
+                                <div class="input-group">
+                                    <span class="input-group-text custom-icon-prepend">
+                                        <i class="bi bi-building-fill"></i> 
+                                    </span>
+                                    <input type="text" name="nombre_empresa" class="form-control" placeholder="Nombre de la Empresa" value="{{ nombre_empresa|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CAMPOS COMUNES -->
+                        <div id="comunes" style="display:none;">
+                            <div class="form-group">
+                                <input type="text" name="usuario" placeholder="Usuario" value="{{ username|default:'' }}">
+                            </div>
+
+                            <div class="form-group">
+                                <i class="fas fa-envelope icon"></i>
+                                <input type="email" name="email" placeholder="Correo Electrónico" value="{{ email|default:'' }}">
+                            </div>
+
+                            <div class="form-group">
+                                <i class="fas fa-lock icon"></i>
+                                <input type="password" name="contrasena" id="password" placeholder="Contraseña">
+                            </div>
+                            <div class="form-group">
+                                <i class="fas fa-lock icon"></i>
+                                <input type="password" name="confirmar_contrasena" placeholder="Confirmar contraseña" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary me-md-">Registrarse</button>
+
+                        <div class="login-link">
+                            <p>¿Ya tienes cuenta?  
+                                <a href="{% url 'usuarios:login' %}" class="login-text">¡Inicia sesión aquí!</a>
+                            </p>
+                        </div>
+                    </form>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const rolSelect = document.getElementById("rol");
+const candidatoFields = document.getElementById("candidatoFields");
+const empresaFields = document.getElementById("empresaFields");
+const comunes = document.getElementById("comunes");
+
+function mostrarCampos() {
+    const rol = rolSelect.value;
+    if (!rol) return;
+
+    comunes.style.display = "block";
+
+    if (rol === "candidato") {
+        candidatoFields.style.display = "block";
+        empresaFields.style.display = "none";
+    } else if (rol === "empresa") {
+        candidatoFields.style.display = "none";
+        empresaFields.style.display = "block";
+    }
+}
+
+// Ejecutar al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarCampos);
+
+// Ejecutar también al cambiar el select
+rolSelect.addEventListener("change", mostrarCampos);
+</script>
+
+{% endblock %}

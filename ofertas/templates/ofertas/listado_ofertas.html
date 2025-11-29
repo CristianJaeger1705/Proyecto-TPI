@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Listado de Ofertas{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-5 text-center">Ofertas Laborales</h1>
+
+    <div class="row g-4">
+        {% for oferta in ofertas %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                
+                <!-- Logo de la empresa -->
+                {% if oferta.empresa.logo %}
+                <img src="{{ oferta.empresa.logo.url }}" class="card-img-top" alt="{{ oferta.empresa.nombre_empresa }}">
+                {% else %}
+                <img src="{% static 'img/default_logo.png' %}" class="card-img-top" alt="Logo por defecto">
+                {% endif %}
+                
+                <div class="card-body d-flex flex-column">
+    <!-- Nombre de la oferta -->
+    <h5 class="card-title">{{ oferta.titulo }}</h5>
+
+    <!-- Nombre de la empresa -->
+    <p class="card-subtitle text-muted mb-2">{{ oferta.empresa.nombre_empresa }}</p>
+
+    <!-- Ubicación -->
+    <p class="mb-2"><i class="bi bi-geo-alt-fill me-2"></i>{{ oferta.ubicacion }}</p>
+
+    <!-- Botón del chat si existe un grupo -->
+    {% if user.is_authenticated and user.rol == 'candidato' %}
+        {% for grupo in oferta.empresa.grupoconversacion_set.all %}
+            {% if user in grupo.postulantes.all %}
+                <a href="{% url 'mensajeria:chat_grupo' grupo.id %}" class="btn btn-success mb-2">
+                    Ir al chat con {{ grupo.nombre }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- Breve descripción -->
+    <p class="card-text text-truncate" style="max-height: 60px;">
+        {{ oferta.descripcion }}
+    </p>
+
+    <!-- Botón ver detalles -->
+    <a href="{% url 'ofertas:detalle_oferta' oferta.id %}" class="btn btn-primary mt-auto">
+        Ver Detalles
+    </a>
+</div>
+
+
+                <div class="card-footer text-muted small">
+                    Publicada el {{ oferta.fecha_publicacion|date:"d M Y" }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No hay ofertas disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación si la hay -->
+    {% if ofertas.has_other_pages %}
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center mt-4">
+            {% if ofertas.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ofertas.previous_page_number }}" aria-label="Anterior">&laquo;</a>
+            </li>
+            {% endif %}
+            {% for num in ofertas.paginator.page_range %}
+            <li class="page-item {% if ofertas.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if ofertas.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ ofertas.next_page_number }}" aria-label="Siguiente">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

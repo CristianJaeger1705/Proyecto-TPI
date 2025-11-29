@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'postulaciones',
     'mensajeria',
     'adminpanel',
-    'core'
-    #'aplicaciones',
+    'core',
+    'aplicaciones',
+    'channels_postgres',
+   
 ]
 
 MIDDLEWARE = [
@@ -74,15 +76,26 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_postgres.core.PostgresChannelLayer",
+        "CONFIG": {
+            "database": "default",
+            "capacity": 1500,
+            "expiry": 60,
+        },
+    },
+}
+
 
 # Database
 DATABASES = {
-    'default': {
+   'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  'ProyectoTPI',
+        'NAME': 'ProyectoTPI',
         'USER': 'postgres',
-        'PASSWORD': 'admin',   
+        'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
 
@@ -113,20 +126,23 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model (si lo van a usar)
 AUTH_USER_MODEL = 'usuarios.Usuario'
+
+MIDDLEWARE.append('usuarios.middleware.UltimaConexionMiddleware')
 
 # Messages tags para Bootstrap
 from django.contrib.messages import constants as messages
@@ -138,7 +154,14 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Login/Logout URLs
 LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'usuarios:redirigir_segun_rol'
+LOGOUT_REDIRECT_URL = 'hola_mundo'
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+

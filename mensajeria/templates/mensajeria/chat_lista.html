@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'mensajeria/panel_mensajeria.css' %}">
+
+
+{% if request.user.rol == "empresa" %}
+
+<!-- ========== TABS SUPERIORES ========== -->
+<div class="tabs-container">
+    <div class="tab-btn active" data-target="tab-conversaciones">
+        <span class="tab-icon">💬</span>
+        Conversaciones
+    </div>
+
+    <div class="tab-btn" data-target="tab-grupos">
+        <span class="tab-icon">👥</span>
+        Mis grupos
+    </div>
+
+    <div class="tab-btn" data-target="tab-notificaciones">
+        <span class="tab-icon">🔔</span>
+        Notificaciones
+    </div>
+</div>
+
+
+
+<!-- =========================================
+        TAB 1 – CONVERSACIONES
+========================================= -->
+<div id="tab-conversaciones" class="tab-section active">
+
+    <h3 class="section-title">📨 Conversaciones con postulantes</h3>
+
+    {% if conversaciones %}
+        {% for conv in conversaciones %}
+            {% for u in conv.participantes.all %}
+                {% if u != user %}
+                    <div class="list-card item-row">
+                        <strong>💬 {{ u.username }}</strong>
+                        <a href="{% url 'mensajeria:chat_con_usuario' u.username %}"
+                           class="btn btn-primary btn-small">Abrir</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No tienes conversaciones aún.</p>
+    {% endif %}
+
+    <hr>
+
+    <h4 class="mb-3">Iniciar conversación</h4>
+
+    {% for user in usuarios %}
+        <div class="list-card item-row">
+            <span>👤 {{ user.username }}</span>
+            <a href="{% url 'mensajeria:chat_con_usuario' user.username %}"
+               class="btn btn-success btn-small">Iniciar chat</a>
+        </div>
+    {% empty %}
+        <p class="text-muted">No hay usuarios disponibles.</p>
+    {% endfor %}
+</div>
+
+
+
+<!-- =========================================
+        TAB 2 – GRUPOS
+========================================= -->
+<div id="tab-grupos" class="tab-section">
+
+    <h3 class="section-title">👥 Mis grupos de chat</h3>
+
+    <div class="create-group-btn" onclick="document.getElementById('crear-grupo-form').style.display='block';">
+        ➕ Crear nuevo grupo
+    </div>
+
+    <form id="crear-grupo-form" method="POST" action="{% url 'mensajeria:crear_grupo' %}"
+          style="display:none; margin-bottom:20px;">
+        {% csrf_token %}
+        <input name="nombre" class="form-control mb-2" placeholder="Nombre del grupo" required>
+        <button class="btn btn-success">Crear</button>
+    </form>
+
+    {% for grupo in grupos %}
+        <div class="list-card item-row">
+            <div>
+                <strong>👥 {{ grupo.nombre }}</strong><br>
+                {% if grupo.oferta %}
+                <small class="text-muted">{{ grupo.oferta.titulo }}</small>
+                {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'mensajeria:chat_grupo' grupo.id %}"
+                   class="btn btn-primary btn-small">Abrir</a>
+
+                <form method="POST" action="{% url 'mensajeria:eliminar_grupo' grupo.id %}"
+                      onsubmit="return confirm('¿Eliminar grupo?');">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-small">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No hay grupos creados.</p>
+    {% endfor %}
+</div>
+
+
+
+<!-- =========================================
+        TAB 3 – NOTIFICACIONES
+========================================= -->
+<div id="tab-notificaciones" class="tab-section">
+
+    <h3 class="section-title">🔔 Notificaciones</h3>
+
+    <table class="table table-sm table-bordered table-notif" id="tabla-notificaciones">
+        <thead class="table-dark">
+        <tr>
+            <th>Tipo</th>
+            <th>Mensaje</th>
+            <th>Fecha</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- ========== SCRIPT DE TABS + NOTIFICACIONES ========== -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".tab-btn");
+    const sections = document.querySelectorAll(".tab-section");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+            const target = this.dataset.target;
+
+            // Quitar active de tabs
+            tabs.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            // Quitar active de todas las secciones
+            sections.forEach(sec => sec.classList.remove("active"));
+
+            // Activar la que corresponde
+            document.getElementById(target).classList.add("active");
+        });
+    });
+});
+</script>
+
+
+
+
+{% else %}
+<div class="alert alert-danger mt-5 text-center">
+    🚫 No tienes permiso para acceder.
+</div>
+{% endif %}
+
+{% endblock %}

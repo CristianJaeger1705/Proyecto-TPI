@@ -1,0 +1,96 @@
+/* ======================= TABS SUPERIORES ======================= */
+
+.tabs-container {
+    display: flex;
+    background: #111;
+    padding: 10px 0;
+    justify-content: space-around;
+    color: white;
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+.tab-btn.active {
+    opacity: 1;
+    font-weight: bold;
+    border-bottom: 3px solid #00e676; /* verde WhatsApp */
+}
+
+.tab-icon {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* ======================= SECCIONES ======================= */
+
+.tab-section {
+    display: none;
+    padding: 20px;
+}
+
+.tab-section.active {
+    display: block;
+}
+
+/* ================= LISTAS / TARJETAS =================== */
+
+.list-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+}
+
+.list-card:hover {
+    background: #f9f9f9;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Botones con estilo WhatsApp empresarial */
+.btn-small {
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+
+/* ================= Crear Grupo ================= */
+
+.create-group-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #128c7e;
+    color: white;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-group-btn:hover {
+    background: #0f7668;
+}
+
+/* ==================== Tabla de notificaciones ==================== */
+
+.table-notif {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

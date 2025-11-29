@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil Empresa{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="col-md-7 mx-auto form-modern">
+        <h2 class="mb-4">Completa tu Perfil de Empresa</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Logo actual -->
+            {% if perfil.logo %}
+                <div class="mb-3 text-center">
+                    <img src="{{ perfil.logo.url }}" alt="Logo de {{ perfil.nombre_empresa }}" 
+                         style="max-height: 120px; border-radius: 12px;">
+                </div>
+            {% endif %}
+
+            <!-- Formulario automático con estilos aplicados -->
+            {{ form.as_p }}
+
+            <button type="submit" class="btn-modern mt-3">Guardar Perfil</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
