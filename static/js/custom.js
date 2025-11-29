@@ -1,4 +1,3 @@
-// Custom JS for Proyecto-TPI
 document.addEventListener('DOMContentLoaded', function () {
   try {
     // Inicializar tooltips
@@ -7,10 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
       new bootstrap.Tooltip(el); 
     });
   } catch (e) {}
-});
-
-
-
 
   // -------------------------------
   // Inicializar mensajes tipo Toast
@@ -25,4 +20,4 @@ document.addEventListener('DOMContentLoaded', function () {
       toast.show();
     });
   } catch (e) {}
-
+});

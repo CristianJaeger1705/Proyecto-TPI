@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mensajeria/chat.css' %}">
+<style>
+/* Ajuste cuando NO hay sidebar (candidato) */
+.no-sidebar .chat-panel {
+    width: 100% !important;
+}
+
+/* Ajuste normal con sidebar */
+.chat-container {
+    display: flex;
+    height: 80vh;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="chat-container {% if request.user.rol != 'empresa' %}no-sidebar{% endif %}">
+
+    <!-- ================= SIDEBAR SOLO PARA EMPRESAS ================= -->
+    {% if request.user.rol == "empresa" %}
+    <div class="sidebar">
+
+        <div class="user-profile p-3 mb-3 text-center">
+            <h5 class="mb-0">{{ request.user.username }}</h5>
+            <small class="text-success">En línea</small>
+        </div>
+
+        <h4 class="sidebar-title">💬 Conversaciones</h4>
+
+        {% for conv in conversaciones %}
+            {% for participante in conv.participantes.all %}
+                {% if participante != request.user %}
+                    <a href="{% url 'mensajeria:chat_con_usuario' participante.username %}"
+                       class="conversation-item {% if otro_usuario and otro_usuario.id == participante.id %}active{% endif %}">
+                        {{ participante.username }}
+                        {% if participante.is_online %}
+                            <span class="text-success"> ●</span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        {% empty %}
+            <p class="text-muted">No tienes conversaciones.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- ============ FIN DEL SIDEBAR SOLO PARA EMPRESA ============ -->
+
+    <!-- PANEL DEL CHAT (AMBOS ROLES LO VEN) -->
+    <div class="chat-panel">
+        <div class="chat-header">
+            <span>
+                {% if otro_usuario %}
+                    {{ otro_usuario.username }}
+                {% else %}
+                    —
+                {% endif %}
+            </span>
+
+            {% if otro_usuario and otro_usuario.is_online %}
+                <span class="user-status">En línea</span>
+            {% else %}
+                <span class="user-status text-muted">Desconectado</span>
+            {% endif %}
+        </div>
+
+        <div id="chat-box"></div>
+
+        <form id="form-mensaje" class="chat-input">
+            <input type="text" id="texto" placeholder="Escribe un mensaje..."
+                   autocomplete="off" required>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+window.CHAT_TIPO = "privado";
+window.CONVO_ID = {% if conversacion %}{{ conversacion.id }}{% else %}null{% endif %};
+window.USUARIO_ACTUAL = "{{ request.user.username|escapejs }}";
+</script>
+
+<script src="{% static 'mensajeria/chat.js' %}"></script>
+
+{% endblock %}

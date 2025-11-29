@@ -1,12 +1,117 @@
 /* Custom styles for Proyecto-TPI */
-:root{
+:root {
   --brand-color: #0d6efd;
   --bg-soft: #f8f9fa;
 }
 
 html, body { height: 100%; }
-body{
+
+body {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background-color: var(--bg-soft);
   color: #222;
 }
+
+.main-content {
+  padding: 2.5rem 1rem;
+  min-height: calc(100vh - 220px);
+}
+
+.site-brand {
+  color: var(--brand-color);
+  font-weight: 700;
+}
+
+.muted-small {
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+/* Toasts */
+.toast {
+  min-width: 320px !important;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.20);
+  font-size: 18px;
+}
+.toast-success { background-color: #28a745 !important; }
+.toast-error, .toast-danger { background-color: #dc3545 !important; }
+.toast-warning { background-color: #ffc107 !important; color: #000 !important; }
+.toast-info { background-color: #0dcaf0 !important; }
+.toast-body { font-weight: 500; }
+
+/* Form styles */
+.form-group {
+  position: relative;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 10px 14px 14px 45px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #000;
+  outline: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: #000;
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder {
+  color: #666;
+}
+
+/* Links */
+.signup-link, .login-link {
+  text-align: center;
+  margin-top: 25px;
+}
+.signup-link p, .login-link p { font-size: 14px; color: #000; }
+.signup-text, .login-text {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.signup-text:hover, .login-text:hover {
+  color: #444;
+  transform: scale(1.1);
+}
+
+/* Password Toggle Icon */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid #000;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+.toggle-password::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid #000;
+  background-

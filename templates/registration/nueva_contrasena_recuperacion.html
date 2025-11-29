@@ -2,7 +2,7 @@
 
 {% block title %}Nueva Contraseña{% endblock %}
 
-{% block meta_description %}Página para poner otra contraseña{% endblock %}
+{% block meta_description %}Página para actualizar la contraseña{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -10,17 +10,18 @@
         <div class="col-md-4 mx-auto text-center">
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form method="POST">
+                    <h2 class="mb-4">Ingrese su nueva contraseña</h2>
+                    <form method="POST" action="">
                         {% csrf_token %}
-                        <h2 class="mb-4">Ingrese su nueva contraseña</h2>
-                        <div class="input-group mb-2">
-                            <span class="input-group-text">#</i></span>
-                            <input type="password" name="contrasena" placeholder="Ingrese Nueva contraseña" required class="form-control">
-                        </div>                        <div class="input-group mb-4">
-                            <span class="input-group-text">#</i></span>
-                            <input type="password" name="confirmar_contrasena" placeholder="Repita Nueva contraseña" required class="form-control">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <input type="password" name="contrasena" placeholder="Nueva contraseña" required class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-primary mb-2">Cambiar contraseña</button>
+                        <div class="input-group mb-4">
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <input type="password" name="confirmar_contrasena" placeholder="Confirmar contraseña" required class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Cambiar contraseña</button>
                     </form>
                 </div>
             </div>
@@ -28,4 +29,3 @@
     </div>
 </div>
 {% endblock %}
-

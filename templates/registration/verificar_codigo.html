@@ -1,30 +1,29 @@
 {% extends 'base.html' %}
 
 {% block title %}Verificar Registro{% endblock %}
-
-{% block meta_description %}Página de verificar{% endblock %}
-
+{% block meta_description %}Página para verificar el código enviado al correo durante el registro{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row">
-        <div class="col-md-8 mx-auto text-center">
-            <!-- Card con sombra -->
+        <div class="col-md-6 mx-auto text-center">
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form method="POST">
+                    <h2 class="mb-3">Verificar Cuenta</h2>
+                    <p class="text-muted mb-4">Hemos enviado un código de verificación (OTP) al correo electrónico para confirmar su identidad.</p>
+
+                    <form method="POST" action="{% url 'usuarios:verificar_codigo' %}">
                         {% csrf_token %}
-                        <h2 class="mb-1">Verificar Codigo</h2>
-                        <p class="text-muted mb-4">Hemos enviado un código de verificación (OTP) al correo electrónico para verificar su identidad.</p>
-                        <div class="input-group mb-4">
-                            <span class="input-group-text">#</i></span>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
                             <input type="text" name="codigo" placeholder="Ingresa el código" required class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-primary mb-2">Verificar Código</button>
+
+                        <button type="submit" class="btn btn-primary w-100">Verificar Código</button>
                     </form>
-                  </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
- {% endblock %}
+{% endblock %}

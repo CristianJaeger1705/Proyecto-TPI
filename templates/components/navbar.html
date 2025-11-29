@@ -1,36 +1,91 @@
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'pagina_principal' %}">Bolsa de Trabajo</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{% url 'hola_mundo' %}">LABURO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+
+            <!-- Menú izquierdo -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'pagina_principal' %}">Inicio</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'hola_mundo' %}active{% endif %}" 
+                       href="{% url 'hola_mundo' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#info">Más Información</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ofertas:listado_ofertas' %}">Ofertas Laborales</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ms-auto">
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    {% if request.user.rol == 'candidato' %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_candidato' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
-                    {% elif request.user.rol == 'empresa' %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_empresa' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
-                    {% else %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+
+            <!-- Menú derecho: login / logout + dropdown -->
+            <div class="d-flex align-items-center gap-2">
+
+                {% if user.is_authenticated %}
+                    <span class="text-white me-3">Hola, {{ user.username }}</span>
+
+                    {% if user.rol == 'candidato' %}
+                        <!-- Dropdown moderno para candidatos -->
+                        <div class="dropdown">
+                            <button class="btn btn-modern d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-whatsapp me-1"></i> Mis postulaciones
+                            </button>
+                            <ul class="dropdown-menu p-3" style="min-width: 320px; max-height: 400px; overflow-y: auto;">
+                                {% if user.grupos_postulantes.count %}
+                                    <li class="dropdown-header fw-bold">Grupos de empresa</li>
+                                    {% for grupo in user.grupos_postulantes.all %}
+                                        <li class="mb-1">
+                                            <a class="dropdown-item d-flex justify-content-between align-items-center" 
+                                               href="{% url 'mensajeria:chat_grupo' grupo.id %}">
+                                                <span><i class="bi bi-people-fill me-2"></i>{{ grupo.nombre }}</span>
+                                                <span class="badge bg-primary rounded-pill">{{ grupo.mensajes_no_leidos|default:0 }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+
+                                {% if user.postulaciones.count %}
+                                    <li class="dropdown-header fw-bold">Empresas con postulaciones</li>
+                                    {% for postulacion in user.postulaciones.all %}
+                                        {% with empresa=postulacion.oferta.empresa %}
+                                            <li class="mb-1">
+                                                <a class="dropdown-item d-flex justify-content-between align-items-center" 
+                                                   href="{% url 'mensajeria:chat_con_usuario' empresa.username %}">
+                                                    <span><i class="bi bi-building me-2"></i>{{ empresa.nombre_empresa }}</span>
+                                                    <span class="badge bg-success rounded-pill">{{ postulacion.mensajes_no_leidos|default:0 }}</span>
+                                                </a>
+                                            </li>
+                                        {% endwith %}
+                                    {% endfor %}
+                                    <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+
+                                {% if user.grupos_postulantes.count == 0 and not user.postulaciones.count %}
+                                    <li><span class="dropdown-item text-muted">No tienes chats disponibles</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    {% elif user.rol == 'empresa' %}
+                        <!-- Botón para empresas -->
+                        <a href="{% url 'mensajeria:lista_conversaciones' %}" class="btn btn-modern d-flex align-items-center gap-2">
+                            <i class="bi bi-chat-dots me-1"></i> Administrar mensajería
+                        </a>
                     {% endif %}
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
-                </li>
+
+                    <a href="{% url 'usuarios:logout' %}" class="btn btn-danger btn-lg">Cerrar Sesión</a>
+
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
-                </li>
+                    <a href="{% url 'usuarios:login' %}" class="btn btn-light btn-lg">Iniciar Sesión</a>
                 {% endif %}
 
-            </ul>
+            </div>
         </div>
     </div>
 </nav>

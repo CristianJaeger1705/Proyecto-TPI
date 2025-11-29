@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mt-3">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mt-4 shadow">
+        <div class="card-body text-center">
+            <h3 class="mb-3">Operación realizada</h3>
+            <p>La acción solicitada se ejecutó con éxito.</p>
+
+            <a href="{% url 'redirigir' %}" class="btn btn-primary mt-3">
+                Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

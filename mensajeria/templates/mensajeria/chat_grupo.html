@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mensajeria/chat.css' %}">
+<style>
+/* Estilos para el modal de miembros */
+.modal-body .miembro {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin-bottom: 8px;
+}
+.modal-body .miembro img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+}
+.badge-role {
+    font-size: 0.75rem;
+    margin-left: 5px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-3">
+    👥 Grupo: {{ grupo.nombre }}
+    <span class="badge bg-secondary" data-bs-toggle="modal" data-bs-target="#modalMiembros">
+        Ver miembros ({{ miembros.count }} personas)
+    </span>
+</h3>
+
+<!-- Modal de miembros -->
+<div class="modal fade" id="modalMiembros" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Miembros del grupo ({{ miembros.count }} personas)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- EMPRESA -->
+        <div class="miembro bg-light">
+            {% if grupo.empresa.avatar %}
+                <img src="{{ grupo.empresa.avatar.url }}" alt="Avatar">
+            {% else %}
+                <img src="{% static 'default-avatar.png' %}" alt="Avatar">
+            {% endif %}
+            <div>
+                <strong>{{ grupo.empresa.username }}</strong>
+                <span class="badge bg-primary badge-role">Empresa</span><br>
+                {% if grupo.empresa.esta_en_linea %}
+                    <span class="text-success">● En línea</span>
+                {% else %}
+                    <span class="text-muted">Última conexión: {{ grupo.empresa.last_seen|timesince }} atrás</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- POSTULANTES -->
+        {% for m in miembros %}
+        <div class="miembro">
+            {% if m.avatar %}
+                <img src="{{ m.avatar.url }}" alt="Avatar">
+            {% else %}
+                <img src="{% static 'default-avatar.png' %}" alt="Avatar">
+            {% endif %}
+            <div>
+                <strong>{{ m.username }}</strong>
+                <span class="badge bg-success badge-role">{{ m.rol|capfirst }}</span><br>
+                {% if m.esta_en_linea %}
+                    <span class="text-success">● En línea</span>
+                {% else %}
+                    <span class="text-muted">Última conexión: {{ m.last_seen|timesince }} atrás</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Chat -->
+<div id="chat-box" class="border p-3 mb-3"
+     style="height:450px; overflow-y:auto; background:#f8f9fa;">
+    <p class="text-muted">Cargando mensajes...</p>
+</div>
+
+<form id="form-mensaje" class="input-group">
+    <input type="text" id="texto" class="form-control" placeholder="Escribe un mensaje..." autocomplete="off" required>
+    <button class="btn btn-primary">Enviar</button>
+</form>
+
+<script>
+// Variables para chat.js
+window.CHAT_TIPO = "grupo";
+window.GRUPO_ID = {{ grupo.id }};
+window.USUARIO_ACTUAL = "{{ request.user.username|escapejs }}";
+</script>
+
+<script src="{% static 'mensajeria/chat.js' %}"></script>
+
+{% endblock %}

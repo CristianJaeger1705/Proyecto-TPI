@@ -1,26 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %} Lista de Ofertas {% endblock %}
+{% block title %}Lista de Ofertas{% endblock %}
 
 {% block content %}
 
-    <!-- Mensajes de Django (se convertirán a SweetAlert) -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+<!-- Mensajes Django -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
 
 <div class="card mx-3">
     <div class="card-header d-flex justify-content-between align-items-center">
+
+        <!-- SOLO EMPRESAS PUEDEN VER ESTE BOTÓN -->
+        {% if es_empresa %}
         <button type="button" class="btn btn-success" onclick="abrirModalCreacion()">
             <i class="bi bi-plus-circle"></i> Nueva Oferta
         </button>
-        
-        <!-- Filtro dinámico con ubicaciones de la BD -->
+        {% endif %}
+
+        <!-- Filtro dinámico con ubicaciones -->
         <div class="col-md-3">
             <form method="get" class="d-flex">
                 <select name="ubicacion" class="form-select me-2" onchange="this.form.submit()">
@@ -33,7 +37,7 @@
                     {% endfor %}
                 </select>
                 {% if request.GET.ubicacion %}
-                    <a href="?" class="btn btn-outline-secondary">x</a>
+                    <a href="?" class="btn btn-outline-secondary">×</a>
                 {% endif %}
             </form>
         </div>
@@ -41,7 +45,7 @@
 
     <div class="card-body">
         <h4 class="card-title">LISTA DE OFERTAS</h4>
-        
+
         <!-- Información de paginación -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <p class="mb-0 text-muted">
@@ -69,9 +73,11 @@
                     {% for ofert in ofertas %}
                     <tr>
                         <td>{{ ofert.id }}</td>
-                        <td style="max-width: 200px;"><div class="text-truncate" title="{{ ofert.titulo }}">
+                        <td style="max-width: 200px;">
+                            <div class="text-truncate" title="{{ ofert.titulo }}">
                                 {{ ofert.titulo }}
-                            </div></td>
+                            </div>
+                        </td>
                         <td>{{ ofert.get_tipo_empleo_display }}</td>
                         <td style="max-width: 200px;">
                             <div class="text-truncate" title="{{ ofert.descripcion }}">
@@ -95,7 +101,6 @@
                                     onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
                                     <i class="bi bi-trash"></i>
                                 </a>
-                                <!-- Botón Ver simplificado -->
                                 <button type="button" class="btn btn-outline-info btn-ver" data-id="{{ ofert.id }}" title="Ver detalles">
                                     <i class="bi bi-eye"></i>
                                 </button>
@@ -106,7 +111,7 @@
                     <tr>
                         <td colspan="9">
                             <div class="alert alert-warning text-center mb-0">
-                                No se encontraron ofertas, realiza tu primera oferta presionando el boton Nueva Oferta.
+                                No se encontraron ofertas, realiza tu primera oferta presionando el botón Nueva Oferta.
                             </div>
                         </td>
                     </tr>
@@ -115,7 +120,7 @@
             </table>
         </div>
 
-        <!-- CARDS PARA DISPOSITIVOS MÓVILES (hasta md) CARDS FUNCIONAL-->
+        <!-- CARDS PARA DISPOSITIVOS MÓVILES (hasta md) -->
         <div class="d-md-none">
             {% for ofert in ofertas %}
             <div class="card mb-3 shadow-sm">
@@ -128,18 +133,13 @@
                         {{ ofert.estado }}
                     </span>
                 </div>
-                
                 <div class="card-body">
-                    <!-- Descripción -->
                     <div class="mb-2">
                         <small class="text-muted">Descripción:</small>
-                        <p class="mb-1 text-truncate" data-bs-toggle="tooltip" 
-                           title="{{ ofert.descripcion }}">
+                        <p class="mb-1 text-truncate" data-bs-toggle="tooltip" title="{{ ofert.descripcion }}">
                             {{ ofert.descripcion }}
                         </p>
                     </div>
-                    
-                    <!-- Información en filas -->
                     <div class="row mb-2">
                         <div class="col-6">
                             <small class="text-muted">Salario:</small>
@@ -150,28 +150,22 @@
                             <div class="fw-semibold">{{ ofert.ubicacion }}</div>
                         </div>
                     </div>
-                    
-                    <!-- Fecha -->
                     <div class="mb-3">
                         <small class="text-muted">Publicación:</small>
                         <div>{{ ofert.fecha_publicacion|date:"d/m/Y" }}</div>
                     </div>
-                    
-                    <!-- Botones de Acción -->
                     <div class="d-grid gap-2 d-flex justify-content-between">
                         <button type="button" class="btn btn-outline-primary btn-sm flex-fill btn-editar" 
                                 data-id="{{ ofert.id }}" title="Editar oferta">
                             <i class="bi bi-pencil me-1"></i>Editar
                         </button>
-                        <a href="{% url 'eliminar' ofert.id %}" 
-                           class="btn btn-outline-danger btn-sm flex-fill"
-                           title="Eliminar oferta"
-                           onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
+                        <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger btn-sm flex-fill"
+                           title="Eliminar oferta" onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
                             <i class="bi bi-trash me-1"></i>Eliminar
                         </a>
-        <button type="button" class="btn btn-outline-info btn-ver" data-id="{{ ofert.id }}" title="Ver detalles">
-            <i class="bi bi-eye"></i>
-        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm flex-fill btn-ver" data-id="{{ ofert.id }}" title="Ver detalles">
+                            <i class="bi bi-eye"></i>Ver
+                        </button>
                     </div>
                 </div>
             </div>
@@ -182,47 +176,32 @@
             {% endfor %}
         </div>
 
-        <!-- Paginación (Para ambos modos de pantalla -->
+        <!-- Paginación -->
         {% if ofertas.has_other_pages %}
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">
-                <!-- Flecha anterior -->
                 {% if ofertas.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ ofertas.previous_page_number }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    <a class="page-link" href="?page={{ ofertas.previous_page_number }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}">&laquo;</a>
                 </li>
                 {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">&laquo;</span>
-                </li>
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                 {% endif %}
-                
-                <!-- Números de página -->
+
                 {% for i in ofertas.paginator.page_range %}
                     {% if ofertas.number == i %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ i }}</span>
-                    </li>
+                        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
                     {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ i }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}">{{ i }}</a>
-                    </li>
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
 
-                <!-- Flecha siguiente -->
                 {% if ofertas.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ ofertas.next_page_number }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    <a class="page-link" href="?page={{ ofertas.next_page_number }}{% if request.GET.ubicacion %}&ubicacion={{ request.GET.ubicacion }}{% endif %}">&raquo;</a>
                 </li>
                 {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">&raquo;</span>
-                </li>
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
                 {% endif %}
             </ul>
         </nav>

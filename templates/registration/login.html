@@ -1,43 +1,41 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio de Sesion - LaburoSV{% endblock %}
+{% block title %}Inicio de Sesión - LaburoSV{% endblock %}
 
-{% block meta_description %}Página para iniciar sesion en la bolsa de trabajo de LaburoSV{% endblock %}
+{% block meta_description %}Página para iniciar sesión en la bolsa de trabajo de LaburoSV{% endblock %}
 
 {% block content %}
 <div class="container py-4">
     <div class="row">
         <div class="col-md-4 mx-auto text-center">
-            <!-- Card con sombra -->
             <div class="card shadow-lg">
                 <div class="card-body">
-                    <form  action="" method="POST">
+                    <form method="POST" action="{% url 'usuarios:login' %}">
                         {% csrf_token %}
                         <h2 class="mb-4">Iniciar Sesión</h2>
-                        <div class="input-group mb-2">
+
+                        <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
                             <input type="text" name="username" placeholder="Usuario" class="form-control" required>
                         </div>
-                        <div class="input-group mb-2">
+
+                        <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input type="password" name="password"  placeholder="Contraseña" class="form-control""Contraseña" id="password" required>
-                        </div> 
-                        <button type="submit" class="btn btn-primary mt-3">Iniciar Sesión</button>
-
-                        <!-- Enlace para recuperación de contraseña -->
-                        <div class="signup-link">
-                            <p><a href="{% url 'usuarios:recuperar_contrasena' %}">¿Olvidaste tu contraseña?</a></p>
-                        </div>    
-
-                        <div class="signup-link">
-                            <p>¿No tienes cuenta? <a href="{% url 'usuarios:register' %}" class="signup-text">¡Crea una ahora aquí!</a></p>
+                            <input type="password" name="password" placeholder="Contraseña" class="form-control" id="password" required>
                         </div>
-                        <a href="/accounts/google/login/" class="btn btn-danger border mt-2 w-75">
-                            <i class="bi bi-google"></i> Iniciar sesión con Google
-                    </a>
 
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+
+                        <!-- Enlaces útiles -->
+                        <p><a href="{% url 'usuarios:recuperar_contrasena' %}">¿Olvidaste tu contraseña?</a></p>
+                        <p>¿No tienes cuenta? <a href="{% url 'usuarios:register' %}">¡Regístrate aquí!</a></p>
+
+                        <!-- Login con Google -->
+                        <a href="/accounts/google/login/" class="btn btn-danger border w-100 mt-2">
+                            <i class="bi bi-google"></i> Iniciar sesión con Google
+                        </a>
                     </form>
-               </div>
+                </div>
             </div>
         </div>
     </div>

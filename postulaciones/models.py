@@ -3,6 +3,9 @@ from django.db import models
 from perfiles.models import PerfilCandidato
 from ofertas.models import OfertaLaboral
 
+
+
+
 class Postulacion(models.Model):
     ESTADOS = [
         ('pendiente', 'Pendiente'),
@@ -20,3 +23,7 @@ class Postulacion(models.Model):
 
     def __str__(self):
         return f"{self.candidato.usuario.username} → {self.oferta.titulo}"
+
+
+
+

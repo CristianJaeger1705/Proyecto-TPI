@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ oferta.titulo }} - LABURO{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h2>{{ oferta.titulo }}</h2>
+            <p><strong>Empresa:</strong> {{ oferta.empresa.nombre_empresa }}</p>
+            <p>{{ oferta.descripcion }}</p>
+            <p><strong>Requisitos:</strong> {{ oferta.requisitos }}</p>
+            <p><strong>Ubicación:</strong> {{ oferta.ubicacion }}</p>
+
+            {% if not user.is_authenticated %}
+                <!-- Usuario NO autenticado → enviar a login -->
+                <a href="{% url 'usuarios:login' %}" 
+                   class="btn btn-primary btn-lg mt-3">
+                    Iniciar sesión para aplicar
+                </a>
+
+            {% else %}
+                <!-- Usuario autenticado → enviar a seleccionar perfil -->
+                <a href="{% url 'postulaciones:seleccionar_perfil' oferta.id %}"
+                   class="btn btn-success btn-lg mt-3">
+                    Aplicar
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

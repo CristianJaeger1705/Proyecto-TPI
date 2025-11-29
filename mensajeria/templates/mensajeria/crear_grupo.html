@@ -1,0 +1,55 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<h2>➕ Crear nuevo grupo</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label>Nombre del grupo</label>
+        <input class="form-control" name="nombre" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Seleccionar postulantes</label>
+
+        <select class="form-control select2" name="postulantes" id="postulantes" multiple>
+            {% for p in postulantes %}
+                <option value="{{ p.id }}">{{ p.username }}</option>
+            {% endfor %}
+        </select>
+
+        <small class="text-muted">Puedes buscar usuarios por nombre.</small>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('#postulantes').select2({
+            placeholder: "Selecciona usuarios",
+            width: '100%'
+        });
+    });
+    </script>
+
+
+    <button class="btn btn-primary">Crear grupo</button>
+</form>
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    const sel = document.getElementById("postulantes");
+    for (let i = 0; i < sel.options.length; i++) {
+        sel.options[i].selected = sel.options[i].selected;
+    }
+});
+</script>
+
+{% endblock %}
