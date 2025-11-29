@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 #from django.conf import settings
 from django.conf.urls.static import static
-from aplicaciones.views import *
+from aplicaciones.views import prueba_email
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
@@ -35,6 +35,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
     path("postulaciones/", include("postulaciones.urls")),
+    path('prueba-email-secreta/', prueba_email),
     
 ]
 
