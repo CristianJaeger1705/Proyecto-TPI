@@ -8,30 +8,43 @@ from django.core.mail import send_mail
 from django.conf import settings
 import os
 
-def prueba_email(request):
-    # 1. Verificar credenciales visualmente
-    user = os.getenv('EMAIL_HOST_USER')
-    pwd = os.getenv('EMAIL_HOST_PASSWORD')
+from django.http import HttpResponse
+import os
+import smtplib
+import ssl
+
+def diagnostico_correo(request):
+    # 1. Leer variables
+    user = os.getenv('EMAIL_HOST_USER', 'NO DEFINIDO')
+    pwd = os.getenv('EMAIL_HOST_PASSWORD', '')
     
-    debug_info = f"""
-    <h1>Diagnóstico de Correo</h1>
-    <p><strong>Usuario:</strong> {user}</p>
-    <p><strong>Contraseña configurada:</strong> {'SÍ' if pwd else 'NO'} (Longitud: {len(str(pwd))})</p>
-    <p><strong>Backend:</strong> {settings.EMAIL_BACKEND}</p>
-    <p><strong>Host:</strong> {settings.EMAIL_HOST}:{settings.EMAIL_PORT}</p>
-    <p><strong>TLS/SSL:</strong> TLS={settings.EMAIL_USE_TLS} / SSL={settings.EMAIL_USE_SSL}</p>
-    <hr>
+    # 2. Análisis de contraseña (SIN mostrarla, solo longitud y bordes)
+    longitud = len(pwd)
+    primer_caracter = pwd[0] if pwd else 'N/A'
+    ultimo_caracter = pwd[-1] if pwd else 'N/A'
+    
+    mensaje = f"""
+    <html>
+        <body style='font-family: sans-serif; padding: 20px;'>
+            <h1>🔍 Diagnóstico Render</h1>
+            <h3>Análisis de Variables:</h3>
+            <ul>
+                <li><strong>Usuario:</strong> {user}</li>
+                <li><strong>Longitud Contraseña:</strong> {longitud} (Debe ser 16)</li>
+                <li><strong>Primer caracter:</strong> '{primer_caracter}'</li>
+                <li><strong>Último caracter:</strong> '{ultimo_caracter}'</li>
+            </ul>
     """
     
+    # 3. Prueba de Conexión Real (SSL 465)
     try:
-        # 2. Intentar enviar
-        send_mail(
-            'Prueba Definitiva Render',
-            'Si lees esto, funcionó. Ya puedes dormir tranquilo.',
-            settings.EMAIL_HOST_USER,
-            [settings.EMAIL_HOST_USER], # Se envía a ti mismo
-            fail_silently=False,
-        )
-        return HttpResponse(debug_info + "<h2 style='color:green'>✅ ¡ÉXITO! Correo enviado. Revisa tu bandeja.</h2>")
+        context = ssl.create_default_context()
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context)
+        server.login(user, pwd)
+        mensaje += "<h2 style='color:green'>✅ ÉXITO: Google aceptó la contraseña.</h2>"
+        server.quit()
     except Exception as e:
-        return HttpResponse(debug_info + f"<h2 style='color:red'>❌ ERROR: {e}</h2>")
+        mensaje += f"<h2 style='color:red'>❌ ERROR: {e}</h2>"
+        
+    mensaje += "</body></html>"
+    return HttpResponse(mensaje)
