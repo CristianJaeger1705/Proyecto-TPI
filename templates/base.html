@@ -18,10 +18,13 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+       <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    
     <!-- Navbar -->
     {% include 'components/navbar.html' %}
     
@@ -41,7 +44,15 @@
     
     <!-- Custom JS -->
     <script src="{% static 'js/custom.js' %}"></script>
+        
+    <!--###########################################################3-->
     
+    <script src="{% static 'js/sweetalert.js' %}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/geolocation.js' %}"></script>
+    <script src="{% static 'js/sweetalert.js' %}"></script>
+    <script src="{% static 'js/modals.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
