@@ -13,19 +13,22 @@ import os
 import smtplib
 import ssl
 
-def diagnostico_correo(request):
-    user = os.getenv('EMAIL_HOST_USER', 'NO DEFINIDO')
-    pwd = os.getenv('EMAIL_HOST_PASSWORD', '')
+def test_brevo(request):
+    try:
+        send_mail(
+            subject="Prueba Brevo OK",
+            message="Este correo fue enviado correctamente desde Brevo 😎",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=["tu-correo@gmail.com"],
+            fail_silently=False,
+        )
+        return HttpResponse("<h1>✔️ Enviado correctamente</h1>")
+    except Exception as e:
+        return HttpResponse(f"<h1>❌ Error: {e}</h1>")
     
-    longitud = len(pwd)
-    primer_caracter = pwd[0] if pwd else 'N/A'
-    ultimo_caracter = pwd[-1] if pwd else 'N/A'
-    
+
+def debug_smtp(request):
     return HttpResponse(f"""
-        <h1>Diagnóstico Rápido</h1>
-        <p><strong>Usuario:</strong> {user}</p>
-        <p><strong>Longitud contraseña:</strong> {longitud}</p>
-        <p><strong>Primer caracter:</strong> {primer_caracter}</p>
-        <p><strong>Último caracter:</strong> {ultimo_caracter}</p>
-        <p>🚀 Render responde sin timeout.</p>
+        USER = {os.getenv("EMAIL_HOST_USER")}
+        PASS_LEN = {len(os.getenv("EMAIL_HOST_PASSWORD") or '')}
     """)

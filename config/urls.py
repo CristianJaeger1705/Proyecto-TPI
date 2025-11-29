@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 #from django.conf import settings
 from django.conf.urls.static import static
-from aplicaciones.views import diagnostico_correo
+from aplicaciones.views import test_brevo,debug_smtp
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
@@ -35,7 +35,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
     path("postulaciones/", include("postulaciones.urls")),
-    path('diagnostico-secreto/', diagnostico_correo),
+    path('test/', test_brevo),
+    path('test2/',debug_smtp),
     
 ]
 
