@@ -27,6 +27,7 @@ DATABASE_HOST = os.getenv('DB_HOST', 'localhost')
 DATABASE_PORT = os.getenv('DB_PORT', '5432')
 
 ALLOWED_HOSTS = [
+     'laburosv.com',
      'proyecto-tpi-jtgf.onrender.com',
     'localhost',
     '127.0.0.1'
