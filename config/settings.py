@@ -27,6 +27,7 @@ DATABASE_HOST = os.getenv('DB_HOST', 'localhost')
 DATABASE_PORT = os.getenv('DB_PORT', '5432')
 
 ALLOWED_HOSTS = [
+     'laburosv.com',
      'proyecto-tpi-jtgf.onrender.com',
     'localhost',
     '127.0.0.1'
@@ -39,21 +40,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'usuarios',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'usuarios.apps.UsuariosConfig',
     'ofertas',
     'perfiles',
     'postulaciones',
     'mensajeria',
     'adminpanel',
     'core'
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -81,6 +90,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 #Se modifico para enlazar a mi bd local
+# Detect Render environment
+RENDER = os.getenv("RENDER") == "true"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -92,7 +104,7 @@ DATABASES = {
     }
 }
 
-# Forzar base de datos de Render en producción
+# Force DATABASE_URL when running on Render
 if RENDER:
     import dj_database_url
     DATABASES['default'] = dj_database_url.config(
@@ -152,8 +164,47 @@ LOGIN_REDIRECT_URL = 'lista_ofertas_publicas'
 LOGOUT_REDIRECT_URL = 'lista_ofertas_publicas'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_HOST = "smtp-relay.brevo.com"
+EMAIL_PORT = 2525          # 🔥 PUERTO QUE FUNCIONA EN RENDER
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_SSL = False
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")       
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") 
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+
+# ===========================
+# CONFIGURACIÓN ALLAUTH
+# ===========================
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_ADAPTER = "usuarios.adapters.GoogleAccountAdapter"
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = "none" 
+ACCOUNT_LOGIN_METHODS = {"username"}
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv("GOOGLE_CLIENT_ID"),
+            'secret': os.getenv("GOOGLE_CLIENT_SECRET"),
+            'key': ''
+        }
+    }
+}
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

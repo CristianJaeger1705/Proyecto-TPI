@@ -269,7 +269,7 @@ def registro(request):
         send_mail(
             subject="Código de verificación",
             message=f"Tu código es: {codigo}",
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
         )
         messages.success(request, "Se ha enviado un código al correo registrado.")
@@ -375,7 +375,7 @@ def recuperar_contrasena(request):
         send_mail(
             subject="Código de recuperación de contraseña",
             message=f"Hola {user.first_name}, tu código es: {codigo}",
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
         )
 

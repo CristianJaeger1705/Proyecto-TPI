@@ -1,6 +1,19 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'pagina_principal' %}">Bolsa de Trabajo</a>
+        <a class="navbar-brand" href="{% url 'pagina_principal' %}" 
+          style="display: flex; align-items: center; gap: 10px;"
+          >
+          <img 
+            style="filter: brightness(1.2) drop-shadow(0 4px 6px rgba(0, 0, 255, 0.6));"
+            src="{% static 'icon.png' %}"
+            alt="Logo"
+            width="35"
+            height="35"
+            class="d-inline-block align-text-top"
+          />
+          LaburoSV
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,6 +34,11 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
                     {% endif %}
                 </li>
+                {% if request.user.rol == 'empresa' %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'ofertas' %}"><i class="bi bi-card-list"></i>  Mis Ofertas</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
                 </li>

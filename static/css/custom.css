@@ -199,5 +199,13 @@ body{
     background-color: rgba(13, 110, 253, 0.05);
     border-left: 3px solid var(--bs-primary);
     padding-left: 0.75rem !important;
+
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
+main {
+    flex: 1;
+}

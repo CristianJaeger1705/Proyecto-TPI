@@ -56,6 +56,11 @@ Sigue estos pasos para configurar el entorno de desarrollo local.
     # IMPORTANTE: Usa una contraseña de aplicación si tienes 2FA activado.
     EMAIL_HOST_USER='tu_correo@gmail.com'
     EMAIL_HOST_PASSWORD='tu_contraseña_de_aplicacion'
+    EMAIL_HOST_USER='user_brevo'
+    EMAIL_HOST_PASSWORD='contraseña_brevo'
+    DEFAULT_FROM_EMAIL='correo_from'
+    GOOGLE_CLIENT_ID='cliente_id'
+    GOOGLE_CLIENT_SECRET='cliente_secreto'
     ```
 
 5.  **Aplica las migraciones de la base de datos:**
