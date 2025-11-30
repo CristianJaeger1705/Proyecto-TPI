@@ -21,6 +21,11 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
                     {% endif %}
                 </li>
+                {% if request.user.rol == 'empresa' %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'ofertas' %}"><i class="bi bi-card-list"></i>  Mis Ofertas</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
                 </li>
