@@ -39,16 +39,17 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-                    ########################################################################
-                    AQUI SE SUPONE QUE TENDRIA QUE IR EL BOTON POSTULARME
-                    ########################################################################
-                    -->
                     <div class="d-flex gap-2">
-                        <button class="btn btn-success btn-lg flex-grow-1">
-                            <i class="bi bi-send-fill me-2"></i>
-                            BOTON PARA POSTULARME
-                        </button>
+                        {% if acciones.puedePostular %}
+                          <a href="{% url 'postular_con_id' oferta.id %}"  class="btn btn-success btn-lg flex-grow-1">
+                              <i class="bi bi-send me-1"></i> Postularme a esta oferta
+                          </a>
+                        {% endif %}
+                        {% if acciones.puedeCancelarPostulacion %}
+                          <a href="{% url 'cancelar_postulacion' oferta.id %}" class="btn btn-success btn-lg flex-grow-1">
+                              <i class="bi bi-x-circle me-1"></i> Cancelar mi postulación
+                          </a>
+                        {% endif %}
                         <button class="btn btn-outline-secondary btn-lg">
                             <i class="bi bi-heart"></i>
                         </button>
