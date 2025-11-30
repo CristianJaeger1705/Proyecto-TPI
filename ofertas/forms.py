@@ -4,12 +4,7 @@ from .models import OfertaLaboral
 class Ofertasform(forms.ModelForm):
     class Meta:
         model = OfertaLaboral
-<<<<<<< HEAD
         fields=['titulo','tipo_empleo','descripcion','salario','ubicacion','estado']
-=======
-        fields='__all__'
-        exclude = ['empresa']
->>>>>>> e1022b1d198e8020d6d9f8dd9b8f53fb365017b2
         widgets = {
             'tipo_empleo': forms.Select(attrs={'class': 'form-control'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
@@ -19,7 +14,6 @@ class Ofertasform(forms.ModelForm):
             'ubicacion': forms.TextInput(attrs={'class': 'form-control'}),
         }
     def __init__(self, *args, **kwargs):
-<<<<<<< HEAD
      self.request=kwargs.pop('request',None)
      super().__init__(*args, **kwargs)
     
@@ -30,6 +24,3 @@ class Ofertasform(forms.ModelForm):
        if commit:
           instance.save()
        return instance
-=======
-     super().__init__(*args, **kwargs)
->>>>>>> e1022b1d198e8020d6d9f8dd9b8f53fb365017b2
