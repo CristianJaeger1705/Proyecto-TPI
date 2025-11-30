@@ -1,15 +1,19 @@
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from .decorators import empresa_o_admin_required
+from perfiles.models import PerfilEmpresa
+from postulaciones.permissions import puede_postular_con_id, puede_cancelar_postulacion
+
 # Create your views here.
 #Lista todos las vacantes disponibles
 @empresa_o_admin_required
 def ofertas_List(request):
-    ofert = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
+    empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+    ofert = OfertaLaboral.objects.filter(empresa=empresa).order_by('-fecha_publicacion')
            # Filtrar por ubicación
     ubicacion = request.GET.get('ubicacion')
     if ubicacion:
@@ -28,8 +32,8 @@ def ofertas_List(request):
 #funcion para eliminar un campo o registro
 @empresa_o_admin_required
 def eliminar(request, id):
-    ofert = OfertaLaboral.objects.get(id=id)
-    nombre_oferta=ofert.titulo
+    empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+    ofert = get_object_or_404(OfertaLaboral, id=id, empresa=empresa)
     ofert.delete()
     return redirect('ofertas')
 
@@ -41,6 +45,7 @@ def eliminar(request, id):
 def obtener_formulario_creacion(request):
     """Obtener formulario de creación para modal - NUEVA VISTA"""
     try:
+        get_object_or_404(PerfilEmpresa, usuario=request.user)
         formulario = Ofertasform()
         
         form_html = render(request,'ofertas/form.html', {
@@ -63,7 +68,8 @@ def obtener_formulario_creacion(request):
 def obtener_formulario_edicion(request, id):
     #Obtener formulario de edición para modal
     try:
-        oferta = get_object_or_404(OfertaLaboral, id=id)
+        empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+        oferta = get_object_or_404(OfertaLaboral, id=id, empresa=empresa)
         formulario = Ofertasform(instance=oferta)
         
         form_html = render(request, 'ofertas/form.html', {
@@ -92,7 +98,10 @@ def guardar_creacion_modal(request):
             formulario = Ofertasform(request.POST, request.FILES)
             
             if formulario.is_valid():
-                nueva_oferta = formulario.save()
+                nueva_oferta = formulario.save(commit=False)
+                perfil_empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+                nueva_oferta.empresa = perfil_empresa
+                nueva_oferta.save()
                 return JsonResponse({
                     'success': True,
                     'message': f'Oferta "{nueva_oferta.titulo}" creada correctamente'
@@ -126,7 +135,8 @@ def guardar_edicion_modal(request, id):
     #Guardar cambios desde el modal
     if request.method == 'POST':
         try:
-            oferta = get_object_or_404(OfertaLaboral, id=id)
+            empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+            oferta = get_object_or_404(OfertaLaboral, id=id, empresa=empresa)
             formulario = Ofertasform(request.POST, request.FILES, instance=oferta)
             
             if formulario.is_valid():
@@ -164,7 +174,8 @@ def guardar_edicion_modal(request, id):
 def obtener_datos_visualizacion(request, id):
     """Obtener datos de oferta para modal de visualización"""
     try:
-        oferta = get_object_or_404(OfertaLaboral, id=id)
+        empresa = get_object_or_404(PerfilEmpresa, usuario=request.user)
+        oferta = get_object_or_404(OfertaLaboral, id=id, empresa=empresa)
 
         acciones = {
             'puedePostular': puede_postular_con_id(request.user, id),
