@@ -250,3 +250,18 @@ main {
 }
 
 
+.hover-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+            transition: all 0.2s ease;
+        }
+.sidebar-item {
+            text-decoration: none;
+            color: #495057;
+            display: block;
+            transition: all 0.2s;
+        }
+.sidebar-item:hover { background-color: #f8f9fa; color: #212529; }
+.active-sidebar { background-color: var(--bs-primary); color: white !important; }
+.active-badge { background-color: rgba(255,255,255,0.25) !important; }
+.sidebar-badge { background-color: #e9ecef; }
