@@ -216,34 +216,58 @@ def obtener_datos_visualizacion(request, id):
     # VISTA DE OFERTAS ABIERTAS AL PUBLICO NO REQUIERE INICIAR SESION
     # CUALQUIER PERSONA PUEDE VERLO
     #####################################################################################
-
 def lista_ofertas_publicas(request):
-    # Ofertas activas
-    ofertas = OfertaLaboral.objects.select_related('empresa').filter(
+    rubro_seleccionado = request.GET.get('rubro', '')
+
+    # Consulta base
+    base_queryset = OfertaLaboral.objects.select_related('empresa').filter(
         estado='activa'
     ).order_by('-fecha_publicacion')
 
-    # Crear lista de categorías con conteo
+    # Filtro por rubro
+    if rubro_seleccionado:
+        base_queryset = base_queryset.filter(empresa__rubro=rubro_seleccionado)
+
+    # ------------------------------
+    # 🔹 PAGINACIÓN (10 por página)
+    # ------------------------------
+    paginator = Paginator(base_queryset, 10)
+    page_number = request.GET.get('page')
+    ofertas = paginator.get_page(page_number)
+    # Ahora "ofertas" es un Page object (perfecto para el HTML)
+    # ------------------------------
+
+    # Crear categorías con conteo
     categorias = []
     for rubro_id, rubro_nombre in RUBROS_EMPRESA:
         count = OfertaLaboral.objects.filter(
             estado='activa',
             empresa__rubro=rubro_id
         ).count()
-        
-        # Solo incluir categorías que tienen ofertas
         if count > 0:
             categorias.append({
                 'id': rubro_id,
                 'nombre': rubro_nombre,
-                'total': count
+                'total': count,
+                'activo': rubro_id == rubro_seleccionado
             })
 
-    contexto = {
-        'ofertas': ofertas,
-        'categorias': categorias,
-        'total_ofertas': ofertas.count()
+    # Categoría "todas"
+    todas_categorias = {
+        'id': '',
+        'nombre': 'Todas las categorías',
+        'total': OfertaLaboral.objects.filter(estado='activa').count(),
+        'activo': not rubro_seleccionado
     }
+
+    contexto = {
+        'ofertas': ofertas,  # ← ahora es Page, no queryset
+        'categorias': categorias,
+        'todas_categorias': todas_categorias,
+        'rubro_seleccionado': rubro_seleccionado,
+        'total_ofertas': base_queryset.count()
+    }
+
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
 
 def ver_oferta_publica(request, oferta_id):

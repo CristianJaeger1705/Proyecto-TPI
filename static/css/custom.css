@@ -209,3 +209,44 @@ body{
 main {
     flex: 1;
 }
+
+
+/*ESTILOS PARA FILTRO DE BUSQUEDA*/
+
+/* Estilo general */
+.sidebar-item {
+    font-size: 0.95rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+/* Hover */
+.sidebar-item:hover {
+    background: #f4f4f4;
+}
+
+/* Badge */
+.sidebar-badge {
+    background: #d1d1d1;
+    color: #333;
+    font-weight: 600;
+    padding: 4px 8px;
+}
+
+/* Ítem activo */
+.active-sidebar {
+    background: #e8f5e9; /* Verde suave */
+    color: #2e7d32 !important;
+    font-weight: 600;
+    border-left: 4px solid #2e7d32;
+}
+
+/* Badge activo */
+.active-badge {
+    background: #2e7d32 !important;
+    color: white !important;
+}
+
+

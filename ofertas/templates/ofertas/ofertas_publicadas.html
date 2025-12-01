@@ -5,13 +5,14 @@
 {% load static %}
 {% load static %}
 
-<!-- HERO SECTION -->
+{% load static %}
+
 <div class="bg-success bg-gradient text-white py-5 mb-4">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <h1 class="display-5 fw-bold mb-3">BIENVENID@ A LABUROSV</h1>
-                <p class="lead mb-0">Explora tu primer oportunidad laboral en El Salvador</p>
+                <p class="lead mb-0">Explora tu primera oportunidad laboral en El Salvador</p>
             </div>
         </div>
     </div>
@@ -19,65 +20,125 @@
 
 <div class="container mb-5">
     <div class="row g-4">
-        
+
         <!-- SIDEBAR DE FILTROS -->
         <div class="col-lg-3 col-md-4">
             <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
                 <div class="card-body">
-                    <h6 class="text-uppercase fw-bold text-secondary mb-3 d-flex align-items-center">
-                        <i class="bi bi-funnel-fill me-2"></i>
-                        Filtrar por areas de trabajo
+
+                    <!-- TÍTULO -->
+                    <h6 class="text-uppercase fw-bold text-secondary mb-3"
+                        style="font-size: 0.85rem; letter-spacing: .6px;">
+                        MOSTRAR RESULTADOS POR
                     </h6>
-                    
-<div class="list-group list-group-flush">
-    {% for cat in categorias %}
-    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center py-2 px-0">
-        <span class="text-dark">{{ cat.nombre }}</span>
-        <span class="badge bg-light text-dark rounded-pill">{{ cat.total }}</span>
-    </a>
-    {% empty %}
-    <div class="list-group-item border-0 py-2 px-0 text-muted">
-        No hay categorías disponibles
-    </div>
-    {% endfor %}
-</div>
+
+                    <p class="fw-bold text-dark mb-2" style="font-size: 1rem;">Áreas</p>
+
+                    <!-- Opción "Todas" -->
+                    <a href="?rubro=" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item
+               {% if todas_categorias.activo %}active-sidebar{% endif %}">
+
+                        <span class="flex-grow-1 me-2">
+                            {{ todas_categorias.nombre|safe }}
+                        </span>
+
+                        <span class="badge sidebar-badge {% if todas_categorias.activo %}active-badge{% endif %}">
+                            {{ todas_categorias.total }}
+                        </span>
+                    </a>
+
+                    <!-- LISTA DE CATEGORÍAS -->
+                    <div class="mt-2">
+                        {% for cat in categorias %}
+                        <a href="?rubro={{ cat.id }}" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item
+                          {% if cat.activo %}active-sidebar{% endif %}">
+
+                            <span class="flex-grow-1 me-2">
+                                {{ cat.nombre|safe }}
+                            </span>
+
+                            <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
+                                {{ cat.total }}
+                            </span>
+                        </a>
+
+                        {% empty %}
+                        <div class="text-muted small py-2">No hay categorías disponibles</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- FILTRO ACTIVO -->
+                    {% if rubro_seleccionado %}
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted d-block mb-1">Filtro aplicado:</small>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-dark">
+                                {% for cat in categorias %}
+                                {% if cat.activo %}
+                                {{ cat.nombre|safe }}
+                                {% endif %}
+                                {% endfor %}
+                            </span>
+                            <a href="?rubro=" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x-lg"></i> Limpiar
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
 
+
         <!-- LISTA DE OFERTAS -->
         <div class="col-lg-9 col-md-8">
-            
-            <!-- HEADER CON CONTROLES -->
+
+            <!-- HEADER CON CONTADOR Y FILTRO ACTIVO -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
                     <div class="row align-items-center g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <h5 class="mb-0 fw-bold">
-                                <span class="text-primary">{{ total_ofertas }}</span> 
+                                <span class="text-primary">{{ total_ofertas }}</span>
                                 <span class="text-secondary">ofertas disponibles</span>
+
+                                {% if rubro_seleccionado %}
+                                <small class="text-muted ms-2">
+                                    <i class="bi bi-funnel"></i>
+                                    {% for cat in categorias %}
+                                    {% if cat.activo %}
+                                    Filtrado por: <span class="fw-bold">{{ cat.nombre }}</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                </small>
+                                {% endif %}
                             </h5>
                         </div>
-                        
-                        <div class="col-md-8">
-                            <div class="row g-2">
-                                <div class="col-sm-6">
-                                    <label class="form-label small text-muted mb-1">Ordenar por</label>
-                                    <select class="form-select form-select-sm">
-                                        <option>Más recientes</option>
-                                        <option>Próximas a vencer</option>
-                                        <option>Por empresa</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="col-sm-6">
-                                    <label class="form-label small text-muted mb-1">Mostrar</label>
-                                    <select class="form-select form-select-sm">
-                                        <option>20</option>
-                                        <option>40</option>
-                                        <option>80</option>
-                                    </select>
-                                </div>
+
+                        <div class="col-md-6 text-end">
+                            <!-- Botón para volver a todas si hay filtro activo -->
+                            {% if rubro_seleccionado %}
+                            <a href="?rubro=" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-counterclockwise"></i> Ver todas
+                            </a>
+                            {% endif %}
+
+                            <!-- Mantener controles de ordenamiento si los necesitas -->
+                            <div class="btn-group ms-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bi bi-sort-down"></i> Ordenar
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"
+                                            href="?rubro={{ rubro_seleccionado }}&orden=reciente">Más recientes</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="?rubro={{ rubro_seleccionado }}&orden=vencimiento">Próximas a
+                                            vencer</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="?rubro={{ rubro_seleccionado }}&orden=empresa">Por empresa</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -89,14 +150,17 @@
             <div class="card border-0 shadow-sm mb-3 hover-card">
                 <div class="card-body p-4">
                     <div class="row align-items-center g-3">
-                        
+
                         <!-- LOGO EMPRESA -->
                         <div class="col-auto">
-                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center"
+                                style="width: 80px; height: 80px;">
                                 {% if o.empresa.logo %}
-                                    <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa }}" class="img-fluid" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa.nombre }}" class="img-fluid"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
                                 {% else %}
-                                    <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
                                 {% endif %}
                             </div>
                         </div>
@@ -104,8 +168,21 @@
                         <!-- CONTENIDO -->
                         <div class="col">
                             <h5 class="card-title fw-bold mb-2">{{ o.titulo }}</h5>
-                            <h6 class="text-muted mb-3">{{ o.empresa }}</h6>
-                            
+
+                            <!-- Mostrar rubro de la empresa -->
+                            {% if o.empresa.rubro %}
+                            <div class="mb-2">
+                                <span class="badge bg-info-subtle text-info border border-info-subtle">
+                                    <i class="bi bi-tag-fill me-1"></i>
+                                    {{ o.empresa.get_rubro_display }}
+                                </span>
+                                <!-- Nombre de la empresa -->
+                                <span class="text-secondary fw-semibold" style="font-size: 0.9rem;">
+                                    {{ o.empresa}}
+                                </span>
+                            </div>
+                            {% endif %}
+
                             <div class="d-flex flex-wrap gap-3 text-secondary small">
                                 <div>
                                     <i class="bi bi-geo-alt-fill me-1"></i>
@@ -113,8 +190,14 @@
                                 </div>
                                 <div>
                                     <i class="bi bi-clock-fill me-1"></i>
-                                    <span>Publicada el {{ o.fecha_publicacion }}</span>
+                                    <span>Publicada el {{ o.fecha_publicacion|date:"d/m/Y" }}</span>
                                 </div>
+                                {% if o.salario %}
+                                <div>
+                                    <i class="bi bi-cash-coin me-1"></i>
+                                    <span>${{ o.salario }}</span>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -125,7 +208,8 @@
                                     <i class="bi bi-heart"></i>
                                     <span class="d-none d-sm-inline">Guardar</span>
                                 </button>
-                                <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                                <a href="{% url 'detalleoferta' o.id %}"
+                                    class="btn btn-primary btn-sm d-flex align-items-center gap-1">
                                     <span>Ver oferta</span>
                                     <i class="bi bi-arrow-right"></i>
                                 </a>
@@ -140,26 +224,80 @@
             <div class="card border-0 shadow-sm text-center py-5">
                 <div class="card-body">
                     <i class="bi bi-search display-1 text-muted mb-3"></i>
-                    <h4 class="fw-bold mb-2">No se encontraron ofertas</h4>
-                    <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+                    <h4 class="fw-bold mb-2">
+                        {% if rubro_seleccionado %}
+                        No hay ofertas en "{{ rubro_seleccionado }}"
+                        {% else %}
+                        No se encontraron ofertas
+                        {% endif %}
+                    </h4>
+                    <p class="text-muted mb-3">
+                        {% if rubro_seleccionado %}
+                        No tenemos ofertas disponibles en esta categoría en este momento.
+                        {% else %}
+                        No hay ofertas activas disponibles actualmente.
+                        {% endif %}
+                    </p>
+                    {% if rubro_seleccionado %}
+                    <a href="?rubro=" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i> Ver todas las ofertas
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
 
-            <!-- PAGINACIÓN (OPCIONAL) -->
+            <!-- PAGINACIÓN -->
+            {% if ofertas.has_other_pages %}
             <nav aria-label="Navegación de páginas" class="mt-4">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+                    <!-- Botón anterior -->
+                    {% if ofertas.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="#">Siguiente</a>
+                        <a class="page-link"
+                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.previous_page_number }}">
+                            Anterior
+                        </a>
                     </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    <!-- Numeración -->
+                    {% for num in ofertas.paginator.page_range %}
+                    {% if ofertas.number == num %}
+                    <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Botón siguiente -->
+                    {% if ofertas.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.next_page_number }}">
+                            Siguiente
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Siguiente</a>
+                    </li>
+                    {% endif %}
+
                 </ul>
             </nav>
+            {% endif %}
+
 
         </div>
     </div>
