@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from perfiles.models import RUBROS_EMPRESA
 from postulaciones.permissions import puede_cancelar_postulacion, puede_postular_con_id
+from postulaciones.views import obtener_postulantes_de_oferta
 from .models import OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
@@ -246,6 +247,12 @@ def lista_ofertas_publicas(request):
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
 
 def ver_oferta_publica(request, oferta_id):
-    # Obtener la oferta específica por ID
+    acciones = {
+        'puedePostular': puede_postular_con_id(request.user, oferta_id),
+        'puedeCancelarPostulacion': puede_cancelar_postulacion(request.user, oferta_id),
+    }
+
+    postulantes = obtener_postulantes_de_oferta(request, oferta_id)
+
     oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
-    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta})
+    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta, "acciones": acciones, "postulantes": postulantes})
