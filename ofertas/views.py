@@ -218,16 +218,28 @@ def obtener_datos_visualizacion(request, id):
     #####################################################################################
 def lista_ofertas_publicas(request):
     rubro_seleccionado = request.GET.get('rubro', '')
-
+    orden = request.GET.get('orden')
+    
     # Consulta base
     base_queryset = OfertaLaboral.objects.select_related('empresa').filter(
         estado='activa'
-    ).order_by('-fecha_publicacion')
+    )
 
     # Filtro por rubro
     if rubro_seleccionado:
         base_queryset = base_queryset.filter(empresa__rubro=rubro_seleccionado)
-
+    
+    # ------------------------------
+    # 🔹 ORDENAMIENTO ANTES de paginación
+    # ------------------------------
+    if orden == 'reciente':
+        base_queryset = base_queryset.order_by('-fecha_publicacion')
+    elif orden == 'vencimiento':
+        base_queryset = base_queryset.order_by('fecha_expiracion')
+    else:
+        # Orden por defecto si no se especifica
+        base_queryset = base_queryset.order_by('-fecha_publicacion')
+    
     # ------------------------------
     # 🔹 PAGINACIÓN (10 por página)
     # ------------------------------
@@ -235,8 +247,7 @@ def lista_ofertas_publicas(request):
     page_number = request.GET.get('page')
     ofertas = paginator.get_page(page_number)
     # Ahora "ofertas" es un Page object (perfecto para el HTML)
-    # ------------------------------
-
+    
     # Crear categorías con conteo
     categorias = []
     for rubro_id, rubro_nombre in RUBROS_EMPRESA:
@@ -265,11 +276,11 @@ def lista_ofertas_publicas(request):
         'categorias': categorias,
         'todas_categorias': todas_categorias,
         'rubro_seleccionado': rubro_seleccionado,
-        'total_ofertas': base_queryset.count()
+        'total_ofertas': base_queryset.count(),
+        'orden_actual': orden  # Opcional: para mantener seleccionado en template
     }
 
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
-
 def ver_oferta_publica(request, oferta_id):
     acciones = {
         'puedePostular': puede_postular_con_id(request.user, oferta_id),

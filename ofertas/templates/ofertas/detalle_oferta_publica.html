@@ -30,7 +30,7 @@
                                 <div>
                                     {% if oferta.fecha_expiracion %}
                                     <i class="bi bi-clock-fill"></i>
-                                    Expira {{ oferta.fecha_expiracion }}
+                                    Expira {{ oferta.fecha_expiracion|date:"d/m/Y" }}
                                     {% else %}
                                       <i class="bi bi-clock-fill"></i>
                                     Expira : no especificado

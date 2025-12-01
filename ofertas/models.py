@@ -19,6 +19,7 @@ class OfertaLaboral(models.Model):
     salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ubicacion = models.CharField(max_length=100)
     fecha_publicacion = models.DateField(auto_now_add=True)
+    fecha_expiracion = models.DateField(null=True, blank=True)  # ← NUEVO CAMPO
     estado = models.CharField(max_length=20, default='activa')
 
     def __str__(self):

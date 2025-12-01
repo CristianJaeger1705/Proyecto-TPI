@@ -7,6 +7,7 @@
 
 {% load static %}
 
+<!-- HERO -->
 <div class="bg-success bg-gradient text-white py-5 mb-4">
     <div class="container">
         <div class="row justify-content-center">
@@ -21,63 +22,51 @@
 <div class="container mb-5">
     <div class="row g-4">
 
-        <!-- SIDEBAR DE FILTROS -->
-        <div class="col-lg-3 col-md-4">
+        <!-- BOTÓN FILTROS EN MÓVIL -->
+        <div class="d-lg-none mb-3">
+            <button class="btn btn-primary w-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFiltros">
+                <i class="bi bi-funnel-fill me-2"></i> Filtrar por área
+                {% if rubro_seleccionado %}<span class="badge bg-light text-dark ms-2">1</span>{% endif %}
+            </button>
+        </div>
+
+        <!-- SIDEBAR DE FILTROS (escritorio) -->
+        <div class="col-lg-3 d-none d-lg-block">
             <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
                 <div class="card-body">
-
-                    <!-- TÍTULO -->
-                    <h6 class="text-uppercase fw-bold text-secondary mb-3"
-                        style="font-size: 0.85rem; letter-spacing: .6px;">
+                    <h6 class="text-uppercase fw-bold text-secondary mb-3" style="font-size: 0.85rem; letter-spacing: .6px;">
                         MOSTRAR RESULTADOS POR
                     </h6>
 
                     <p class="fw-bold text-dark mb-2" style="font-size: 1rem;">Áreas</p>
 
-                    <!-- Opción "Todas" -->
-                    <a href="?rubro=" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item
-               {% if todas_categorias.activo %}active-sidebar{% endif %}">
-
-                        <span class="flex-grow-1 me-2">
-                            {{ todas_categorias.nombre|safe }}
-                        </span>
-
+                    <!-- Todas -->
+                    <a href="?rubro=" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if todas_categorias.activo %}active-sidebar{% endif %}">
+                        <span class="flex-grow-1 me-2">{{ todas_categorias.nombre|safe }}</span>
                         <span class="badge sidebar-badge {% if todas_categorias.activo %}active-badge{% endif %}">
                             {{ todas_categorias.total }}
                         </span>
                     </a>
 
-                    <!-- LISTA DE CATEGORÍAS -->
-                    <div class="mt-2">
-                        {% for cat in categorias %}
-                        <a href="?rubro={{ cat.id }}" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item
-                          {% if cat.activo %}active-sidebar{% endif %}">
+                    <!-- Categorías -->
+                    {% for cat in categorias %}
+                    <a href="?rubro={{ cat.id }}" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if cat.activo %}active-sidebar{% endif %}">
+                        <span class="flex-grow-1 me-2">{{ cat.nombre|safe }}</span>
+                        <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
+                            {{ cat.total }}
+                        </span>
+                    </a>
+                    {% empty %}
+                    <div class="text-muted small py-2">No hay categorías disponibles</div>
+                    {% endfor %}
 
-                            <span class="flex-grow-1 me-2">
-                                {{ cat.nombre|safe }}
-                            </span>
-
-                            <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
-                                {{ cat.total }}
-                            </span>
-                        </a>
-
-                        {% empty %}
-                        <div class="text-muted small py-2">No hay categorías disponibles</div>
-                        {% endfor %}
-                    </div>
-
-                    <!-- FILTRO ACTIVO -->
+                    <!-- Filtro activo -->
                     {% if rubro_seleccionado %}
                     <div class="mt-3 pt-3 border-top">
                         <small class="text-muted d-block mb-1">Filtro aplicado:</small>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-dark">
-                                {% for cat in categorias %}
-                                {% if cat.activo %}
-                                {{ cat.nombre|safe }}
-                                {% endif %}
-                                {% endfor %}
+                                {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor %}
                             </span>
                             <a href="?rubro=" class="btn btn-sm btn-outline-danger">
                                 <i class="bi bi-x-lg"></i> Limpiar
@@ -85,16 +74,54 @@
                         </div>
                     </div>
                     {% endif %}
-
                 </div>
             </div>
         </div>
 
+        <!-- OFFCANVAS FILTROS (móvil y tablet) -->
+        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasFiltros" style="width: 300px;">
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title fw-bold">Filtrar por área</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <p class="fw-bold text-dark mb-3">Áreas</p>
+
+                <a href="?rubro=" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if todas_categorias.activo %}active-sidebar{% endif %}">
+                    <span class="flex-grow-1 me-2">{{ todas_categorias.nombre|safe }}</span>
+                    <span class="badge sidebar-badge {% if todas_categorias.activo %}active-badge{% endif %}">
+                        {{ todas_categorias.total }}
+                    </span>
+                </a>
+
+                {% for cat in categorias %}
+                <a href="?rubro={{ cat.id }}" class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if cat.activo %}active-sidebar{% endif %}">
+                    <span class="flex-grow-1 me-2">{{ cat.nombre|safe }}</span>
+                    <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
+                        {{ cat.total }}
+                    </span>
+                </a>
+                {% empty %}
+                <div class="text-muted small py-2">No hay categorías disponibles</div>
+                {% endfor %}
+
+                {% if rubro_seleccionado %}
+                <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-dark">
+                            {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor %}
+                        </span>
+                        <a href="?rubro=" class="btn btn-sm btn-outline-danger">Limpiar</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
 
         <!-- LISTA DE OFERTAS -->
-        <div class="col-lg-9 col-md-8">
+        <div class="col-lg-9">
 
-            <!-- HEADER CON CONTADOR Y FILTRO ACTIVO -->
+            <!-- Header con contador -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
                     <div class="row align-items-center g-3">
@@ -102,42 +129,29 @@
                             <h5 class="mb-0 fw-bold">
                                 <span class="text-primary">{{ total_ofertas }}</span>
                                 <span class="text-secondary">ofertas disponibles</span>
-
                                 {% if rubro_seleccionado %}
-                                <small class="text-muted ms-2">
-                                    <i class="bi bi-funnel"></i>
-                                    {% for cat in categorias %}
-                                    {% if cat.activo %}
-                                    Filtrado por: <span class="fw-bold">{{ cat.nombre }}</span>
-                                    {% endif %}
-                                    {% endfor %}
+                                <small class="text-muted ms-2 d-block d-md-inline">
+                                    <i class="bi bi-funnel"></i> Filtrado por:
+                                    <span class="fw-bold">
+                                        {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre }}{% endif %}{% endfor %}
+                                    </span>
                                 </small>
                                 {% endif %}
                             </h5>
                         </div>
-
-                        <div class="col-md-6 text-end">
-                            <!-- Botón para volver a todas si hay filtro activo -->
+                        <div class="col-md-6 text-md-end">
                             {% if rubro_seleccionado %}
-                            <a href="?rubro=" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-arrow-counterclockwise"></i> Ver todas
+                            <a href="?rubro=" class="btn btn-outline-secondary btn-sm me-2">
+                                Ver todas
                             </a>
                             {% endif %}
-
-                            <!-- Mantener controles de ordenamiento si los necesitas -->
-                            <div class="btn-group ms-2">
-                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bi bi-sort-down"></i> Ordenar
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                    Ordenar
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item"
-                                            href="?rubro={{ rubro_seleccionado }}&orden=reciente">Más recientes</a></li>
-                                    <li><a class="dropdown-item"
-                                            href="?rubro={{ rubro_seleccionado }}&orden=vencimiento">Próximas a
-                                            vencer</a></li>
-                                    <li><a class="dropdown-item"
-                                            href="?rubro={{ rubro_seleccionado }}&orden=empresa">Por empresa</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="?rubro={{ rubro_seleccionado }}&orden=reciente">Más recientes</a></li>
+                                    <li><a class="dropdown-item" href="?rubro={{ rubro_seleccionado }}&orden=vencimiento">Próximas a vencer</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -145,162 +159,96 @@
                 </div>
             </div>
 
-            <!-- TARJETAS DE OFERTAS -->
+            <!-- Tarjetas de ofertas -->
             {% for o in ofertas %}
             <div class="card border-0 shadow-sm mb-3 hover-card">
                 <div class="card-body p-4">
                     <div class="row align-items-center g-3">
-
-                        <!-- LOGO EMPRESA -->
                         <div class="col-auto">
-                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
+                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                                 {% if o.empresa.logo %}
-                                <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa.nombre }}" class="img-fluid"
-                                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa.nombre }}" class="img-fluid" style="max-height: 100%; object-fit: contain;">
                                 {% else %}
-                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50"
-                                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50">
                                 {% endif %}
                             </div>
                         </div>
 
-                        <!-- CONTENIDO -->
                         <div class="col">
                             <h5 class="card-title fw-bold mb-2">{{ o.titulo }}</h5>
-
-                            <!-- Mostrar rubro de la empresa -->
                             {% if o.empresa.rubro %}
                             <div class="mb-2">
                                 <span class="badge bg-info-subtle text-info border border-info-subtle">
-                                    <i class="bi bi-tag-fill me-1"></i>
                                     {{ o.empresa.get_rubro_display }}
                                 </span>
-                                <!-- Nombre de la empresa -->
-                                <span class="text-secondary fw-semibold" style="font-size: 0.9rem;">
-                                    {{ o.empresa}}
-                                </span>
+                                <span class="text-secondary fw-semibold ms-2">{{ o.empresa }}</span>
                             </div>
                             {% endif %}
 
                             <div class="d-flex flex-wrap gap-3 text-secondary small">
-                                <div>
-                                    <i class="bi bi-geo-alt-fill me-1"></i>
-                                    <span>{{ o.ubicacion }}</span>
-                                </div>
-                                <div>
-                                    <i class="bi bi-clock-fill me-1"></i>
-                                    <span>Publicada el {{ o.fecha_publicacion|date:"d/m/Y" }}</span>
-                                </div>
+                                <div><i class="bi bi-geo-alt-fill me-1"></i>{{ o.ubicacion }}</div>
+                                <div><i class="bi bi-clock-fill me-1"></i>{{ o.fecha_publicacion|date:"d/m/Y" }}</div>
                                 {% if o.salario %}
-                                <div>
-                                    <i class="bi bi-cash-coin me-1"></i>
-                                    <span>${{ o.salario }}</span>
-                                </div>
+                                <div><i class="bi bi-cash-coin me-1"></i>${{ o.salario }}</div>
                                 {% endif %}
                             </div>
                         </div>
 
-                        <!-- ACCIONES -->
                         <div class="col-auto">
                             <div class="d-flex flex-column gap-2">
-                                <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
-                                    <i class="bi bi-heart"></i>
-                                    <span class="d-none d-sm-inline">Guardar</span>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    Guardar
                                 </button>
-                                <a href="{% url 'detalleoferta' o.id %}"
-                                    class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-                                    <span>Ver oferta</span>
-                                    <i class="bi bi-arrow-right"></i>
+                                <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary btn-sm">
+                                    Ver oferta
                                 </a>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
             {% empty %}
-            <!-- ESTADO VACÍO -->
-            <div class="card border-0 shadow-sm text-center py-5">
-                <div class="card-body">
-                    <i class="bi bi-search display-1 text-muted mb-3"></i>
-                    <h4 class="fw-bold mb-2">
-                        {% if rubro_seleccionado %}
-                        No hay ofertas en "{{ rubro_seleccionado }}"
-                        {% else %}
-                        No se encontraron ofertas
-                        {% endif %}
-                    </h4>
-                    <p class="text-muted mb-3">
-                        {% if rubro_seleccionado %}
-                        No tenemos ofertas disponibles en esta categoría en este momento.
-                        {% else %}
-                        No hay ofertas activas disponibles actualmente.
-                        {% endif %}
-                    </p>
-                    {% if rubro_seleccionado %}
-                    <a href="?rubro=" class="btn btn-primary">
-                        <i class="bi bi-arrow-left"></i> Ver todas las ofertas
-                    </a>
-                    {% endif %}
-                </div>
+            <div class="text-center py-5">
+                <i class="bi bi-search display-1 text-muted mb-4"></i>
+                <h4 class="fw-bold">No se encontraron ofertas</h4>
+                <p class="text-muted">Intenta con otra categoría o regresa más tarde.</p>
             </div>
             {% endfor %}
 
-            <!-- PAGINACIÓN -->
+            <!-- Paginación -->
             {% if ofertas.has_other_pages %}
-            <nav aria-label="Navegación de páginas" class="mt-4">
+            <nav class="mt-5">
                 <ul class="pagination justify-content-center">
-
-                    <!-- Botón anterior -->
                     {% if ofertas.has_previous %}
                     <li class="page-item">
-                        <a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.previous_page_number }}">
-                            Anterior
-                        </a>
+                        <a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.previous_page_number }}">Anterior</a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link">Anterior</a>
-                    </li>
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
                     {% endif %}
 
-                    <!-- Numeración -->
                     {% for num in ofertas.paginator.page_range %}
                     {% if ofertas.number == num %}
-                    <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                     {% else %}
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">
-                            {{ num }}
-                        </a>
-                    </li>
+                    <li class="page-item"><a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">{{ num }}</a></li>
                     {% endif %}
                     {% endfor %}
 
-                    <!-- Botón siguiente -->
                     {% if ofertas.has_next %}
                     <li class="page-item">
-                        <a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.next_page_number }}">
-                            Siguiente
-                        </a>
+                        <a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.next_page_number }}">Siguiente</a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link">Siguiente</a>
-                    </li>
+                    <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
                     {% endif %}
-
                 </ul>
             </nav>
             {% endif %}
 
-
         </div>
     </div>
 </div>
+
 
 {% endblock %}
