@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 #from django.conf import settings
 from django.conf.urls.static import static
-from aplicaciones.views import test_brevo,debug_smtp
+from aplicaciones.views import *
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
@@ -35,8 +35,12 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
     path("postulaciones/", include("postulaciones.urls")),
-    path('test/', test_brevo),
-    path('test2/',debug_smtp),
+    path("solicitudes/", listar_solicitudes, name="listar_solicitudes"),
+    path("solicitudes/historial/", historial_solicitudes, name="historial_solicitudes"),
+    path("solicitud/<int:id>/aprobar/", aprobar_solicitud, name="aprobar_solicitud"),
+    path("solicitud/<int:id>/rechazar/", rechazar_solicitud, name="rechazar_solicitud"),
+    path("solicitud/<int:id>/ver/", ver_solicitud, name="ver_solicitud"),
+
     
 ]
 

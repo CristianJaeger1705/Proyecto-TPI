@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Solicitud{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Detalle de Solicitud</h2>
+
+<div class="card p-4 shadow">
+    <p><strong>Empresa:</strong> {{ solicitud.nombre_empresa }}</p>
+    <p><strong>Correo:</strong> {{ solicitud.correo }}</p>
+    <p><strong>Estado:</strong> 
+        {% if solicitud.estado == "pendiente" %}
+            <span class="badge bg-warning text-dark">Pendiente</span>
+        {% elif solicitud.estado == "aprobada" %}
+            <span class="badge bg-success">Aprobada</span>
+        {% else %}
+            <span class="badge bg-danger">Rechazada</span>
+        {% endif %}
+    </p>
+
+    <p><strong>Fecha:</strong> {{ solicitud.fecha_solicitud }}</p>
+
+    {% if solicitud.sitio_web %}
+        <p><strong>Sitio web:</strong> <a href="{{ solicitud.sitio_web }}" target="_blank">{{ solicitud.sitio_web }}</a></p>
+    {% endif %}
+
+    {% if solicitud.telefono %}
+        <p><strong>Teléfono:</strong> {{ solicitud.telefono }}</p>
+    {% endif %}
+
+    <p><strong>Descripción:</strong></p>
+    <div class="border p-2 rounded">
+        {{ solicitud.descripcion }}
+    </div>
+
+    {% if solicitud.solicitante %}
+        <p class="mt-3"><strong>Solicitante (usuario):</strong> {{ solicitud.solicitante.username }}</p>
+    {% endif %}
+
+    <hr>
+    <div class="mt-3">
+        {% if solicitud.estado == "pendiente" %}
+            <a href="{% url 'aprobar_solicitud' solicitud.id %}" class="btn btn-success">Aprobar</a>
+            <a href="{% url 'rechazar_solicitud' solicitud.id %}" class="btn btn-danger">Rechazar</a>
+            <a href="{% url 'listar_solicitudes' %}" class="btn btn-secondary">Volver</a>
+        {% else %}
+            <a href="{% url 'historial_solicitudes' %}" class="btn btn-secondary">Volver</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

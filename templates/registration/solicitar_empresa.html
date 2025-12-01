@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-5 mx-auto text-center">
+            <!-- Card con sombra -->
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="text-center">
+                            <h2 class="mb-1">Registrar Empresa</h2>
+                            <p class="text-muted">Llene los campos para hacer la solicitud de crear cuenta de empresa</p>
+                        </div>
+                    
+                        <label for="basic-url" class="form-label">Datos de Empresa:</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" name="nombre_empresa" class="form-control" placeholder="Nombre de empresa" value="{{ nombre_empresa|default:'' }}" required>
+                        </div> 
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">#</i></span>
+                            <input type="text" name="telefono"   placeholder="Telefono (+503 #####-#####)"  class="form-control" value="{{ telefono|default:'' }}" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>                                
+                            <input type="url" name="sitio_web" placeholder="Sitio Web de la Empresa URL (Opcional)" class="form-control" value="{{ sitio_web|default:'' }}" >
+                        </div> 
+                        <div class="input-group mb-2">
+                            <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                            <input type="email" name="correo_corporativo"  placeholder="Correo de la Empresa" class="form-control" value="{{ correo_corporativo|default:'' }}" required>
+                        </div> 
+                        <label for="basic-url" class="form-label mt-3">Descripcion de la Empresa</label>
+                        <div class="input-group mb-4">
+                            <textarea class="form-control" aria-label="With textarea" name="descripcion" placeholder="Opcional"></textarea>
+                        </div>         
+                        <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+                    </form>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
