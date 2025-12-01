@@ -28,7 +28,8 @@ urlpatterns = [
     path('recuperar_contrasena/', recuperar_contrasena, name='recuperar_contrasena'),
     path('verificar_codigo_recuperacion/', verificar_codigo_recuperacion, name='verificar_codigo_recuperacion'),
     path('nueva_contrasena_recuperacion/', nueva_contrasena_recuperacion, name='nueva_contrasena_recuperacion'),
-    
+    path("solicitar-empresa/", solicitar_empresa, name="solicitar_empresa"),
+    path("registrar_empresa/<uuid:token>/", crear_cuenta_empresa, name="registrar_empresa"),
     # Redirección
     path('redirigir/', redirigir_según_rol, name='redirigir'),
     
