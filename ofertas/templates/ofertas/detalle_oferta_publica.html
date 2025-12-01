@@ -40,6 +40,11 @@
                         </div>
                     </div>
                     <div class="d-flex gap-2">
+                        {% if not request.user.is_authenticated %}
+                          <a href="{% url 'usuarios:login' %}?next={% url 'detalleoferta' oferta.id %}" class="btn btn-success btn-lg flex-grow-1">
+                            <i class="bi bi-send me-1"></i> Inicia sesión para postularte
+                          </a>
+                        {% endif %}
                         {% if acciones.puedePostular %}
                           <a href="{% url 'postular_con_id' oferta.id %}"  class="btn btn-success btn-lg flex-grow-1">
                               <i class="bi bi-send me-1"></i> Postularme a esta oferta
@@ -75,6 +80,24 @@
                     <div class="text-secondary">
                         {{ oferta.requisitos|linebreaks }}
                     </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if postulantes %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                  <h5 class="fw-bold mb-3">Postulantes</h5>
+                  <ul class="list-group">
+                    {% for postulante in postulantes %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ postulante.candidato.usuario.get_full_name }} ({{ postulante.candidato.usuario.email }})
+                        <span class="badge bg-primary rounded-pill">{{ postulante.fecha_postulacion|date:"d/m/Y" }}</span>
+                      </li>
+                      {% empty %}
+                      <li class="list-group-item">No hay postulantes aún.</li>
+                      {% endfor %}
+                  </ul>
                 </div>
             </div>
             {% endif %}
