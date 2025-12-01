@@ -246,6 +246,10 @@ def lista_ofertas_publicas(request):
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
 
 def ver_oferta_publica(request, oferta_id):
-    # Obtener la oferta específica por ID
+    acciones = {
+        'puedePostular': puede_postular_con_id(request.user, oferta_id),
+        'puedeCancelarPostulacion': puede_cancelar_postulacion(request.user, oferta_id),
+    }
+
     oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
-    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta})
+    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta, "acciones": acciones})
