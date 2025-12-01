@@ -194,16 +194,14 @@
                             </div>
                         </div>
 
-                        <div class="col-auto">
-                            <div class="d-flex flex-column gap-2">
-                                <button class="btn btn-outline-secondary btn-sm">
-                                    Guardar
-                                </button>
-                                <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary btn-sm">
-                                    Ver oferta
-                                </a>
-                            </div>
-                        </div>
+<div class="col-auto botones-oferta d-flex flex-column gap-2">
+    <button class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-heart"></i> Guardar
+    </button>
+    <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary btn-sm">
+        Ver oferta <i class="bi bi-arrow-right"></i>
+    </a>
+</div>
                     </div>
                 </div>
             </div>
