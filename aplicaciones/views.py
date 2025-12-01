@@ -31,7 +31,7 @@ def aprobar_solicitud(request, id):
     solicitud.estado = "aprobada"
     solicitud.save()
 
-    link = f"https://laburosv.com//usuarios/registrar_empresa/{solicitud.token}/"
+    link = f"https://laburosv.com/usuarios/registrar_empresa/{solicitud.token}/"
 
     send_mail(
         subject="Solicitud aprobada - Crear cuenta",
