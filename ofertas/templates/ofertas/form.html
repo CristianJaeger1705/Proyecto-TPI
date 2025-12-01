@@ -39,6 +39,21 @@
                 placeholder="{{ campo.label }}"
                 rows="4">{{ campo.value | default:'' }}</textarea>
 
+        {% elif campo.name == 'fecha_expiracion' %}
+    <!-- Campo de fecha OPIONAL -->
+    <div class="mb-3">
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="bi bi-calendar-event"></i>
+            </span>
+            <input 
+                type="date"
+                id="id_{{ campo.name }}"
+                class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                value="{% if campo.value %}{{ campo.value|date:'Y-m-d' }}{% endif %}"
+                min="{% now 'Y-m-d' %}"
+            >
         <!--NO ES NECESARIO PERO POR SI ACASO SE IMPLEMENTA FUNCION PARA AGREGAR ARCHIVOS-->
         <!--#############################################################################-->
         {% elif campo.field.widget.input_type == 'file' %}
