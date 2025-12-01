@@ -1,4 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Administrar Usuarios</h1>
+
+<h1>Gestión de Postulaciones</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Candidato</th>
+            <th>Oferta</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in postulaciones %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.candidato.usuario.username }}</td>
+            <td>{{ p.oferta.titulo }}</td>
+            <td>{{ p.get_estado_display }}</td>
+            <td>{{ p.fecha_postulacion|date:"d/m/Y H:i" }}</td>
+
+            <td>
+                <a href="{% url 'postulacion_detalle' p.id %}">Ver</a> |
+                <a href="{% url 'eliminar_postulacion' p.id %}" 
+                   onclick="return confirm('¿Eliminar esta postulación?');">
+                   Eliminar
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

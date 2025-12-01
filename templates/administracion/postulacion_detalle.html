@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Detalle de Postulación</h2>
+
+<ul>
+    <li><strong>ID:</strong> {{ postulacion.id }}</li>
+    <li><strong>Candidato:</strong> {{ postulacion.candidato.usuario.username }}</li>
+    <li><strong>Oferta:</strong> {{ postulacion.oferta.titulo }}</li>
+    <li><strong>Estado:</strong> {{ postulacion.get_estado_display }}</li>
+    <li><strong>Fecha:</strong> {{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</li>
+</ul>
+
+<a href="{% url 'postulaciones_admin' %}" class="btn btn-secondary">Regresar</a>
+
+{% endblock %}

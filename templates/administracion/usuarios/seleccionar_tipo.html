@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>¿Qué tipo de usuario deseas crear?</h2>
+
+<a href="{% url 'crear_usuario' 'admin' %}" class="btn btn-dark">Administrador</a>
+<a href="{% url 'crear_usuario' 'empresa' %}" class="btn btn-primary">Empresa</a>
+<a href="{% url 'crear_usuario' 'candidato' %}" class="btn btn-success">Candidato</a>
+{% endblock %}

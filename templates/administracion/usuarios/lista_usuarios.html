@@ -19,11 +19,35 @@
         <td>{{ u.email }}</td>
         <td>{{ u.get_rol_display }}</td>
         <td>{% if u.is_active %}Activo{% else %}Inactivo{% endif %}</td>
-        <td>
-            <a href="{% url 'usuario_detalle' u.id %}">Ver</a> |
-            <a href="{% url 'usuario_editar' u.id %}">Editar</a> |
-            <a href="{% url 'usuario_eliminar' u.id %}">Eliminar</a>
-        </td>
+       <td>
+    <!-- Activar -->
+    <a href="{% url 'activar_usuario' u.id %}" class="btn btn-success btn-sm" title="Activar">
+        <i class="bi bi-check-circle"></i>
+    </a>
+
+    <!-- Desactivar -->
+    <a href="{% url 'desactivar_usuario' u.id %}" class="btn btn-warning btn-sm" title="Desactivar">
+        <i class="bi bi-x-circle"></i>
+    </a>
+
+    <!-- Verificar -->
+    <a href="{% url 'verificar_usuario' u.id %}" class="btn btn-info btn-sm" title="Verificar">
+        <i class="bi bi-patch-check"></i>
+    </a>
+
+    <!-- Editar -->
+    <a href="{% url 'editar_usuario' u.id %}" class="btn btn-primary btn-sm" title="Editar">
+        <i class="bi bi-pencil-square"></i>
+    </a>
+
+    <!-- Eliminar -->
+    <a href="{% url 'eliminar_usuario' u.id %}" class="btn btn-danger btn-sm" 
+       onclick="return confirm('¿Seguro que deseas eliminar este usuario?');"
+       title="Eliminar">
+        <i class="bi bi-trash"></i>
+    </a>
+</td>
+
     </tr>
     {% endfor %}
 </table>

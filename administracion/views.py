@@ -2,13 +2,15 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import user_passes_test
 from usuarios.models import Usuario
 from django.shortcuts import redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UsuarioAdminForm
 from ofertas.models import OfertaLaboral
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from postulaciones.models import Postulacion
+from django.contrib import messages
+from .forms import UsuarioAdminForm
+
+
 
 
 
@@ -21,10 +23,13 @@ def es_admin(user):
 def panel_admin(request):
     total_ofertas = OfertaLaboral.objects.count()
     total_usuarios = Usuario.objects.count()
+    total_postulaciones = Postulacion.objects.count()
+
 
     return render(request, 'administracion/panel_admin.html',{
     'total_usuarios': total_usuarios,
-    'total_ofertas': total_ofertas,})
+    'total_ofertas': total_ofertas,
+    'total postulaciones': total_postulaciones,})
 
 @user_passes_test(es_admin)
 def dashboard(request):
@@ -43,6 +48,8 @@ def admin_postulaciones(request):
     return render(request, 'administracion/postulaciones_admin.html')
 
 #trabajo para el area de ususarios 
+def seleccionar_tipo_usuario(request):
+    return render(request, 'administracion/usuarios/seleccionar_tipo.html')
 
 # --- Lista de usuarios ---
 def lista_usuarios(request):
@@ -58,29 +65,31 @@ def usuario_detalle(request, usuario_id):
 # --- Editar usuario ---
 @login_required
 @user_passes_test(es_admin)
-def usuario_editar(request, usuario_id):
+def editar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
+
     if request.method == "POST":
-        form = UsuarioEditarForm(request.POST, instance=usuario)
+        form = UsuarioAdminForm(request.POST, instance=usuario)
         if form.is_valid():
             form.save()
+            messages.success(request, "Usuario actualizado correctamente.")
             return redirect("lista_usuarios")
     else:
-        form = UsuarioEditarForm(instance=usuario)
+        form = UsuarioAdminForm(instance=usuario)
 
-    return render(request, "administracion/usuario_editar.html", {"form": form, "usuario": usuario})
+    return render(request, "administracion/usuarios/usuario_forms.html", {"form": form})
 
 # --- Eliminar usuario ---
 @login_required
 @user_passes_test(es_admin)
-def usuario_eliminar(request, usuario_id):
+def eliminar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
 
-    if request.method == "POST":
-        usuario.delete()
-        return redirect("lista_usuarios")
+    usuario.delete()
 
-    return render(request, "administracion/usuario_confirmar_eliminar.html", {"usuario": usuario})
+    messages.success(request, "Usuario eliminado correctamente.")
+
+    return redirect('lista_usuarios')
 
 
 def gestionar_usuarios(request):
@@ -111,20 +120,30 @@ def verificar_usuario(request, user_id):
     usuario.save()
     messages.success(request, "Usuario marcado como verificado.")
     return redirect('gestionar_usuarios')
-
-#crear al usuario 
+#crear usuario
 def crear_usuario(request):
     if request.method == "POST":
         form = UsuarioAdminForm(request.POST)
         if form.is_valid():
             usuario = form.save(commit=False)
-            usuario.set_password("12345678")  # contraseña temporal
-            usuario.verificado = True
+            usuario.set_password("123456")  
             usuario.save()
-            return redirect('lista_usuarios')
+
+            messages.success(request, "Usuario creado exitosamente.")
+            return redirect("usuarios_admin")
     else:
         form = UsuarioAdminForm()
-    return render(request, 'administracion/usuarios/usuario_forms.html', {'form': form})
+
+    return render(request, "administracion/usuarios/usuario_forms.html", {"form": form})
+
+#desactivar verificacion 
+@login_required
+def quitar_verificacion_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    usuario.verificado = False
+    usuario.save()
+    messages.success(request, f"Se ha quitado la verificación del usuario {usuario.username}.")
+    return redirect('lista_usuarios')
 
 #trabajo del area de ofertas
 
@@ -166,4 +185,28 @@ def admin_eliminar_oferta(request, id):
     oferta.delete()
     messages.error(request, "Oferta eliminada.")
     return redirect('admin_ofertas')
+
+#trabajo con postulaciones 
+@login_required
+def postulaciones_admin(request):
+    postulaciones = Postulacion.objects.select_related("candidato__usuario", "oferta").order_by("-fecha_postulacion")
+
+    return render(request, "administracion/postulaciones_admin.html", {
+        "postulaciones": postulaciones
+    })
+#detalles 
+@login_required
+def postulacion_detalle(request, id):
+    p = get_object_or_404(Postulacion, id=id)
+
+    return render(request, "administracion/postulacion_detalle.html", {
+        "postulacion": p
+    })
+#eliminar postulacion 
+@login_required
+def eliminar_postulacion(request, id):
+    p = get_object_or_404(Postulacion, id=id)
+    p.delete()
+    return redirect("postulaciones_admin")
+
 

@@ -22,10 +22,20 @@ urlpatterns = [
     path('usuarios/desactivar/<int:user_id>/', views.desactivar_usuario, name='desactivar_usuario'),
     path('usuarios/verificar/<int:user_id>/', views.verificar_usuario, name='verificar_usuario'),
     path('crear/', views.crear_usuario, name='crear_usuario'),
+    path('usuarios/<int:usuario_id>/editar/', views.editar_usuario, name='editar_usuario'),
+    path('usuarios/<int:usuario_id>/eliminar/', views.eliminar_usuario, name='eliminar_usuario'),
+    path('usuarios/crear/', views.seleccionar_tipo_usuario, name='seleccionar_tipo_usuario'),
+    path('usuarios/crear/<str:rol>/', views.crear_usuario, name='crear_usuario'),
+    path('usuarios/<int:usuario_id>/quitar-verificacion/', views.quitar_verificacion_usuario, name='quitar_verificacion_usuario'),
     # OFERTAS - ADMINISTRACIÓN
 path('ofertas/', views.admin_lista_ofertas, name='admin_ofertas'),
 path('ofertas/<int:id>/ver/', views.admin_ver_oferta, name='admin_ver_oferta'),
 path('ofertas/<int:id>/activar/', views.admin_activar_oferta, name='admin_activar_oferta'),
 path('ofertas/<int:id>/desactivar/', views.admin_desactivar_oferta, name='admin_desactivar_oferta'),
 path('ofertas/<int:id>/eliminar/', views.admin_eliminar_oferta, name='admin_eliminar_oferta'),
+# POSTULACIONES ADMIN
+path('postulaciones/', views.postulaciones_admin, name='postulaciones_admin'),
+path('postulaciones/<int:id>/', views.postulacion_detalle, name='postulacion_detalle'),
+path('postulaciones/<int:id>/eliminar/', views.eliminar_postulacion, name='eliminar_postulacion'),
+
 ]

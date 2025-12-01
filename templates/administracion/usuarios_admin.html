@@ -1,67 +1,98 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
 
-    <h1 class="mb-4">Gestión de Usuarios</h1>
+<h1 class="mb-3">Gestión de Usuarios</h1>
 
-    <!-- BOTÓN: Crear Usuario -->
-    <a href="{% url 'crear_usuario' %}" class="btn btn-primary mb-3">Crear Usuario</a>
+<a href="{% url 'crear_usuario' %}" class="btn btn-success mb-3">
+    <i class="bi bi-person-plus"></i> Crear Usuario
+</a>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Verificado</th>
-                <th>Activo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Activo</th>
+            <th>Verificado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-        <tbody>
-            {% if usuarios %}
-                {% for u in usuarios %}
-                <tr>
-                    <td>{{ u.id }}</td>
-                    <td>{{ u.username }}</td>
-                    <td>{{ u.email }}</td>
-                    <td>{{ u.get_rol_display }}</td>
+    <tbody>
+        {% for u in usuarios %}
+        <tr>
+           <tbody>
+    {% for u in usuarios %}
+    <tr>
+       <td>{{ u.id }}</td>
+    <td>{{ u.username }}</td>
+    <td>{{ u.email }}</td>
+    <td>{{ u.get_rol_display }}</td>
+    <td>{{ u.is_active|yesno:"Sí,No" }}</td>
 
-                    <td>
-                        {% if u.verificado %}
-                            ✔ Verificado
-                        {% else %}
-                            ❌ No verificado
-                        {% endif %}
-                    </td>
+    <!-- Verificación con icono -->
+    <td class="text-center">
+        {% if u.verificado %}
+            <i class="bi bi-patch-check-fill text-success" title="Verificado"></i>
+        {% else %}
+            <i class="bi bi-x-circle text-danger" title="No verificado"></i>
+        {% endif %}
+    </td>
 
-                    <td>
-                        {% if u.is_active %}
-                            Activo
-                        {% else %}
-                            Desactivado
-                        {% endif %}
-                    </td>
+    <!-- ACCIONES -->
+    <td class="text-center">
 
-                    <td>
-                        <a href="{% url 'activar_usuario' u.id %}">Activar</a> |
-                        <a href="{% url 'desactivar_usuario' u.id %}">Desactivar</a> |
-                        <a href="{% url 'verificar_usuario' u.id %}">Verificar</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="7" class="text-center">No hay usuarios registrados.</td>
-                </tr>
-            {% endif %}
-        </tbody>
+        <!-- Editar -->
+        <a href="{% url 'editar_usuario' u.id %}"
+           class="btn btn-sm btn-warning" title="Editar">
+            <i class="bi bi-pencil-square"></i>
+        </a>
 
-    </table>
+        <!-- Eliminar -->
+        <a href="{% url 'eliminar_usuario' u.id %}"
+           class="btn btn-sm btn-danger"
+           onclick="return confirm('¿Eliminar usuario?')"
+           title="Eliminar">
+            <i class="bi bi-trash"></i>
+        </a>
 
-</div>
+        <!-- Activar -->
+        <a href="{% url 'activar_usuario' u.id %}"
+           class="btn btn-sm btn-success" title="Activar">
+            <i class="bi bi-toggle-on"></i>
+        </a>
+
+        <!-- Desactivar -->
+        <a href="{% url 'desactivar_usuario' u.id %}"
+           class="btn btn-sm btn-secondary" title="Desactivar">
+            <i class="bi bi-toggle-off"></i>
+        </a>
+
+        <!-- Verificar o quitar verificación -->
+        {% if u.verificado %}
+            <a href="{% url 'quitar_verificacion_usuario' u.id %}"
+               class="btn btn-sm btn-info" title="Quitar verificación">
+                <i class="bi bi-patch-check-fill"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'verificar_usuario' u.id %}"
+               class="btn btn-sm btn-primary" title="Verificar">
+                <i class="bi bi-patch-check"></i>
+            </a>
+        {% endif %}
+
+    </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
 {% endblock %}
-
