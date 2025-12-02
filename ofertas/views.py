@@ -281,6 +281,7 @@ def lista_ofertas_publicas(request):
     }
 
     return render(request, 'ofertas/ofertas_publicadas.html', contexto)
+
 def ver_oferta_publica(request, oferta_id):
     acciones = {
         'puedePostular': puede_postular_con_id(request.user, oferta_id),
