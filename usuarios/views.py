@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
+from .models import SolicitudEmpresa
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -210,23 +211,19 @@ Usuario = get_user_model()
 def registro(request):
     if request.method == "POST":
         # Obtener datos
-        rol = request.POST.get("rol")
         username = request.POST.get("usuario")
         email = request.POST.get("email")
         password = request.POST.get("contrasena")
         confirmar_password = request.POST.get("confirmar_contrasena")
         nombre = request.POST.get("nombre")
         apellidos = request.POST.get("apellidos")
-        nombre_empresa = request.POST.get("nombre_empresa")
 
         # Preparar context para rellenar campos en caso de error
         context = {
-            "rol": rol,
             "username": username,
             "email": email,
             "nombre": nombre,
             "apellidos": apellidos,
-            "nombre_empresa": nombre_empresa
         }
 
         # Validaciones
@@ -243,19 +240,14 @@ def registro(request):
             return render(request, "registration/register.html", context)
 
         # Procesar nombres
-        if rol == "candidato":
-            first_name = nombre
-            last_name = apellidos
-        else:
-            first_name = nombre_empresa
-            last_name = ""
+        first_name = nombre
+        last_name = apellidos
 
         # Generar código
         codigo = str(random.randint(100000, 999999))
 
         # Guardar datos en session
         request.session["registro_data"] = {
-            "rol": rol,
             "username": username,
             "email": email,
             "password": password,
@@ -278,7 +270,97 @@ def registro(request):
 
     return render(request, "registration/register.html")
 
+def crear_cuenta_empresa(request, token):
+    solicitud = SolicitudEmpresa.objects.filter(token=token, estado="aprobada").first()
 
+    if not solicitud:
+        return render(request, "registration/token_invalido.html")
+
+    if request.method == "POST":
+        username = request.POST.get("usuario")
+        password = request.POST.get("contrasena")
+        confirmar_password = request.POST.get("confirmar_contrasena")
+
+        context = {
+            "username": username,
+        }
+
+        if password != confirmar_password:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return render(request, "registration/registrar_empresa.html", {
+                "username": username,
+                "token": token, 
+            })
+        if Usuario.objects.filter(username=username).exists():
+            messages.error(request, "El nombre de usuario ya está en uso.")
+            return render(request, "registration/registrar_empresa.html", {
+                "token": token,  
+            })
+
+        user = Usuario.objects.create_user(
+                username=username,
+                email=solicitud.correo,
+                password=password,
+                rol="empresa",
+                first_name=solicitud.nombre_empresa,
+                verificado=False
+            )
+
+        return redirect("usuarios:login")
+
+    return render(request, "registration/registrar_empresa.html", {
+        "nombre_empresa": solicitud.nombre_empresa,
+        "correo": solicitud.correo,
+        "token": solicitud.token,
+    })
+
+
+
+def solicitar_empresa(request):
+    if request.method == "POST":
+        nombre = request.POST.get("nombre_empresa")
+        sitio = request.POST.get("sitio_web")
+        correo = request.POST.get("correo_corporativo")
+        descripcion = request.POST.get("descripcion")
+        telefono = request.POST.get("telefono")
+
+        context = {
+            "nombre_empresa": nombre,
+            "telefono": telefono,
+            "sitio_web": sitio,
+            "correo": correo,
+            "descripcion" : descripcion,
+        }
+
+        # If unicidad
+        if Usuario.objects.filter(email=correo).exists():
+            messages.error(request, "Ya existe una empresa con este correo.")
+            return render(request, "registration/solicitar_empresa.html", context)
+
+        solicitud_existente = SolicitudEmpresa.objects.filter(correo=correo).first()
+
+        if solicitud_existente and solicitud_existente.estado == "pendiente":
+            messages.error(request, "Ya se envio una solicitud con ese correo.")
+            return render(request, "registration/solicitar_empresa.html", context)
+        
+        if solicitud_existente and solicitud_existente.estado == "aprobada":
+            messages.success(request, "Se aprobo su solicitud revise su correo para finalizar registro")
+            return render(request, "registration/solicitar_empresa.html", context)
+
+
+        SolicitudEmpresa.objects.create(
+            nombre_empresa=nombre,
+            telefono=telefono,
+            sitio_web=sitio,
+            correo=correo,
+            descripcion=descripcion,
+            solicitante=request.user if request.user.is_authenticated else None
+        )
+
+        messages.success(request, "Solicitud enviada. Será revisada por un administrador.")
+        return redirect("usuarios:login")
+
+    return render(request, "registration/solicitar_empresa.html")
 
 def redirigir_según_rol(request):
     """
@@ -350,7 +432,7 @@ def verificar_codigo(request):
             request.session.pop("registro_data")
             request.session.pop("codigo_verificacion")
 
-            messages.success(request, "¡Correo verificado exitosamente! 🎉")
+            messages.success(request, "¡Correo verificado exitosamente!")
             return redirect("usuarios:login")
         messages.error(request, "Código incorrecto")
         return render(request, "registration/verificar_codigo.html")
