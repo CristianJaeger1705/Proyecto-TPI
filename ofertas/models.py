@@ -2,6 +2,7 @@
 from django import forms
 from django.db import models
 from perfiles.models import PerfilEmpresa
+from usuarios.adapters import Usuario
 
 
 class OfertaLaboral(models.Model):
@@ -30,22 +31,22 @@ class OfertaLaboral(models.Model):
 
 class Favorito(models.Model):
     usuario = models.ForeignKey(
-        'usuarios.Usuario',           
+        Usuario,  # O 'usuarios.Usuario' si prefieres string reference
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name='favoritos'      
     )
     oferta = models.ForeignKey(
-        'ofertas.OfertaLaboral',
+        OfertaLaboral,
         on_delete=models.CASCADE,
         related_name='favoritos_recibidos'
     )
-    session_key = models.CharField(max_length=40, null=True, blank=True)
+    # ⚠️ ELIMINA esta línea: session_key = models.CharField(max_length=40, null=True, blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('usuario', 'oferta', 'session_key')
+        unique_together = ('usuario', 'oferta')  # ← Cambiado: sin session_key
         ordering = ['-fecha']
 
     def __str__(self):

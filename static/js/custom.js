@@ -35,23 +35,16 @@ class FavoritosManager {
     }
     
     init() {
-        // Botones normales (lista)
-        document.querySelectorAll('.favorito-btn').forEach(btn => {
+        // Botones favoritos
+        document.querySelectorAll('.favorito-btn, .favorito-btn-detalle').forEach(btn => {
             btn.onclick = (e) => this.toggleFavorito(e);
         });
         
-        // Botones en detalle
-        document.querySelectorAll('.favorito-btn-detalle').forEach(btn => {
-            btn.onclick = (e) => this.toggleFavorito(e);
-        });
+        // Transferir favoritos automáticamente
+        this.autoTransferirFavoritos();
         
-        // Enlace de favoritos
-        const favoritosLink = document.getElementById('favoritos-link');
-        if (favoritosLink && favoritosLink.getAttribute('href') === '#') {
-            favoritosLink.onclick = (e) => this.handleFavoritosLink(e);
-        }
-        
-        this.updateCounterFromButtons();
+        // Actualizar UI inicial
+        this.updateInitialUI();
     }
     
     async toggleFavorito(e) {
@@ -76,14 +69,25 @@ class FavoritosManager {
             const data = await res.json();
             
             if (data.success) {
-                // 1. Actualizar el botón clickeado
+                // Si necesita login
+                if (data.needs_login) {
+                    const confirmar = confirm('Para guardar favoritos permanentemente, necesitas iniciar sesión. ¿Quieres iniciar sesión ahora?');
+                    if (confirmar) {
+                        localStorage.setItem('pending_favorito', id);
+                        window.location.href = `/usuarios/login/?next=${window.location.pathname}`;
+                        return;
+                    }
+                }
+                
+                // Actualizar botón clickeado
                 this.updateButtonUI(btn, data.agregado);
                 
-                // 2. Actualizar TODOS los botones con el mismo data-id (sincronización)
+                // Sincronizar todos los botones con mismo ID
                 this.syncAllButtons(id, data.agregado);
                 
-                // 3. Actualizar contador
-                this.updateFavoritosCount(data.total);
+                // Actualizar TODA la UI de favoritos (¡INCLUYENDO BLOQUES!)
+                this.updateFavoritosUI(data.total);
+                
             } else {
                 alert('Error: ' + (data.error || 'Error al guardar favorito'));
             }
@@ -96,12 +100,93 @@ class FavoritosManager {
         }
     }
     
+    // NUEVO: Actualizar UI inicial
+    updateInitialUI() {
+        // Calcular favoritos actuales desde botones
+        const savedButtons = document.querySelectorAll('.favorito-btn.btn-warning, .favorito-btn-detalle.btn-warning');
+        const count = savedButtons.length;
+        
+        // Actualizar UI
+        this.updateFavoritosUI(count);
+    }
+    
+    // NUEVO: Actualizar TODA la UI (badges + bloques)
+    updateFavoritosUI(count) {
+        console.log('Actualizando favoritos UI con count:', count);
+        
+        // 1. Actualizar TODOS los badges (desktop y mobile)
+        this.updateBadges(count);
+        
+        // 2. Mostrar/ocultar TODOS los bloques
+        this.updateBlocksVisibility(count);
+    }
+    
+    // Método específico para badges
+    updateBadges(count) {
+        // Buscar TODOS los badges (desktop y mobile)
+        const badges = [
+            document.getElementById('favoritos-badge-desktop'),
+            document.getElementById('favoritos-badge-mobile')
+        ].filter(badge => badge !== null);
+        
+        badges.forEach(badge => {
+            badge.textContent = count;
+            if (count > 0) {
+                badge.className = 'badge bg-success rounded-pill';
+                badge.style.display = 'inline-block';
+            } else {
+                badge.className = 'badge bg-danger rounded-pill';
+                badge.style.display = 'none';
+            }
+        });
+    }
+    
+    // Método específico para bloques
+    updateBlocksVisibility(count) {
+        // Buscar TODOS los bloques (desktop y mobile)
+        const blocks = [
+            document.getElementById('favoritos-block-desktop'),
+            document.getElementById('favoritos-block-mobile')
+        ].filter(block => block !== null);
+        
+        if (blocks.length === 0) return;
+        
+        // Verificar si el usuario es candidato
+        const isCandidato = this.checkIfUserIsCandidato();
+        
+        console.log('Mostrar bloques?', { count, isCandidato, blocks: blocks.length });
+        
+        // REGLA: Mostrar si tiene favoritos O es candidato
+        blocks.forEach(block => {
+            if (count > 0 || isCandidato) {
+                block.style.display = 'block';
+                console.log('Mostrando bloque:', block.id);
+            } else {
+                block.style.display = 'none';
+                console.log('Ocultando bloque:', block.id);
+            }
+        });
+    }
+    
+    checkIfUserIsCandidato() {
+        // Buscar cualquier enlace de favoritos
+        const links = [
+            document.getElementById('favoritos-link-desktop'),
+            document.getElementById('favoritos-link-mobile')
+        ].filter(link => link !== null);
+        
+        if (links.length > 0) {
+            // Si algún enlace NO es "#", entonces es candidato
+            return links.some(link => link.getAttribute('href') !== '#');
+        }
+        
+        return false;
+    }
+    
     syncAllButtons(ofertaId, isSaved) {
-        // Encontrar TODOS los botones con este ID (en lista y detalle)
         const allButtons = document.querySelectorAll(`[data-id="${ofertaId}"]`);
         
         allButtons.forEach(btn => {
-            // Solo actualizar si no es el botón que ya actualizamos
             if (!btn.disabled) {
                 this.updateButtonUI(btn, isSaved);
             }
@@ -123,58 +208,34 @@ class FavoritosManager {
         }
     }
     
-    updateCounterFromButtons() {
-        const savedButtons = document.querySelectorAll('.favorito-btn.btn-warning, .favorito-btn-detalle.btn-warning');
-        const count = savedButtons.length;
-        this.updateFavoritosCount(count);
-    }
-    
-    updateFavoritosCount(count) {
-        const badge = document.getElementById('favoritos-badge');
-        if (badge) {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'inline-block' : 'none';
-        }
-        
-        const sidebarBlock = document.getElementById('favoritos-sidebar-block');
-        if (sidebarBlock) {
-            sidebarBlock.style.display = count > 0 ? 'block' : 'none';
-        }
-    }
-    
-    handleFavoritosLink(e) {
-        e.preventDefault();
-        
-        const badge = document.getElementById('favoritos-badge');
-        const count = badge ? parseInt(badge.textContent) : 0;
-        
-        if (count === 0) {
-            alert('No tienes favoritos guardados');
-            return;
-        }
-        
-        window.location.href = `/usuarios/login/?next=${this.basePath}/mis-favoritos/`;
+    async autoTransferirFavoritos() {
+        // ... (mantén tu código de transferencia) ...
     }
     
     getCsrfToken() {
-        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (csrfInput && csrfInput.value) return csrfInput.value;
-        
-        const metaTag = document.querySelector('meta[name="csrfmiddlewaretoken"]');
-        if (metaTag && metaTag.content) return metaTag.content;
-        
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            cookie = cookie.trim();
-            if (cookie.startsWith('csrftoken=')) {
-                return cookie.substring('csrftoken='.length);
-            }
-        }
-        
-        return '';
+        // ... (mantén tu código CSRF) ...
     }
 }
 
+// Función global
+function handleFavoritosClick(event) {
+    event.preventDefault();
+    const badges = [
+        document.getElementById('favoritos-badge-desktop'),
+        document.getElementById('favoritos-badge-mobile')
+    ].filter(badge => badge !== null);
+    
+    const count = badges.length > 0 ? parseInt(badges[0].textContent) : 0;
+    
+    if (count === 0) {
+        alert('No tienes favoritos guardados. Primero guarda algunas ofertas como favoritas.');
+    } else {
+        
+        window.location.href = `/usuarios/login/?next=/ofertas/mis-favoritos/`;
+    }
+}
+
+// Inicializar
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => new FavoritosManager());
 } else {
