@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %} Ofertas publicadas - LaburoSv {% endblock %}
-{ csrf_token }
-<!-- En el HEAD de tu base.html o en este template -->
 
 {% block content %}
 
@@ -45,18 +43,19 @@
                     <div class="p-3 border-bottom bg-light">
                         <a href="{% if user.is_authenticated and user.rol == 'candidato' %}{% url 'mis_favoritos' %}{% else %}#{% endif %}"
                             class="d-flex justify-content-between align-items-center text-decoration-none text-dark fw-bold"
-                            id="favoritos-link" {% if not user.is_authenticated or user.rol !='candidato'
-                            %}onclick="handleFavoritosClick(event)" >
+                            id="favoritos-link" 
+                            {% if not user.is_authenticated or user.rol != 'candidato' %}
+                                onclick="handleFavoritosClick(event)"
+                            {% endif %}>
                             <span><i class="bi bi-heart-fill text-warning me-2"></i> Mis favoritos</span>
                             {% if total_favoritos > 0 %}
-                            <span id="favoritos-badge" class="badge bg-success rounded-pill">{{ total_favoritos
-                                }}</span>
+                            <span id="favoritos-badge" class="badge bg-success rounded-pill">{{ total_favoritos }}</span>
                             {% else %}
-                            <span id="favoritos-badge" class="badge bg-danger rounded-pill"
-                                style="display: none;">0</span>
+                            <span id="favoritos-badge" class="badge bg-danger rounded-pill" style="display: none;">0</span>
                             {% endif %}
                         </a>
                     </div>
+                    
                     <!-- Todas -->
                     <a href="?rubro="
                         class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if todas_categorias.activo %}active-sidebar{% endif %}">
@@ -85,14 +84,14 @@
                         <small class="text-muted d-block mb-1">Filtro aplicado:</small>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-dark">
-                                {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor
-                                %}
+                                {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor %}
                             </span>
                             <a href="?rubro=" class="btn btn-sm btn-outline-danger">
                                 <i class="bi bi-x-lg"></i> Limpiar
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                     
                 </div>
             </div>
@@ -155,11 +154,10 @@
                                 <small class="text-muted ms-2 d-block d-md-inline">
                                     <i class="bi bi-funnel"></i> Filtrado por:
                                     <span class="fw-bold">
-                                        {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre }}{% endif %}{%
-                                        endfor %}
+                                        {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre }}{% endif %}{% endfor %}
                                     </span>
                                 </small>
-                            
+                                {% endif %}
                             </h5>
                         </div>
                         <div class="col-md-6 text-md-end">
@@ -229,8 +227,7 @@
                                 class="btn btn-sm favorito-btn w-100 text-center {% if o.id in favoritos_ids %}btn-warning{% else %}btn-outline-warning{% endif %}"
                                 data-id="{{ o.id }}"
                                 data-initial-state="{% if o.id in favoritos_ids %}saved{% else %}unsaved{% endif %}">
-                                <i
-                                    class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
+                                <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
                                 <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
                             </button>
 
@@ -268,8 +265,7 @@
                     <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                     {% else %}
                     <li class="page-item"><a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">{{
-                            num }}</a></li>
+                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">{{ num }}</a></li>
                     {% endif %}
                     {% endfor %}
 
@@ -288,5 +284,14 @@
         </div>
     </div>
 </div>
+
+<script>
+// Función global para manejar clic en favoritos
+function handleFavoritosClick(event) {
+    event.preventDefault();
+    alert('Debes iniciar sesión como candidato para ver tus favoritos.');
+    window.location.href = `/usuarios/login/?next=${window.location.pathname}`;
+}
+</script>
 
 {% endblock %}
