@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Detalle de Oferta</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+
+        <h4>{{ oferta.titulo }}</h4>
+        <p><strong>Empresa:</strong> {{ oferta.empresa }}</p>
+        <p><strong>Descripción:</strong> {{ oferta.descripcion }}</p>
+        <p><strong>Ubicación:</strong> {{ oferta.ubicacion }}</p>
+        <p><strong>Salario:</strong> ${{ oferta.salario }}</p>
+        <p><strong>Tipo empleo:</strong> {{ oferta.tipo_empleo }}</p>
+        <p><strong>Estado:</strong> {{ oferta.estado }}</p>
+        <p><strong>Publicada:</strong> {{ oferta.fecha_publicacion|date:"d/m/Y" }}</p>
+
+        <a href="{% url 'admin_listar_ofertas' %}" class="btn btn-primary mt-3">
+            Volver
+        </a>
+
+    </div>
+</div>
+{% endblock %}

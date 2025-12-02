@@ -1,15 +1,19 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h1>Gestión de Ofertas</h1>
+<h2 class="mb-3">Gestión de Ofertas</h2>
 
-<table border="1" cellpadding="10" cellspacing="0">
+<p><strong>Total de ofertas:</strong> {{ total_ofertas }}</p>
+
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>ID</th>
             <th>Título</th>
             <th>Empresa</th>
             <th>Estado</th>
+            <th>Fecha</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -19,19 +23,59 @@
         <tr>
             <td>{{ o.id }}</td>
             <td>{{ o.titulo }}</td>
-            <td>{{ o.empresa.nombre }}</td>
+            <td>{{ o.empresa }}</td>
             <td>{{ o.estado }}</td>
+            <td>{{ o.fecha_publicacion }}</td>
 
-            <td>
-                <a href="{% url 'activar_oferta_admin' o.id %}">Activar</a> |
-                <a href="{% url 'desactivar_oferta_admin' o.id %}">Desactivar</a> |
-                <a href="{% url 'eliminar_oferta_admin' o.id %}" style="color:red;">
-                    Eliminar
+            <td class="text-center">
+
+                <a href="{% url 'editar_oferta' o.id %}"
+                 class="btn btn-sm btn-warning" title="Editar">
+                 <i class="bi bi-pencil-square"></i>
+                 </a>
+
+                <a href="{% url 'eliminar_oferta_admin' o.id %}"
+                 class="btn btn-sm btn-danger"
+                 onclick="return confirm('¿Eliminar la oferta?')"
+                 title="Eliminar">
+                 <i class="bi bi-trash"></i>
                 </a>
+
+                {% if o.estado == "activa" %}
+                    <a href="{% url 'desactivar_oferta_admin' o.id %}"
+                     class="btn btn-sm btn-secondary" title="Desactivar">
+                     <i class="bi bi-toggle-off"></i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'activar_oferta_admin' o.id %}"
+                     class="btn btn-sm btn-success" title="Activar">
+                     <i class="bi bi-toggle-on"></i>
+                   </a>
+                {% endif %}
             </td>
+            <div class="pagination mt-3">
+    <span class="step-links">
+
+        {% if ofertas.has_previous %}
+            <a href="?page=1">&laquo; Primero</a>
+            <a href="?page={{ ofertas.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ ofertas.number }} de {{ ofertas.paginator.num_pages }}
+        </span>
+
+        {% if ofertas.has_next %}
+            <a href="?page={{ ofertas.next_page_number }}">Siguiente</a>
+            <a href="?page={{ ofertas.paginator.num_pages }}">Último &raquo;</a>
+        {% endif %}
+
+    </span>
+</div>
         </tr>
         {% endfor %}
     </tbody>
+
 </table>
 
 {% endblock %}

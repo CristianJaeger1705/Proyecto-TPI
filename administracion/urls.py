@@ -28,7 +28,8 @@ urlpatterns = [
     path('usuarios/crear/<str:rol>/', views.crear_usuario, name='crear_usuario'),
     path('usuarios/<int:usuario_id>/quitar-verificacion/', views.quitar_verificacion_usuario, name='quitar_verificacion_usuario'),
     # OFERTAS - ADMINISTRACIÓN
-path('ofertas/', views.admin_lista_ofertas, name='admin_ofertas'),
+path("ofertas/", views.admin_listar_ofertas, name="admin_listar_ofertas"),
+path("ofertas/<int:id>/detalle/", views.admin_detalle_oferta, name="admin_detalle_oferta"),
 path('ofertas/<int:id>/ver/', views.admin_ver_oferta, name='admin_ver_oferta'),
 path('ofertas/<int:id>/activar/', views.admin_activar_oferta, name='admin_activar_oferta'),
 path('ofertas/<int:id>/desactivar/', views.admin_desactivar_oferta, name='admin_desactivar_oferta'),

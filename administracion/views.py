@@ -9,6 +9,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from postulaciones.models import Postulacion
 from django.contrib import messages
 from .forms import UsuarioAdminForm
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 
@@ -149,10 +151,15 @@ def quitar_verificacion_usuario(request, usuario_id):
 
 #lista de ofertas
 @login_required
-def admin_lista_ofertas(request):
+def admin_listar_ofertas(request):
     ofertas = OfertaLaboral.objects.all().order_by('-fecha_publicacion')
-    return render(request, 'administracion/ofertas/ofertas_admin.html', {
-        'ofertas': ofertas
+    total_ofertas = ofertas.count()
+    paginator = Paginator(ofertas, 10)  # 10 ofertas por página
+    page_number = request.GET.get('page')
+
+    return render(request, "administracion/ofertas_admin.html", {
+        "ofertas": ofertas,
+        "total_ofertas": total_ofertas
     })
 #ver oferta 
 @login_required
@@ -165,27 +172,34 @@ def admin_ver_oferta(request, id):
 @login_required
 def admin_activar_oferta(request, id):
     oferta = get_object_or_404(OfertaLaboral, id=id)
-    oferta.estado = "Activa"
+    oferta.estado = "activa"     
     oferta.save()
-    messages.success(request, "Oferta activada correctamente.")
-    return redirect('admin_ofertas')
+    messages.success(request, f"La oferta '{oferta.titulo}' ha sido activada.")
+    return redirect("ofertas_admin")
 
 #desactivar oferta 
 @login_required
 def admin_desactivar_oferta(request, id):
     oferta = get_object_or_404(OfertaLaboral, id=id)
-    oferta.estado = "Inactiva"
+    oferta.estado = "inactiva"   # usa el valor correcto según tu modelo
     oferta.save()
-    messages.warning(request, "Oferta desactivada.")
-    return redirect('admin_ofertas')
+    messages.warning(request, f"La oferta '{oferta.titulo}' ha sido desactivada.")
+    return redirect("ofertas_admin")
 #eliminar ofertas 
 @login_required
 def admin_eliminar_oferta(request, id):
     oferta = get_object_or_404(OfertaLaboral, id=id)
     oferta.delete()
-    messages.error(request, "Oferta eliminada.")
-    return redirect('admin_ofertas')
+    messages.error(request, "Oferta eliminada correctamente.")
+    return redirect("ofertas_admin")
+#detalle de oferta 
+def admin_detalle_oferta(request, id):
+    oferta = get_object_or_404(OfertaLaboral, id=id)
 
+    return render(request, "administracion/ofertas_detalle_admin.html", {
+        "oferta": oferta
+    })
+                          
 #trabajo con postulaciones 
 @login_required
 def postulaciones_admin(request):
