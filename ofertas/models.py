@@ -3,6 +3,7 @@ from django import forms
 from django.db import models
 from perfiles.models import PerfilEmpresa
 
+
 class OfertaLaboral(models.Model):
     TIPOS = [
         ('formal', 'Formal'),
@@ -25,4 +26,28 @@ class OfertaLaboral(models.Model):
     def __str__(self):
         return f"{self.titulo} - {self.empresa.nombre_empresa}"
     
-    
+    # NUEVO: MODELO FAVORITO (al final del mismo archivo)
+# ofertas/models.py
+class Favorito(models.Model):
+    usuario = models.ForeignKey(
+        'usuarios.Usuario',           # ← app en minúscula (como dice tu apps.py)
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='favoritos'      # → request.user.favoritos.all()
+    )
+    oferta = models.ForeignKey(
+        'ofertas.OfertaLaboral',
+        on_delete=models.CASCADE,
+        related_name='favoritos_recibidos'
+    )
+    session_key = models.CharField(max_length=40, null=True, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'oferta', 'session_key')
+        ordering = ['-fecha']
+
+    def __str__(self):
+        user = self.usuario.username if self.usuario else "Anónimo"
+        return f"{user} → {self.oferta.titulo}"

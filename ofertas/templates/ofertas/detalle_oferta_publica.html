@@ -55,9 +55,10 @@
                               <i class="bi bi-x-circle me-1"></i> Cancelar mi postulación
                           </a>
                         {% endif %}
-                        <button class="btn btn-outline-secondary btn-lg">
-                            <i class="bi bi-heart"></i>
-                        </button>
+<button class="btn btn-lg favorito-btn-detalle {% if esta_en_favoritos %}btn-warning{% else %}btn-outline-warning{% endif %}"
+        data-id="{{ oferta.id }}">
+    <i class="bi {% if esta_en_favoritos %}bi-star-fill{% else %}bi-star{% endif %}"></i>
+</button>
                     </div>
                 </div>
             </div>
@@ -128,22 +129,6 @@
             </div>
 
             <!-- OFERTAS SIMILARES -->
-            {% if ofertas_similares %}
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold mb-3">Ofertas similares</h6>
-                    
-                    {% for similar in ofertas_similares %}
-                    <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
-                        <a href="{% url 'ofertas:detalle' slug=similar.slug %}" class="text-decoration-none text-dark">
-                            <h6 class="mb-1">{{ similar.titulo }}</h6>
-                            <small class="text-muted">{{ similar.empresa }}</small>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>

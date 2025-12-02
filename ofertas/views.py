@@ -1,16 +1,18 @@
 from itertools import count
+import json
+from urllib import request
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.views.decorators.csrf import csrf_exempt
 from perfiles.models import RUBROS_EMPRESA
 from postulaciones.permissions import puede_cancelar_postulacion, puede_postular_con_id
 from postulaciones.views import obtener_postulantes_de_oferta
-from .models import OfertaLaboral
+from .models import Favorito, OfertaLaboral
 from ofertas.forms import Ofertasform
 from django.core.paginator import Paginator
 
-from .decorators import empresa_o_admin_required
+from .decorators import candidato_required, empresa_o_admin_required
 from perfiles.models import PerfilEmpresa
 from postulaciones.permissions import puede_postular_con_id, puede_cancelar_postulacion
 
@@ -229,32 +231,23 @@ def lista_ofertas_publicas(request):
     if rubro_seleccionado:
         base_queryset = base_queryset.filter(empresa__rubro=rubro_seleccionado)
     
-    # ------------------------------
-    # 🔹 ORDENAMIENTO ANTES de paginación
-    # ------------------------------
+    # ORDENAMIENTO
     if orden == 'reciente':
         base_queryset = base_queryset.order_by('-fecha_publicacion')
     elif orden == 'vencimiento':
         base_queryset = base_queryset.order_by('fecha_expiracion')
     else:
-        # Orden por defecto si no se especifica
         base_queryset = base_queryset.order_by('-fecha_publicacion')
     
-    # ------------------------------
-    # 🔹 PAGINACIÓN (10 por página)
-    # ------------------------------
+    # PAGINACIÓN
     paginator = Paginator(base_queryset, 10)
     page_number = request.GET.get('page')
     ofertas = paginator.get_page(page_number)
-    # Ahora "ofertas" es un Page object (perfecto para el HTML)
     
-    # Crear categorías con conteo
+    # CATEGORÍAS
     categorias = []
     for rubro_id, rubro_nombre in RUBROS_EMPRESA:
-        count = OfertaLaboral.objects.filter(
-            estado='activa',
-            empresa__rubro=rubro_id
-        ).count()
+        count = OfertaLaboral.objects.filter(estado='activa', empresa__rubro=rubro_id).count()
         if count > 0:
             categorias.append({
                 'id': rubro_id,
@@ -263,7 +256,6 @@ def lista_ofertas_publicas(request):
                 'activo': rubro_id == rubro_seleccionado
             })
 
-    # Categoría "todas"
     todas_categorias = {
         'id': '',
         'nombre': 'Todas las categorías',
@@ -271,16 +263,51 @@ def lista_ofertas_publicas(request):
         'activo': not rubro_seleccionado
     }
 
+    # FAVORITOS: versión 100% segura y sin errores
+    favoritos_ids = []
+
+    if request.user.is_authenticated:
+        favoritos_ids = list(
+            Favorito.objects.filter(usuario=request.user)
+            .values_list('oferta_id', flat=True)
+        )
+    else:
+        raw_cookie = request.COOKIES.get('favoritos_laburosv')
+        if raw_cookie and raw_cookie.strip():
+            try:
+                data = json.loads(raw_cookie)
+                if isinstance(data, list):
+                    favoritos_ids = [int(x) for x in data if isinstance(x, (int, str)) and str(x).isdigit()]
+            except (json.JSONDecodeError, ValueError, TypeError):
+                favoritos_ids = []  # Cookie corrupta → ignorar
+        # Si no hay cookie o está vacía → favoritos_ids queda como lista vacía
+
+    # CONTEXTO
     contexto = {
-        'ofertas': ofertas,  # ← ahora es Page, no queryset
+        'ofertas': ofertas,
         'categorias': categorias,
         'todas_categorias': todas_categorias,
         'rubro_seleccionado': rubro_seleccionado,
         'total_ofertas': base_queryset.count(),
-        'orden_actual': orden  # Opcional: para mantener seleccionado en template
+        'orden_actual': orden,
+        'favoritos_ids': favoritos_ids,
+        'total_favoritos': len(favoritos_ids),
+        'es_autenticado': request.user.is_authenticated,
     }
 
-    return render(request, 'ofertas/ofertas_publicadas.html', contexto)
+    # RESPUESTA + cookie para anónimos
+    response = render(request, 'ofertas/ofertas_publicadas.html', contexto)
+
+    if not request.user.is_authenticated and favoritos_ids:
+        response.set_cookie(
+            'favoritos_laburosv',
+            json.dumps(favoritos_ids),
+            max_age=60*60*24*90,  # 90 días
+            httponly=False,
+            samesite='Lax'
+        )
+
+    return response
 
 def ver_oferta_publica(request, oferta_id):
     acciones = {
@@ -289,6 +316,132 @@ def ver_oferta_publica(request, oferta_id):
     }
 
     postulantes = obtener_postulantes_de_oferta(request, oferta_id)
-
     oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
-    return render(request, 'ofertas/detalle_oferta_publica.html', {'oferta': oferta, "acciones": acciones, "postulantes": postulantes})
+    
+    # SOLO VERIFICAR SI ESTÁ EN FAVORITOS (sin toda la lógica de cookies)
+    esta_en_favoritos = False
+    
+    if request.user.is_authenticated:
+        # Usuario autenticado: verificar en BD
+        esta_en_favoritos = Favorito.objects.filter(
+            usuario=request.user, 
+            oferta=oferta
+        ).exists()
+    else:
+        # Usuario anónimo: verificar en cookie
+        raw_cookie = request.COOKIES.get('favoritos_laburosv')
+        if raw_cookie:
+            try:
+                favoritos = json.loads(raw_cookie)
+                esta_en_favoritos = oferta_id in [int(f) for f in favoritos if str(f).isdigit()]
+            except:
+                esta_en_favoritos = False
+    
+    # Obtener ofertas similares (opcional)
+    ofertas_similares = OfertaLaboral.objects.filter(
+        empresa__rubro=oferta.empresa.rubro,
+        estado='activa'
+    ).exclude(id=oferta_id)[:3]
+    
+    return render(request, 'ofertas/detalle_oferta_publica.html', {
+        'oferta': oferta, 
+        'acciones': acciones, 
+        'postulantes': postulantes,
+        'esta_en_favoritos': esta_en_favoritos,  # ← NUEVO: solo booleano
+        'ofertas_similares': ofertas_similares,
+    })
+
+
+@csrf_exempt
+def toggle_favorito(request, oferta_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
+    try:
+        oferta = get_object_or_404(OfertaLaboral, id=oferta_id)
+        
+        if request.user.is_authenticated:
+            fav, created = Favorito.objects.get_or_create(
+                usuario=request.user,
+                oferta=oferta
+            )
+            if not created:
+                fav.delete()
+                agregado = False
+            else:
+                agregado = True
+        else:
+            # Manejo para usuarios anónimos
+            cookie_name = 'favoritos_laburosv'
+            cookie_data = request.COOKIES.get(cookie_name, '[]')
+            
+            try:
+                favoritos = json.loads(cookie_data)
+                favoritos = [int(f) for f in favoritos if str(f).isdigit()]
+            except:
+                favoritos = []
+            
+            if oferta_id in favoritos:
+                favoritos.remove(oferta_id)
+                agregado = False
+            else:
+                favoritos.append(oferta_id)
+                agregado = True
+            
+            response = JsonResponse({
+                'success': True,
+                'agregado': agregado,
+                'total': len(favoritos)
+            })
+            
+            response.set_cookie(
+                cookie_name,
+                json.dumps(favoritos),
+                max_age=60*60*24*90,
+                httponly=False,
+                samesite='Lax'
+            )
+            
+            return response
+        
+        total = obtener_total_favoritos(request)
+        return JsonResponse({
+            'success': True,
+            'agregado': agregado,
+            'total': total
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@candidato_required
+def mis_favoritos(request):
+    mis_favs = request.user.favoritos.select_related('oferta', 'oferta__empresa').order_by('-fecha')
+    ofertas_favoritas = [f.oferta for f in mis_favs]
+    return render(request, 'ofertas/mis_favoritos.html', {
+        'ofertas': ofertas_favoritas,
+        'total_favoritos': len(ofertas_favoritas)
+    })
+
+
+
+# ← FUNCIÓN AUXILIAR (pégala también)
+def obtener_total_favoritos(request):
+    if request.user.is_authenticated:
+        return Favorito.objects.filter(usuario=request.user).count()
+    else:
+        try:
+            favs = json.loads(request.COOKIES.get('favoritos_laburosv', '[]'))
+            return len(favs)
+        except:
+            return 0
+def check_auth(request):
+    """Verificar si el usuario está autenticado (para JS)"""
+    return JsonResponse({
+        'is_authenticated': request.user.is_authenticated,
+        'username': request.user.username if request.user.is_authenticated else None
+    })

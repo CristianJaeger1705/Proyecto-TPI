@@ -13,4 +13,7 @@ urlpatterns=[
     path('obtener-visualizacion/<int:id>/', views.obtener_datos_visualizacion, name='obtener_visualizacion'),
     path('', views.lista_ofertas_publicas, name='lista_ofertas_publicas'),
     path('oferta/<int:oferta_id>/', views.ver_oferta_publica, name='detalleoferta'),
+    path('toggle/<int:oferta_id>/', views.toggle_favorito, name='toggle_favorito'),
+    path('mis-favoritos/', views.mis_favoritos, name='mis_favoritos'),
+    path('check-auth/', views.check_auth, name='check_auth'),  # Nueva
 ]
