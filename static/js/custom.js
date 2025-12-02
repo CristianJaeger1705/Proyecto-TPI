@@ -27,9 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
   } catch (e) {}
 
 
-// static/js/favoritos.js - VERSIÓN CON AMARILLO Y ESTRELLA
-// static/js/favoritos.js - VERSIÓN COMPLETA
-// static/js/favoritos.js - VERSIÓN CON SINCRONIZACIÓN
+//Funciones para el boton de favoritos  
 class FavoritosManager {
     constructor() {
         this.basePath = '/ofertas';

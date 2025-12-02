@@ -263,7 +263,7 @@ def lista_ofertas_publicas(request):
         'activo': not rubro_seleccionado
     }
 
-    # FAVORITOS: versión 100% segura y sin errores
+
     favoritos_ids = []
 
     if request.user.is_authenticated:
@@ -337,7 +337,7 @@ def ver_oferta_publica(request, oferta_id):
             except:
                 esta_en_favoritos = False
     
-    # Obtener ofertas similares (opcional)
+    # Obtener ofertas similares (opcional) por si es requerido despues
     ofertas_similares = OfertaLaboral.objects.filter(
         empresa__rubro=oferta.empresa.rubro,
         estado='activa'

@@ -26,15 +26,15 @@ class OfertaLaboral(models.Model):
     def __str__(self):
         return f"{self.titulo} - {self.empresa.nombre_empresa}"
     
-    # NUEVO: MODELO FAVORITO (al final del mismo archivo)
-# ofertas/models.py
+    # NUEVO: MODELO FAVORITO 
+
 class Favorito(models.Model):
     usuario = models.ForeignKey(
-        'usuarios.Usuario',           # ← app en minúscula (como dice tu apps.py)
+        'usuarios.Usuario',           
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='favoritos'      # → request.user.favoritos.all()
+        related_name='favoritos'      
     )
     oferta = models.ForeignKey(
         'ofertas.OfertaLaboral',
