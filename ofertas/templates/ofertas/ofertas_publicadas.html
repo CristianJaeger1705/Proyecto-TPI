@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %} Ofertas publicadas - LaburoSv {% endblock %}
 { csrf_token }
+<!-- En el HEAD de tu base.html o en este template -->
 
 {% block content %}
 
@@ -39,13 +40,13 @@
                     </h6>
 
                     <p class="fw-bold text-dark mb-2" style="font-size: 1rem;">Áreas</p>
-                    {% csrf_token %}
+                    
                     <!-- Solo muestra el bloque si hay favoritos (lo manejará JS también) -->
                     <div class="p-3 border-bottom bg-light">
                         <a href="{% if user.is_authenticated and user.rol == 'candidato' %}{% url 'mis_favoritos' %}{% else %}#{% endif %}"
                             class="d-flex justify-content-between align-items-center text-decoration-none text-dark fw-bold"
                             id="favoritos-link" {% if not user.is_authenticated or user.rol !='candidato'
-                            %}onclick="handleFavoritosClick(event)" {% endif %}>
+                            %}onclick="handleFavoritosClick(event)" >
                             <span><i class="bi bi-heart-fill text-warning me-2"></i> Mis favoritos</span>
                             {% if total_favoritos > 0 %}
                             <span id="favoritos-badge" class="badge bg-success rounded-pill">{{ total_favoritos
@@ -92,7 +93,7 @@
                             </a>
                         </div>
                     </div>
-                    {% endif %}
+                    
                 </div>
             </div>
         </div>
@@ -158,7 +159,7 @@
                                         endfor %}
                                     </span>
                                 </small>
-                                {% endif %}
+                            
                             </h5>
                         </div>
                         <div class="col-md-6 text-md-end">
