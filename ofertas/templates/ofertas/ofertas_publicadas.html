@@ -40,7 +40,7 @@
                     <p class="fw-bold text-dark mb-2" style="font-size: 1rem;">Áreas</p>
                     
                     <!-- Solo muestra el bloque si hay favoritos (lo manejará JS también) -->
-{# BLOQUE DE FAVORITOS - CON CONDICIÓN PARA OCULTAR #}
+                         {# BLOQUE DE FAVORITOS - CON CONDICIÓN PARA OCULTAR #}
                      {% include "ofertas/partials/favoritos_block.html" with mobile=False %}
                     
                     <!-- Todas -->
@@ -79,6 +79,7 @@
                         </div>
                     </div>
                     {% endif %}
+                    
                 </div>
             </div>
         </div>
@@ -270,5 +271,14 @@
         </div>
     </div>
 </div>
+
+<script>
+// Función global para manejar clic en favoritos
+function handleFavoritosClick(event) {
+    event.preventDefault();
+    alert('Debes iniciar sesión como candidato para ver tus favoritos.');
+    window.location.href = `/usuarios/login/?next=${window.location.pathname}`;
+}
+</script>
 
 {% endblock %}
