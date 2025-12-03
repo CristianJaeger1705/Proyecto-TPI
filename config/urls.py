@@ -22,7 +22,7 @@ from aplicaciones.views import *
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
-from aplicaciones.views import test_brevo, debug_smtp
+#from aplicaciones.views import test_brevo, debug_smtp
 
 
 
