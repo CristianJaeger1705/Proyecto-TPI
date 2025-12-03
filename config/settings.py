@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'postulaciones',
     'mensajeria',
     'adminpanel',
-    'core'
+    'core',
+    'channels'
+
 
 ]
 
@@ -87,6 +89,24 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+# ASGI
+ASGI_APPLICATION = "config.asgi.application"
+
+# CHANNEL LAYERS (usar Redis en producción; InMemory localmente si no hay REDIS_URL)
+REDIS_URL = os.getenv("REDIS_URL", None)
+
+if REDIS_URL:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {"hosts": [REDIS_URL]},
+        },
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+    }
+
 
 # Database
 #Se modifico para enlazar a mi bd local

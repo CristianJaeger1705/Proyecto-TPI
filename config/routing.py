@@ -1,6 +1,6 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-import mensajeria.routing  # importa tu routing de la app mensajeria
+import mensajeria.routing
 
 application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(
