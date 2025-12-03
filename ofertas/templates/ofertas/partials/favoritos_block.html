@@ -5,7 +5,7 @@
      data-block-type="{% if mobile %}mobile{% else %}desktop{% endif %}"
      data-initial-count="{{ total_favoritos }}">
     
-    <a href="{% if user.is_authenticated and user.rol == 'candidato' %}{% url 'mis_favoritos' %}{% else %}#{% endif %}"
+    <a href="{% if user.is_authenticated and user.rol == 'candidato' %}{% url 'ofertas:mis_favoritos' %}{% else %}#{% endif %}"
         class="d-flex justify-content-between align-items-center text-decoration-none text-dark fw-bold"
         id="favoritos-link-{% if mobile %}mobile{% else %}desktop{% endif %}" 
         {% if not user.is_authenticated or user.rol != 'candidato' %}
