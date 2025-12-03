@@ -76,7 +76,11 @@
                     </a>
                 </li>
                 {% endif %}
-
+                {% if request.user.rol == 'admin' %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'listar_solicitudes' %}"><i class="bi bi-card-list"></i>  Solicitudes</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'usuarios:exit' %}">
                         <i class="bi bi-arrow-bar-right"></i> Cerrar Sesión
