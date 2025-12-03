@@ -53,7 +53,7 @@ def postular_con_id(request, id):
         return redirect("usuarios:redirigir")
 
     messages.success(request, "Postulación creada exitosamente.")
-    return redirect("detalleoferta", oferta_id=oferta.id)
+    return redirect("ofertas:detalleoferta", oferta_id=oferta.id)
 
 def cancelar_postulacion(request, id):
     try:
@@ -98,7 +98,7 @@ def cancelar_postulacion(request, id):
         return redirect("usuarios:redirigir")
 
     messages.success(request, "Postulación cancelada exitosamente.")
-    return redirect("detalleoferta", oferta_id=oferta.id)
+    return redirect("ofertas:detalleoferta", oferta_id=oferta.id)
 
 def obtener_postulantes_de_oferta(request, oferta_id):
     try:
