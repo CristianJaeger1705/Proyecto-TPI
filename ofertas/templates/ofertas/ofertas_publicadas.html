@@ -272,13 +272,4 @@
     </div>
 </div>
 
-<script>
-// Función global para manejar clic en favoritos
-function handleFavoritosClick(event) {
-    event.preventDefault();
-    alert('Debes iniciar sesión como candidato para ver tus favoritos.');
-    window.location.href = `/usuarios/login/?next=${window.location.pathname}`;
-}
-</script>
-
 {% endblock %}
