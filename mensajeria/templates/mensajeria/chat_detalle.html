@@ -1,0 +1,250 @@
+{% extends "base.html" %} 
+{% block title %}Chat: {{ chat.nombre }}{% endblock %}
+
+{% block content %}
+
+<style>
+/* ============================= */
+/*      ESTILO WHATSAPP PRO      */
+/* ============================= */
+
+.chat-container {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--chat-bg, #f5f5f5);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+/* Modo oscuro */
+body.dark-mode {
+    --chat-bg: #1c1c1c;
+    --msg-own: #056162;
+    --msg-other: #2f2f2f;
+    background: #111 !important;
+    color: white !important;
+}
+
+/* Mensajes */
+#chat-mensajes {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    background-size: cover !important;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mensaje {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.mensaje-propio {
+    background: var(--msg-own, #d1f5d3);
+    color: black;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
+.mensaje-otro {
+    background: var(--msg-other, #ffffff);
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+/* Input */
+.chat-input-container {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input-container input {
+    flex: 1;
+    border-radius: 20px;
+    padding-left: 15px;
+}
+
+.chat-icons button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Selector fondo */
+.bg-box {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    width: fit-content;
+}
+
+.bg-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.bg-thumb {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.bg-thumb:hover {
+    border-color: #007bff;
+}
+
+/* BOTÓN FLOTANTE */
+#boton-volver {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    border: none;
+    z-index: 999;
+}
+
+#boton-volver:hover {
+    background: #f0f0f0;
+}
+</style>
+
+<div class="container my-4 position-relative">
+
+<!-- BOTÓN VOLVER -->
+{% if request.user.rol == 'empresa' %}
+    <a href="{% url 'mensajeria:panel-empresa' %}" id="boton-volver">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+{% else %}
+    <a href="{% url 'mensajeria:panel-candidato' %}" id="boton-volver">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+{% endif %}
+
+<h3 class="mb-3 text-center">{{ chat.nombre }}</h3>
+
+<!-- MODO OSCURO A LA DERECHA -->
+<div class="d-flex justify-content-end mb-2">
+    <button id="toggle-dark" class="btn btn-sm btn-secondary">
+        🌙 Modo oscuro
+    </button>
+</div>
+
+<!-- Selector de fondo -->
+<div class="mb-3">
+    <strong>Personalizar fondo:</strong>
+
+    <div class="bg-box mt-2">
+        <div class="bg-selector">
+            <div class="bg-thumb" style="background:#f5f5f5" data-bg="#f5f5f5"></div>
+            <div class="bg-thumb" style="background:#e0f7fa" data-bg="#e0f7fa"></div>
+            <div class="bg-thumb" style="background:#fff3e0" data-bg="#fff3e0"></div>
+            <div class="bg-thumb" style="background:#ffe0e0" data-bg="#ffe0e0"></div>
+            <div class="bg-thumb" style="background:url('https://i.imgur.com/9YF7w9G.png')" data-bg="url('https://i.imgur.com/9YF7w9G.png')"></div>
+        </div>
+    </div>
+</div>
+
+<div class="chat-container">
+
+    <!-- Mensajes -->
+    <div id="chat-mensajes">
+        {% for mensaje in mensajes %}
+            <div class="mensaje 
+                {% if mensaje.remitente == request.user %}
+                    mensaje-propio
+                {% else %}
+                    mensaje-otro
+                {% endif %}
+            ">
+                <strong>{{ mensaje.remitente.username }}:</strong><br>
+                {{ mensaje.texto }}
+                <div class="text-end mt-1" style="font-size:0.75rem; opacity:0.7;">
+                    {{ mensaje.fecha_envio|date:"H:i" }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Input -->
+    <form method="post" class="chat-input-container">
+        {% csrf_token %}
+
+        <div class="chat-icons">
+            <button type="button"><i class="bi bi-emoji-smile"></i></button>
+            <button type="button"><i class="bi bi-paperclip"></i></button>
+        </div>
+
+        <input type="text" id="mensajeInput" name="mensaje" placeholder="Escribe un mensaje..." required>
+
+        <button class="btn btn-primary ms-2">Enviar</button>
+    </form>
+
+</div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* Auto Scroll */
+const chatMensajes = document.getElementById('chat-mensajes');
+chatMensajes.scrollTop = chatMensajes.scrollHeight;
+
+/* ENTER para enviar */
+document.getElementById("mensajeInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter") {
+        e.preventDefault();
+        this.closest("form").submit();
+    }
+});
+
+/* Modo oscuro */
+const toggle = document.getElementById("toggle-dark");
+toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
+});
+
+if (localStorage.getItem("dark-mode") === "true") {
+    document.body.classList.add("dark-mode");
+}
+
+/* Fondos */
+document.querySelectorAll(".bg-thumb").forEach(t => {
+    t.addEventListener("click", () => {
+        let fondo = t.dataset.bg;
+        chatMensajes.style.background = fondo;
+        localStorage.setItem("chat-bg", fondo);
+    });
+});
+
+let bgSaved = localStorage.getItem("chat-bg");
+if (bgSaved) chatMensajes.style.background = bgSaved;
+</script>
+{% endblock %}

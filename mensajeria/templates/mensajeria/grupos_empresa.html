@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Grupos{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>Grupos</h1>
+
+    <h3 class="mt-4">Crear Nuevo Grupo</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Crear Grupo</button>
+    </form>
+
+    <h3 class="mt-5">Grupos Existentes</h3>
+    <ul class="list-group mt-3">
+        {% for grupo in grupos %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                {% if grupo.nombre %}{{ grupo.nombre }}{% else %}Grupo {{ grupo.id }}{% endif %}
+                - Miembros: 
+                {% for p in grupo.participantes.all %}
+                    {{ p.username }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+            <div>
+                <a href="{% url 'mensajeria:editar-grupo' grupo.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'mensajeria:eliminar-grupo' grupo.id %}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('¿Seguro que quieres eliminar este grupo?');">Eliminar</a>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No hay grupos creados</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Editar Grupo{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>
+        {% if grupo.nombre %}{{ grupo.nombre }}{% else %}Grupo {{ grupo.id }}{% endif %}
+    </h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Actualizar Grupo</button>
+        <a href="{% url 'mensajeria:grupos-empresa' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

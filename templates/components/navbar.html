@@ -1,9 +1,8 @@
-{% load static %}
+{% load static %} 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <a class="navbar-brand" href="{% url 'pagina_principal' %}" 
-          style="display: flex; align-items: center; gap: 10px;"
-          >
+          style="display: flex; align-items: center; gap: 10px;">
           <img 
             style="filter: brightness(1.2) drop-shadow(0 4px 6px rgba(0, 0, 255, 0.6));"
             src="{% static 'icon.png' %}"
@@ -14,45 +13,83 @@
           />
           LaburoSV
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'pagina_principal' %}">Inicio</a>
                 </li>
             </ul>
+
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_authenticated %}
+
+                <!-- NUEVO BOTÓN DE MENSAJERÍA -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarMensajeria" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-chat-dots"></i> Mensajería
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarMensajeria">
+                        {% if request.user.rol == 'empresa' %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'mensajeria:panel-empresa' %}">
+                                    Panel de Empresa
+                                </a>
+                            </li>
+                        {% elif request.user.rol == 'candidato' %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'mensajeria:panel-candidato' %}">
+                                    Panel de Candidato
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <!-- FIN BOTÓN DE MENSAJERÍA -->
+
                 <li class="nav-item">
                     {% if request.user.rol == 'candidato' %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_candidato' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                        <a class="nav-link active" href="{% url 'usuarios:mi_perfil_candidato' %}">
+                            <i class="bi bi-person"></i> Mi Perfil
+                        </a>
                     {% elif request.user.rol == 'empresa' %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:mi_perfil_empresa' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                        <a class="nav-link active" href="{% url 'usuarios:mi_perfil_empresa' %}">
+                            <i class="bi bi-person"></i> Mi Perfil
+                        </a>
                     {% else %}
-                        <a class="nav-link active" aria-current="page" href="{% url 'usuarios:redirigir' %}"><i class="bi bi-person"></i>  Mi Perfil</a>
+                        <a class="nav-link active" href="{% url 'usuarios:redirigir' %}">
+                            <i class="bi bi-person"></i> Mi Perfil
+                        </a>
                     {% endif %}
                 </li>
+
                 {% if request.user.rol == 'empresa' %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'ofertas' %}"><i class="bi bi-card-list"></i>  Mis Ofertas</a>
-                </li>
-                {% endif %}
-                {% if request.user.rol == 'admin' %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'listar_solicitudes' %}"><i class="bi bi-card-list"></i>  Solicitudes</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:exit' %}"><i class="bi bi-arrow-bar-right"></i>  Cerrar Sesion</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'usuarios:login' %}"> <i class="bi bi-arrow-bar-left"></i>  Iniciar Sesion</a>
+                    <a class="nav-link active" href="{% url 'ofertas' %}">
+                        <i class="bi bi-card-list"></i> Mis Ofertas
+                    </a>
                 </li>
                 {% endif %}
 
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'usuarios:exit' %}">
+                        <i class="bi bi-arrow-bar-right"></i> Cerrar Sesión
+                    </a>
+                </li>
+
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'usuarios:login' %}">
+                        <i class="bi bi-arrow-bar-left"></i> Iniciar Sesión
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

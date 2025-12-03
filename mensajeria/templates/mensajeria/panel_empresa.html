@@ -1,0 +1,294 @@
+{% extends "base.html" %} 
+{% block title %}Panel Empresa{% endblock %}
+
+{% block content %}
+
+<style>
+/* ----------------------------- */
+/*   ESTILO WHATSAPP EMPRESARIAL */
+/* ----------------------------- */
+
+.panel-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.nav-tabs .nav-link {
+    font-weight: 600;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 10px 18px;
+}
+
+.list-group-item {
+    border-radius: 10px !important;
+    margin-bottom: 8px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+}
+
+.list-group-item:hover {
+    background: #f0f7ff;
+}
+
+.badge-notif {
+    background: #0084ff;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    margin-left: 6px;
+    position: relative;
+    top: -2px;
+}
+
+.btn-sm {
+    border-radius: 8px;
+}
+</style>
+
+<div class="container my-4">
+
+    <div class="panel-card">
+
+        <h2 class="text-center mb-4">Panel Administrativo de Empresa</h2>
+
+        <!-- Pestañas -->
+        <ul class="nav nav-tabs mt-4" id="panelTabs" role="tablist">
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active d-flex align-items-center gap-2"
+                        id="chats-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#chats"
+                        type="button">
+
+                    Chats con Candidatos
+
+                    {% if chats_nuevos > 0 %}
+                        <span class="badge-notif">{{ chats_nuevos }}</span>
+                    {% endif %}
+                </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="grupos-tab" data-bs-toggle="tab"
+                        data-bs-target="#grupos" type="button">
+                    Grupos
+                </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab"
+                        data-bs-target="#notificaciones" type="button">
+                    Notificaciones
+                </button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content mt-3" id="panelTabsContent">
+
+            <!-- ----------------------------- -->
+            <!--   CHATS INDIVIDUALES          -->
+            <!-- ----------------------------- -->
+            <div class="tab-pane fade show active" id="chats">
+
+                <ul class="list-group">
+                    {% for chat in chats_individuales %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                        <div class="fw-bold d-flex align-items-center gap-2">
+
+                            {% if chat.nombre %}
+                                {{ chat.nombre }}
+                            {% else %}
+                                Chat con: 
+                                {% for p in chat.participantes.all %}
+                                    {% if p != request.user %}
+                                        {{ p.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if chat.mensajes_no_vistos_count > 0 %}
+                                <span class="badge-notif">{{ chat.mensajes_no_vistos_count }}</span>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="d-flex gap-2">
+
+                            <a href="{% url 'mensajeria:chat-detalle' chat.id %}" 
+                               class="btn btn-primary btn-sm">
+                                Abrir Chat
+                            </a>
+
+                            <button class="btn btn-warning btn-sm"
+                                onclick="editarNombreChat({{ chat.id }}, '{{ chat.nombre|default:'Chat' }}')">
+                                Editar
+                            </button>
+
+                            <a href="{% url 'mensajeria:eliminar-chat' chat.id %}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('¿Seguro que quieres eliminar este chat?');">
+                                Eliminar
+                            </a>
+
+                        </div>
+
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted">
+                        No hay chats disponibles
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            <!-- ----------------------------- -->
+            <!--            GRUPOS             -->
+            <!-- ----------------------------- -->
+            <div class="tab-pane fade" id="grupos">
+
+                <ul class="list-group">
+
+                    {% for grupo in grupos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <strong>{{ grupo.nombre|default:"Grupo" }}</strong>
+
+                            {% if grupo.mensajes_no_vistos_count > 0 %}
+                                <span class="badge-notif">{{ grupo.mensajes_no_vistos_count }}</span>
+                            {% endif %}
+
+                            <div class="text-muted small">
+                                · {{ grupo.participantes.count }} miembros
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modalMiembros{{ grupo.id }}">
+                                Ver miembros
+                            </button>
+
+                            <a href="{% url 'mensajeria:chat-detalle' grupo.id %}"
+                               class="btn btn-sm btn-primary">
+                                Abrir Chat
+                            </a>
+
+                            <a class="btn btn-sm btn-warning"
+                               href="{% url 'mensajeria:editar-grupo' grupo.id %}">Editar</a>
+
+                            <a class="btn btn-sm btn-danger"
+                               href="{% url 'mensajeria:eliminar-grupo' grupo.id %}"
+                               onclick="return confirm('¿Seguro que quieres eliminar este grupo?');">
+                                Eliminar
+                            </a>
+                        </div>
+
+                    </li>
+
+                    <!-- Modal miembros -->
+                    <div class="modal fade" id="modalMiembros{{ grupo.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        Miembros de {{ grupo.nombre|default:"Grupo" }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="row g-3">
+
+                                        {% for p in grupo.participantes.all %}
+                                        <div class="col-md-4">
+                                            <div class="card shadow-sm p-3 text-center">
+                                                <div class="fw-bold">{{ p.username }}</div>
+                                                <div class="text-muted small">{{ p.email }}</div>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <p>No hay miembros en este grupo.</p>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <!-- ----------------------------- -->
+            <!--        NOTIFICACIONES         -->
+            <!-- ----------------------------- -->
+            <div class="tab-pane fade" id="notificaciones">
+
+                <ul class="list-group">
+                    {% for notif in notificaciones %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if not notif.leida %}list-group-item-warning{% endif %}">
+
+                        <div>
+                            <strong>{{ notif.tipo }}</strong>: {{ notif.mensaje }}
+                            <div class="text-muted small">{{ notif.fecha|date:"d/m/Y H:i" }}</div>
+                        </div>
+
+                        {% if not notif.leida %}
+                        <a href="{% url 'mensajeria:marcar-notificacion' notif.id %}"
+                           class="btn btn-sm btn-success">
+                           Marcar como leída
+                        </a>
+                        {% endif %}
+
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">No hay notificaciones</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* Mantener pestaña activa */
+const tabs = document.querySelectorAll('#panelTabs button[data-bs-toggle="tab"]');
+
+tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function (event) {
+        localStorage.setItem('activeTab', event.target.id);
+    });
+});
+
+const activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+    const tabTrigger = new bootstrap.Tab(document.getElementById(activeTab));
+    tabTrigger.show();
+}
+</script>
+{% endblock %}

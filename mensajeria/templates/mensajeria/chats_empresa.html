@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Chats de Candidatos{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>Chats de Candidatos</h1>
+    <ul class="list-group mt-3">
+        {% for chat in chats %}
+        <li class="list-group-item">
+            <a href="{% url 'mensajeria:chat-detalle' chat.id %}">
+                {% if chat.nombre %}{{ chat.nombre }}{% else %}Chat {{ chat.id }}{% endif %}
+            </a>
+            - Participantes: 
+            {% for p in chat.participantes.all %}
+                {% if p != request.user %}
+                    {{ p.username }}{% if not forloop.last %}, {% endif %}
+                {% endif %}
+            {% endfor %}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No hay chats disponibles</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
