@@ -45,8 +45,8 @@ class Chat(models.Model):
 
 
 class Mensaje(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='mensajes')
     remitente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensajes_enviados')
-    destinatario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensajes_recibidos')
     texto = models.TextField()
     fecha_envio = models.DateTimeField(auto_now_add=True)
     leido_por = models.ManyToManyField(Usuario, related_name='mensajes_leidos', blank=True)

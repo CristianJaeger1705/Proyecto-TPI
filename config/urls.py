@@ -22,7 +22,7 @@ from aplicaciones.views import *
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
-from aplicaciones.views import test_brevo, debug_smtp
+#from aplicaciones.views import test_brevo, debug_smtp
 
 
 
@@ -32,7 +32,7 @@ urlpatterns = [
     path('', lista_ofertas_publicas, name='pagina_principal'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
-    path('ofertas/',include('ofertas.urls')),
+    path('ofertas/',include('ofertas.urls', namespace='ofertas')),
     path('usuarios/', include('usuarios.urls', namespace='usuarios')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
