@@ -42,7 +42,6 @@ class Favorito(models.Model):
         on_delete=models.CASCADE,
         related_name='favoritos_recibidos'
     )
-    # ⚠️ ELIMINA esta línea: session_key = models.CharField(max_length=40, null=True, blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
 
     class Meta:
