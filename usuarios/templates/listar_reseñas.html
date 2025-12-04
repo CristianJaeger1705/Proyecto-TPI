@@ -1,43 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Reseñas{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-
-    <h2 class="fw-bold mb-4">
-        <i class="bi bi-chat-left-quote text-warning me-2"></i> Reseñas del Sitio
-    </h2>
+    <h2 class="fw-bold mb-4">Reseñas del Sitio</h2>
 
     <div class="row g-4">
-        {% for r in reseñas %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0 h-100">
+        {% for r in reviews %}
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-
-                    <h5 class="card-title">
-                        {{ r.candidato.usuario.username }}
-                    </h5>
-
-                    <p class="text-warning">
+                    <h5 class="fw-bold">
                         {% for i in "12345" %}
                             {% if forloop.counter <= r.calificacion %}
-                                <i class="bi bi-star-fill"></i>
+                                ⭐
                             {% else %}
-                                <i class="bi bi-star"></i>
+                                ☆
                             {% endif %}
                         {% endfor %}
-                    </p>
+                    </h5>
 
-                    <p>{{ r.comentario }}</p>
+                    <p class="mt-2">{{ r.comentario }}</p>
 
-                    <p class="text-muted small mb-0">{{ r.fecha|date:"d M Y H:i" }}</p>
+                    <small class="text-muted">
+                        Candidato: {{ r.candidato.usuario.username }} <br>
+                        {{ r.fecha }}
+                    </small>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <p class="text-muted">No hay reseñas todavía.</p>
         {% endfor %}
     </div>
-
 </div>
 {% endblock %}

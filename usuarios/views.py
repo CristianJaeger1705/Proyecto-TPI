@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from .models import Review, Candidato
+from aplicaciones.decorators import solo_admin
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "registration/nueva_contrasena.html"
@@ -24,35 +25,31 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 def es_admin(user):
     return user.is_authenticated and user.rol == "admin"
 
-@user_passes_test(es_admin)
+
+@solo_admin
 def listar_reseñas(request):
-    reseñas = Review.objects.select_related("candidato").order_by("-fecha")
-    return render(request, "listar_reseñas.html", {
-        "reseñas": reseñas
-    })
+    if request.user.rol != "admin":
+        return redirect('pagina_principal')
+
+    reviews = Review.objects.select_related('candidato')
+    return render(request, 'listar_reseñas.html', {'reviews': reviews})
 
 
 
 #formulario para dejar review
 @login_required
-def crear_reseña(request):
-    if request.user.rol != "candidato":
-        return redirect("pagina_principal")
-
-    candidato = Candidato.objects.get(usuario=request.user)
-
+def crear_review(request):
     if request.method == "POST":
-        Review.objects.create(
-            candidato=candidato,
-            calificacion=request.POST["calificacion"],
-            comentario=request.POST["comentario"]
-        )
-        return redirect("pagina_principal")
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.candidato = candidato
+            review.save()
+            return redirect('pagina_principal')
+    else:
+        form = ReviewForm()
 
-    return render(request, "dejar_reseñas.html")
-
-
-
+    return render(request, 'dejar_reseñas.html', {'form': form})
 
 
 class CustomLoginView(LoginView):
