@@ -33,7 +33,7 @@ urlpatterns = [
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
     path('ofertas/',include('ofertas.urls', namespace='ofertas')),
-    path('usuarios/', include('usuarios.urls', namespace='usuarios')),
+    path('usuarios/', include('usuarios.urls')), # namespace='usuarios')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
     path("postulaciones/", include("postulaciones.urls")),    path("solicitudes/", listar_solicitudes, name="listar_solicitudes"),
