@@ -43,37 +43,24 @@
                 </div>
 
                 <!-- Tarjeta: Reseñas -->
-                <!-- Sección de reseñas -->
-<div class="mt-5">
-    <h3 class="fw-bold">Reseñas de Usuarios</h3>
-
-    <div class="table-responsive shadow-sm mt-3">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Candidato</th>
-                    <th>Calificación</th>
-                    <th>Comentario</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for r in reseñas %}
-                <tr>
-                    <td>{{ r.candidato.username }}</td>
-                    <td>{{ r.calificacion }} ⭐</td>
-                    <td>{{ r.comentario }}</td>
-                    <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center">Aún no hay reseñas.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <!-- Tarjeta: Reseñas -->
+<div class="col-md-6 col-lg-4">
+    <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+            <h5 class="card-title d-flex align-items-center">
+                <i class="bi bi-star-half me-2 text-warning"></i>
+                Reseñas de Candidatos
+            </h5>
+            <p class="card-text">
+                Visualiza, modera y administra las reseñas del sitio.
+            </p>
+            <a href="{% url 'listar_reseñas' %}" class="btn btn-warning text-white w-100">
+                Ver reseñas
+            </a>
+        </div>
     </div>
 </div>
+
 
 
             </div>

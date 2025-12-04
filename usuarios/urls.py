@@ -54,5 +54,6 @@ urlpatterns = [
     path('api/municipios/<str:departamento>/', obtener_municipios, name='obtener_municipios'),
 
     #para dejar reviews
-    path("dejar-review/", dejar_review, name="dejar_review")
+    path("reseñas/", listar_reseñas, name="listar_reseñas"),
+path("reseñas/nueva/", crear_reseña, name="crear_reseña"),
 ]

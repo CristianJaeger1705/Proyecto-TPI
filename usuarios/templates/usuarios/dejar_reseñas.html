@@ -1,12 +1,52 @@
 {% extends "base.html" %}
+{% block title %}Dejar Reseña{% endblock %}
 
 {% block content %}
-<h2>Dejar una reseña</h2>
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">Deja tu reseña</h2>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <form action="" method="POST">
+        {% csrf_token %}
 
-    <button type="submit" class="btn btn-primary">Enviar reseña</button>
-</form>
+        <label class="fw-bold">Calificación:</label>
+        <div class="rating mb-3">
+            {% for i in "54321" %}
+                <input type="radio" name="calificacion" id="star{{ i }}" value="{{ i }}">
+                <label for="star{{ i }}">
+                    <i class="bi bi-star-fill"></i>
+                </label>
+            {% endfor %}
+        </div>
+
+        <label class="fw-bold">Comentario:</label>
+        <textarea name="comentario" class="form-control" rows="4" required></textarea>
+
+        <button class="btn btn-primary mt-3 w-100" type="submit">
+            Enviar reseña
+        </button>
+    </form>
+</div>
+
+<style>
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+.rating input {
+    display: none;
+}
+.rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+}
+.rating input:checked ~ label {
+    color: #ffc107;
+}
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffc107;
+}
+</style>
 {% endblock %}
