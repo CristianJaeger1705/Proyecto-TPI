@@ -54,5 +54,5 @@ urlpatterns = [
 
     #para dejar reviews
     path("resenas/", listar_resenas, name="listar_resenas"),
-    path("reseñas/nueva/", crear_review, name="crear_reseña"),
+    path("reseñas/nueva/", crear_review, name="crear_resena"),
 ]

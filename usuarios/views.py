@@ -53,7 +53,7 @@ def crear_review(request):
     else:
         form = ReviewForm()
 
-    return render(request, "dejar_reseñas.html", {"form": form})
+    return render(request, "dejar_resenas.html", {"form": form})
 
 
 class CustomLoginView(LoginView):
