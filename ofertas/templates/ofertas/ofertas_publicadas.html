@@ -270,7 +270,7 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-clock-fill me-1"></i>
-                                    <span>{{ o.fecha_publicacion|date:"d/m/Y" }}</span>
+                                    <span>publicado : {{  o.fecha_publicacion|date:"d/m/Y" }}</span>
                                 </div>
                                 {% if o.salario %}
                                 <div class="d-flex align-items-center salary">
@@ -283,6 +283,7 @@
 
                         <div class="col-auto botones-oferta d-flex flex-column gap-2">
                             <!-- BOTÓN FAVORITO -->
+                             {% if request.user.rol != 'empresa' %}
                             <button
                                 class="btn btn-sm favorito-btn w-100 text-center professional-favorite-btn {% if o.id in favoritos_ids %}professional-favorite-active{% else %}btn-outline-warning{% endif %}"
                                 data-id="{{ o.id }}"
@@ -290,7 +291,7 @@
                                 <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
                                 <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
                             </button>
-
+                            {% endif %}
                             <!-- BOTÓN VER OFERTA -->
                             <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary btn-sm w-100 professional-apply-btn">
                                 Ver oferta <i class="bi bi-arrow-right ms-2"></i>

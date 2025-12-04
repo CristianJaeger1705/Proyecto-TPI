@@ -375,7 +375,6 @@ def ver_oferta_publica(request, oferta_id):
         empresa__rubro=oferta.empresa.rubro,
         estado='activa'
     ).exclude(id=oferta_id)[:3]
-
     return render(
         request,
         'ofertas/detalle_oferta_publica.html',
