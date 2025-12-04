@@ -14,7 +14,7 @@ from .models import Review
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
-from .models import Review, Candidato
+from .models import Review
 from aplicaciones.decorators import solo_admin
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -39,17 +39,21 @@ def listar_reseñas(request):
 #formulario para dejar review
 @login_required
 def crear_review(request):
+    if request.user.rol != "candidato":
+        return redirect("pagina_principal")  # o mostrar 403
+
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.candidato = candidato
+            review.candidato = request.user
             review.save()
-            return redirect('pagina_principal')
+            return redirect("pagina_principal")
+
     else:
         form = ReviewForm()
 
-    return render(request, 'dejar_reseñas.html', {'form': form})
+    return render(request, "dejar_reseñas.html", {"form": form})
 
 
 class CustomLoginView(LoginView):

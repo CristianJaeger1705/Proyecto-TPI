@@ -1,52 +1,77 @@
 {% extends "base.html" %}
-{% block title %}Dejar Reseña{% endblock %}
+{% load static %}
+{% include "componentes/estrellas.html" with calificacion=r.calificacion %}
+
+{% block title %}Dejar una Reseña{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="fw-bold mb-4">Deja tu reseña</h2>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
 
-    <form action="" method="POST">
-        {% csrf_token %}
+            <h3 class="fw-bold mb-3">
+                <i class="bi bi-chat-left-quote text-warning"></i> Dejar una reseña
+            </h3>
 
-        <label class="fw-bold">Calificación:</label>
-        <div class="rating mb-3">
-            {% for i in "54321" %}
-                <input type="radio" name="calificacion" id="star{{ i }}" value="{{ i }}">
-                <label for="star{{ i }}">
-                    <i class="bi bi-star-fill"></i>
-                </label>
-            {% endfor %}
+            <p class="text-muted mb-4">
+                Tu opinión ayuda a mejorar la plataforma.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Calificación en estrellas -->
+                <div class="mb-3">
+                    <label class="form-label">Calificación:</label><br>
+
+                    <div class="star-rating">
+                        {% for i in "54321"|make_list %}
+                        <input type="radio" id="star{{ i }}" name="calificacion" value="{{ i }}">
+                        <label for="star{{ i }}" title="{{ i }} estrellas">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                    <style>
+                        .star-rating input {
+                            display: none;
+                        }
+
+                        .star-rating label {
+                            font-size: 1.8rem;
+                            color: #ccc;
+                            cursor: pointer;
+                        }
+
+                        .star-rating input:checked ~ label i {
+                            color: gold;
+                        }
+
+                        .star-rating label:hover i,
+                        .star-rating label:hover ~ label i {
+                            color: gold;
+                        }
+                    </style>
+                </div>
+
+                <!-- Comentario -->
+                <div class="mb-3">
+                    <label class="form-label">Comentario:</label>
+                    <textarea
+                        name="comentario"
+                        class="form-control"
+                        rows="4"
+                        required
+                        placeholder="Escribe tu opinión sobre la plataforma..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-warning text-white px-4">
+                    <i class="bi bi-send-fill me-1"></i>Enviar reseña
+                </button>
+            </form>
+
         </div>
-
-        <label class="fw-bold">Comentario:</label>
-        <textarea name="comentario" class="form-control" rows="4" required></textarea>
-
-        <button class="btn btn-primary mt-3 w-100" type="submit">
-            Enviar reseña
-        </button>
-    </form>
+    </div>
 </div>
-
-<style>
-.rating {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-start;
-}
-.rating input {
-    display: none;
-}
-.rating label {
-    font-size: 2rem;
-    color: #ddd;
-    cursor: pointer;
-}
-.rating input:checked ~ label {
-    color: #ffc107;
-}
-.rating label:hover,
-.rating label:hover ~ label {
-    color: #ffc107;
-}
-</style>
 {% endblock %}

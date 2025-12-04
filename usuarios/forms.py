@@ -315,11 +315,10 @@ class FormularioExperienciaLaboral(forms.ModelForm):
         }
 
 class ReviewForm(forms.ModelForm):
-    calificacion = forms.ChoiceField(
-        choices=[(i, f"{i} estrellas") for i in range(1, 6)],
-        widget=forms.RadioSelect
-    )
-
     class Meta:
         model = Review
-        fields = ['calificacion', 'comentario']
+        fields = ["calificacion", "comentario"]
+        widgets = {
+            "calificacion": forms.RadioSelect(choices=[(i, f"{i} estrellas") for i in range(1, 6)]),
+            "comentario": forms.Textarea(attrs={"rows": 3}),
+        }
