@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.urls import path
 from usuarios.views import *
-
 app_name = 'usuarios'
 
 urlpatterns = [
@@ -52,4 +51,8 @@ urlpatterns = [
     
     # API - Municipios
     path('api/municipios/<str:departamento>/', obtener_municipios, name='obtener_municipios'),
+
+    #para dejar reviews
+    path("resenas/", listar_resenas, name="listar_resenas"),
+    path("reseñas/nueva/", crear_review, name="crear_resena"),
 ]

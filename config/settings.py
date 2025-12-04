@@ -52,10 +52,22 @@ INSTALLED_APPS = [
     'mensajeria',
     'adminpanel',
     'core',
-    'channels'
+    'channels',
+    'cloudinary',
+    'cloudinary_storage',
 
 
 ]
+
+DEFAULT_MEDIA_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'dw0yzjfts'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '274171125148962'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', 'XbpyyllJ1xZBfhPjLSBRHYpuODc'),
+}
+
+MEDIA_URL = '/media/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

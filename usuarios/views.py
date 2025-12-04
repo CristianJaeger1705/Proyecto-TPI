@@ -9,12 +9,52 @@ from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from .models import SolicitudEmpresa
-
+from .forms import ReviewForm
+from .models import Review
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from .models import Review
+from aplicaciones.decorators import solo_admin
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "registration/nueva_contrasena.html"
     success_url = "/login/"
 # Create your views here.
+
+def es_admin(user):
+    return user.is_authenticated and user.rol == "admin"
+
+
+@solo_admin
+def listar_resenas(request):
+    if request.user.rol != "admin":
+        return redirect('pagina_principal')
+
+    reviews = Review.objects.select_related('candidato')
+    return render(request, 'listar_resenas.html', {'reviews': reviews})
+
+
+
+#formulario para dejar review
+@login_required
+def crear_review(request):
+    if request.user.rol != "candidato":
+        return redirect("pagina_principal")  # o mostrar 403
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.candidato = request.user
+            review.save()
+            return redirect("pagina_principal")
+
+    else:
+        form = ReviewForm()
+
+    return render(request, "dejar_resenas.html", {"form": form})
+
 
 class CustomLoginView(LoginView):
     # 1. Este método se ejecuta cuando el login es EXITOSO

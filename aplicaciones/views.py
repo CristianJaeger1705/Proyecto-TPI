@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from usuarios.models import SolicitudEmpresa
 from aplicaciones.decorators import solo_admin
+from usuarios.models import Review
 
 def hola_mundo(request):
     return render(request, 'hola_mundo.html')
@@ -14,7 +15,16 @@ def dashboard_empresa(request):
 
 @solo_admin
 def dashboard_admin(request):
-    return render(request, 'dashboard_admin.html')
+    if request.user.rol != "admin":
+        return redirect("/")
+
+    reseñas = Review.objects.all().order_by("-fecha")
+
+    return render(request, "dashboard_admin.html", {
+        "reseñas": reseñas
+    })
+#def dashboard_admin(request):
+#   return render(request, 'dashboard_admin.html')
 
 @solo_admin
 def listar_solicitudes(request):

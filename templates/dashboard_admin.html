@@ -43,21 +43,25 @@
                 </div>
 
                 <!-- Tarjeta: Reseñas -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-chat-square-quote me-2 text-warning"></i>Reseñas
-                            </h5>
-                            <p class="card-text">
-                                Visualiza y modera las reseñas realizadas.
-                            </p>
-                            <a href="{% url 'pagina_principal' %}" class="btn btn-warning w-100 text-white">
-                                Ver reseñas
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <!-- Tarjeta: Reseñas -->
+<div class="col-md-6 col-lg-4">
+    <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-chat-square-quote me-2 text-warning"></i> Reseñas del Sitio
+            </h5>
+            <p class="card-text">
+                Visualiza y modera las reseñas realizadas por los candidatos.
+            </p>
+            <a href="{% url 'usuarios:listar_resenas' %}" class="btn btn-warning w-100 text-white">
+                Ver reseñas
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
 
             </div>
 

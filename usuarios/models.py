@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 import uuid
 from django.conf import settings
 
+
+
 class Usuario(AbstractUser):
     ROLES = [
         ('admin', 'Administrador'),
@@ -49,4 +51,13 @@ class SolicitudEmpresa(models.Model):
 
     def __str__(self):
         return self.nombre_empresa
+
+class Review(models.Model):
+    candidato = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    calificacion = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comentario = models.TextField(max_length=500)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review de {self.candidato.username} - {self.calificacion} estrellas"
 

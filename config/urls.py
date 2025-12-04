@@ -33,7 +33,7 @@ urlpatterns = [
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
     path('ofertas/',include('ofertas.urls', namespace='ofertas')),
-    path('usuarios/', include('usuarios.urls', namespace='usuarios')),
+    path('usuarios/', include('usuarios.urls')), # namespace='usuarios')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
     path("postulaciones/", include("postulaciones.urls")),    path("solicitudes/", listar_solicitudes, name="listar_solicitudes"),
@@ -41,6 +41,7 @@ urlpatterns = [
     path("solicitud/<int:id>/aprobar/", aprobar_solicitud, name="aprobar_solicitud"),
     path("solicitud/<int:id>/rechazar/", rechazar_solicitud, name="rechazar_solicitud"),
     path("solicitud/<int:id>/ver/", ver_solicitud, name="ver_solicitud"),
+    
     path('dashboard_admin', dashboard_admin, name='dashboard_admin'),
     path('dashboard_empresa', dashboard_empresa, name='dashboard_empresa'),
     path('mensajeria/', include('mensajeria.urls', namespace='mensajeria')),
