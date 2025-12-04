@@ -32,7 +32,7 @@ def listar_reseñas(request):
         return redirect('pagina_principal')
 
     reviews = Review.objects.select_related('candidato')
-    return render(request, 'listar_reseñas.html', {'reviews': reviews})
+    return render(request, 'usuarios/listar_reseñas.html', {'reviews': reviews})
 
 
 
