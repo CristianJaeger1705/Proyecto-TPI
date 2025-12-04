@@ -43,21 +43,38 @@
                 </div>
 
                 <!-- Tarjeta: Reseñas -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-chat-square-quote me-2 text-warning"></i>Reseñas
-                            </h5>
-                            <p class="card-text">
-                                Visualiza y modera las reseñas realizadas.
-                            </p>
-                            <a href="{% url 'pagina_principal' %}" class="btn btn-warning w-100 text-white">
-                                Ver reseñas
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <!-- Sección de reseñas -->
+<div class="mt-5">
+    <h3 class="fw-bold">Reseñas de Usuarios</h3>
+
+    <div class="table-responsive shadow-sm mt-3">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Candidato</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reseñas %}
+                <tr>
+                    <td>{{ r.candidato.username }}</td>
+                    <td>{{ r.calificacion }} ⭐</td>
+                    <td>{{ r.comentario }}</td>
+                    <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Aún no hay reseñas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
             </div>
 

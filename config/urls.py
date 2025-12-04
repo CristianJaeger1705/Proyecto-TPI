@@ -41,6 +41,7 @@ urlpatterns = [
     path("solicitud/<int:id>/aprobar/", aprobar_solicitud, name="aprobar_solicitud"),
     path("solicitud/<int:id>/rechazar/", rechazar_solicitud, name="rechazar_solicitud"),
     path("solicitud/<int:id>/ver/", ver_solicitud, name="ver_solicitud"),
+    
     path('dashboard_admin', dashboard_admin, name='dashboard_admin'),
     path('dashboard_empresa', dashboard_empresa, name='dashboard_empresa'),
     path('mensajeria/', include('mensajeria.urls', namespace='mensajeria')),

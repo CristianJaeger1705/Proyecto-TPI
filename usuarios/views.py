@@ -9,12 +9,42 @@ from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from .models import SolicitudEmpresa
-
+from .forms import ReviewForm
+from .models import Review
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "registration/nueva_contrasena.html"
     success_url = "/login/"
 # Create your views here.
+
+#formulario para dejar review
+@login_required
+def dejar_review(request):
+    if request.user.rol != "candidato":
+        messages.error(request, "Solo los candidatos pueden dejar reseñas.")
+        return redirect("/")
+
+    # Evitar que un candidato deje más de 1 reseña (opcional)
+    if Review.objects.filter(candidato=request.user).exists():
+        messages.warning(request, "Ya dejaste una reseña anteriormente.")
+        return redirect("/")
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.candidato = request.user
+            review.save()
+            messages.success(request, "¡Gracias por tu reseña!")
+            return redirect("/")
+    else:
+        form = ReviewForm()
+
+    return render(request, "usuarios/dejar_review.html", {"form": form})
+
+
+
+
 
 class CustomLoginView(LoginView):
     # 1. Este método se ejecuta cuando el login es EXITOSO

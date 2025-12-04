@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from perfiles.models import PerfilCandidato, PerfilEmpresa, ExperienciaLaboral
-
+from django import forms
+from . models import reviews
 
 class FormularioPerfilCandidato(forms.ModelForm):
     """
@@ -313,3 +314,11 @@ class FormularioExperienciaLaboral(forms.ModelForm):
             'fecha_fin': 'Deja en blanco si es tu trabajo actual',
         }
 
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["calificacion", "comentario"]
+        widgets = {
+            "calificacion": forms.Select(attrs={"class": "form-control"}),
+            "comentario": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+        }
