@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.urls import path
 from usuarios.views import *
-from .views import dejar_review
+from .views import crear_review, listar_reseñas
 app_name = 'usuarios'
 
 urlpatterns = [
