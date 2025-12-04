@@ -11,11 +11,11 @@ from django.http import JsonResponse
 from .models import SolicitudEmpresa
 from .forms import ReviewForm
 from .models import Review
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from .models import Review
 from aplicaciones.decorators import solo_admin
+import re
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "registration/nueva_contrasena.html"
@@ -267,6 +267,16 @@ def registro(request):
         }
 
         # Validaciones
+        patron_letras = r'^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,20}$'
+
+        if not re.match(patron_letras, nombre):
+            messages.error(request, "El nombre solo puede contener letras y debe tener máximo 20 caracteres.")
+            return render(request, "registration/register.html", context)
+
+        if not re.match(patron_letras, apellidos):
+            messages.error(request, "Los apellidos solo pueden contener letras y deben tener máximo 20 caracteres.")
+            return render(request, "registration/register.html", context)
+        
         if password != confirmar_password:
             messages.error(request, "Las contraseñas no coinciden.")
             return render(request, "registration/register.html", context)
@@ -274,8 +284,10 @@ def registro(request):
         if Usuario.objects.filter(username=username).exists():
             messages.error(request, "El nombre de usuario ya está en uso.")
             return render(request, "registration/register.html", context)
+        
+        correo_exacto = email.strip().lower()
 
-        if Usuario.objects.filter(email=email).exists():
+        if Usuario.objects.filter(email=correo_exacto).exists():
             messages.error(request, "Ya existe una cuenta con este correo.")
             return render(request, "registration/register.html", context)
 
@@ -289,7 +301,7 @@ def registro(request):
         # Guardar datos en session
         request.session["registro_data"] = {
             "username": username,
-            "email": email,
+            "email": correo_exacto,
             "password": password,
             "first_name": first_name,
             "last_name": last_name,
@@ -373,11 +385,16 @@ def solicitar_empresa(request):
         }
 
         # If unicidad
+        if not telefono.isdigit() or len(telefono) != 8:
+            messages.error(request, "El teléfono debe contener exactamente 8 números.")
+            return render(request, "registration/solicitar_empresa.html", context)
+        
         if Usuario.objects.filter(email=correo).exists():
             messages.error(request, "Ya existe una empresa con este correo.")
             return render(request, "registration/solicitar_empresa.html", context)
-
-        solicitud_existente = SolicitudEmpresa.objects.filter(correo=correo).first()
+        
+        correo_exacto = correo.strip().lower()
+        solicitud_existente = SolicitudEmpresa.objects.filter(correo=correo_exacto).first()
 
         if solicitud_existente and solicitud_existente.estado == "pendiente":
             messages.error(request, "Ya se envio una solicitud con ese correo.")
@@ -387,12 +404,12 @@ def solicitar_empresa(request):
             messages.success(request, "Se aprobo su solicitud revise su correo para finalizar registro")
             return render(request, "registration/solicitar_empresa.html", context)
 
-
+        
         SolicitudEmpresa.objects.create(
             nombre_empresa=nombre,
             telefono=telefono,
             sitio_web=sitio,
-            correo=correo,
+            correo=correo_exacto,
             descripcion=descripcion,
             solicitante=request.user if request.user.is_authenticated else None
         )
@@ -462,7 +479,7 @@ def verificar_codigo(request):
                 username=data["username"],
                 email=data["email"],
                 password=data["password"],
-                rol=data["rol"],
+                rol="candidato",
                 first_name=data["first_name"],
                 last_name=data["last_name"],
                 verificado=True
