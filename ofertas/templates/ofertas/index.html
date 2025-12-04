@@ -91,7 +91,7 @@
                                 <button type="button" class="btn btn-outline-primary btn-editar" data-id="{{ ofert.id }}" title="Editar oferta">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <a href="{% url 'eliminar' ofert.id %}" class="btn btn-outline-danger" title="Eliminar oferta"
+                                <a href="{% url 'ofertas:eliminar' oferta.id %}" class="btn btn-outline-danger" title="Eliminar oferta"
                                     onclick="confirmarEliminacionSimple('{{ ofert.titulo }}', this.href); return false;">
                                     <i class="bi bi-trash"></i>
                                 </a>
