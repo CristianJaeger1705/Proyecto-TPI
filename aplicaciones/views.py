@@ -9,6 +9,12 @@ def hola_mundo(request):
     return render(request, 'hola_mundo.html')
 
 
+def dashboard_empresa(request):
+    return render(request, 'dashboard_empresa.html')
+
+@solo_admin
+def dashboard_admin(request):
+    return render(request, 'dashboard_admin.html')
 
 @solo_admin
 def listar_solicitudes(request):

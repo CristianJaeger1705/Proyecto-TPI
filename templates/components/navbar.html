@@ -71,12 +71,16 @@
 
                 {% if request.user.rol == 'empresa' %}
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'ofertas' %}">
-                        <i class="bi bi-card-list"></i> Mis Ofertas
+                    <a class="nav-link active" href="{% url 'dashboard_empresa' %}">
+                        <i class="bi bi-card-list"></i> Mi Empresa
                     </a>
                 </li>
                 {% endif %}
-
+                {% if request.user.rol == 'admin' %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'dashboard_admin' %}"><i class="bi bi-card-list"></i> Administrativo</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'usuarios:exit' %}">
                         <i class="bi bi-arrow-bar-right"></i> Cerrar Sesión
