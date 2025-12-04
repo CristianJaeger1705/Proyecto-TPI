@@ -65,22 +65,20 @@ def aprobar_solicitud(request, id):
     )
 
 
-    return redirect("admin/listar_solicitudes")
+    return redirect("adminpanel:listar_solicitudes")
 
 @solo_admin
 def rechazar_solicitud(request, id):
     solicitud = get_object_or_404(SolicitudEmpresa, id=id)
-
     send_mail(
         subject="Solicitud rechazada",
          message="Lamentamos informarle que su solicitud ha sido rechazada.",
          from_email=settings.DEFAULT_FROM_EMAIL,
          recipient_list=[solicitud.correo],
     )
-
     solicitud.estado = "rechazada"
     solicitud.save()
-    return redirect("admin/listar_solicitudes")
+    return redirect("adminpanel:listar_solicitudes")
 
 
 #---------------------------------------------------------------------
