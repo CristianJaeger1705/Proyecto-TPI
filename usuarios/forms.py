@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from perfiles.models import PerfilCandidato, PerfilEmpresa, ExperienciaLaboral
 from django import forms
-from . models import reviews
+from . models import Review
 
 class FormularioPerfilCandidato(forms.ModelForm):
     """
