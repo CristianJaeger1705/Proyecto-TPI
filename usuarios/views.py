@@ -394,14 +394,22 @@ def solicitar_empresa(request):
             return render(request, "registration/solicitar_empresa.html", context)
         
         correo_exacto = correo.strip().lower()
-        solicitud_existente = SolicitudEmpresa.objects.filter(correo=correo_exacto).first()
+        pendiente = SolicitudEmpresa.objects.filter(
+            correo=correo_exacto,
+            estado="pendiente"
+        ).exists()
 
-        if solicitud_existente and solicitud_existente.estado == "pendiente":
-            messages.error(request, "Ya se envio una solicitud con ese correo.")
+        if pendiente:
+            messages.error(request, "Ya se envió una solicitud con ese correo.")
             return render(request, "registration/solicitar_empresa.html", context)
-        
-        if solicitud_existente and solicitud_existente.estado == "aprobada":
-            messages.success(request, "Se aprobo su solicitud revise su correo para finalizar registro")
+
+        aprobada = SolicitudEmpresa.objects.filter(
+            correo=correo_exacto,
+            estado="aprobada"
+        ).exists()
+
+        if aprobada:
+            messages.success(request, "Su solicitud fue aprobada. Revise su correo para finalizar el registro.")
             return render(request, "registration/solicitar_empresa.html", context)
 
         
