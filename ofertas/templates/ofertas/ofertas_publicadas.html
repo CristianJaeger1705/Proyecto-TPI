@@ -5,23 +5,45 @@
 {% block content %}
 
 <!-- HERO -->
-<div class="bg-success bg-gradient text-white py-5 mb-4">
+<div class="professional-banner">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <h1 class="display-5 fw-bold mb-3">BIENVENID@ A LABUROSV</h1>
-                <p class="lead mb-0">Explora tu primera oportunidad laboral en El Salvador</p>
+            <div class="col-lg-10 text-center banner-content">
+                <div class="job-icon-container">
+                    <div class="job-icon">💼</div>
+                </div>
+                
+                <h1 class="banner-title">BIENVENID@ A <span class="highlight-text">LABUROSV</span></h1>
+                
+                <p class="banner-subtitle">
+                    Conectamos talento con oportunidades. Encuentra tu próxima oportunidad laboral en El Salvador y construye el futuro que mereces.
+                </p>
+                
+                <div class="banner-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Oportunidades verificadas</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Proceso simplificado</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Empresas líderes</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container mb-5">
+<div class="container mb-5 mt-4">
     <div class="row g-4">
 
         <!-- BOTÓN FILTROS EN MÓVIL -->
         <div class="d-lg-none mb-3">
-            <button class="btn btn-primary w-100" type="button" data-bs-toggle="offcanvas"
+            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center py-3" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasFiltros">
                 <i class="bi bi-funnel-fill me-2"></i> Filtrar por área
                 {% if rubro_seleccionado %}<span class="badge bg-light text-dark ms-2">1</span>{% endif %}
@@ -30,99 +52,145 @@
 
         <!-- SIDEBAR DE FILTROS (escritorio) -->
         <div class="col-lg-3 d-none d-lg-block">
-            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
-                <div class="card-body">
-                    <h6 class="text-uppercase fw-bold text-secondary mb-3"
+            <div class="card border-0 shadow-sm sticky-top professional-filter-card" style="top: 30px;">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="text-uppercase fw-bold text-secondary mb-0"
                         style="font-size: 0.85rem; letter-spacing: .6px;">
-                        MOSTRAR RESULTADOS POR
+                        <i class="bi bi-funnel me-2"></i>FILTRAR POR ÁREA
                     </h6>
-
-                    <p class="fw-bold text-dark mb-2" style="font-size: 1rem;">Áreas</p>
-                    
-                    <!-- Solo muestra el bloque si hay favoritos (lo manejará JS también) -->
-                         {# BLOQUE DE FAVORITOS - CON CONDICIÓN PARA OCULTAR #}
-                     {% include "ofertas/partials/favoritos_block.html" with mobile=False %}
+                </div>
+                <div class="card-body py-3 px-3">
+                    <!-- Solo muestra el bloque si hay favoritos -->
+                    {% include "ofertas/partials/favoritos_block.html" with mobile=False %}
                     
                     <!-- Todas -->
                     <a href="?rubro="
-                        class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if todas_categorias.activo %}active-sidebar{% endif %}">
-                        <span class="flex-grow-1 me-2">{{ todas_categorias.nombre|safe }}</span>
-                        <span class="badge sidebar-badge {% if todas_categorias.activo %}active-badge{% endif %}">
+                        class="category-filter-link d-flex justify-content-between align-items-center py-2 {% if todas_categorias.activo %}active-filter{% endif %}">
+                        <span class="{% if todas_categorias.activo %}fw-semibold text-primary{% else %}text-dark{% endif %}">
+                            {{ todas_categorias.nombre|safe }}
+                        </span>
+                        <span class="badge count-badge {% if todas_categorias.activo %}active-count{% endif %}">
                             {{ todas_categorias.total }}
                         </span>
                     </a>
 
-                    <!-- Categorías -->
-                    {% for cat in categorias %}
-                    <a href="?rubro={{ cat.id }}"
-                        class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if cat.activo %}active-sidebar{% endif %}">
-                        <span class="flex-grow-1 me-2">{{ cat.nombre|safe }}</span>
-                        <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
-                            {{ cat.total }}
-                        </span>
-                    </a>
-                    {% empty %}
-                    <div class="text-muted small py-2">No hay categorías disponibles</div>
-                    {% endfor %}
+                    <!-- Categorías - LISTA SIMPLE -->
+                    <div class="categories-list mt-2">
+                        {% for cat in categorias %}
+                        <a href="?rubro={{ cat.id }}"
+                            class="category-filter-link d-flex justify-content-between align-items-center py-2 {% if cat.activo %}active-filter{% endif %}">
+                            <span class="{% if cat.activo %}fw-semibold text-primary{% else %}text-dark{% endif %}">
+                                {{ cat.nombre|safe }}
+                            </span>
+                            <span class="badge count-badge {% if cat.activo %}active-count{% endif %}">
+                                {{ cat.total }}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <div class="text-muted small py-3 text-center">
+                            <i class="bi bi-inbox me-1"></i> No hay categorías disponibles
+                        </div>
+                        {% endfor %}
+                    </div>
 
                     <!-- Filtro activo -->
                     {% if rubro_seleccionado %}
-                    <div class="mt-3 pt-3 border-top">
-                        <small class="text-muted d-block mb-1">Filtro aplicado:</small>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-dark">
+                    <div class="mt-4 pt-4 border-top">
+                        <small class="text-muted d-block mb-2 fw-medium">Filtro aplicado:</small>
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded bg-light border">
+                            <span class="fw-bold text-dark text-truncate me-2">
                                 {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor %}
                             </span>
-                            <a href="?rubro=" class="btn btn-sm btn-outline-danger">
-                                <i class="bi bi-x-lg"></i> Limpiar
+                            <a href="?rubro=" class="btn btn-sm btn-outline-danger flex-shrink-0">
+                                <i class="bi bi-x-lg me-1"></i>Limpiar
                             </a>
                         </div>
                     </div>
                     {% endif %}
-                    
                 </div>
             </div>
         </div>
 
         <!-- OFFCANVAS FILTROS (móvil y tablet) -->
-        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasFiltros" style="width: 300px;">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold">Filtrar por área</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasFiltros" style="width: 320px;">
+            <div class="offcanvas-header border-bottom pb-3 pt-4 bg-white">
+                <div class="d-flex align-items-center w-100">
+                    <h5 class="offcanvas-title fw-bold text-dark mb-0 flex-grow-1">
+                        <i class="bi bi-funnel me-2 text-primary"></i>Filtrar por área
+                    </h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                </div>
             </div>
-            <div class="offcanvas-body">
-                <p class="fw-bold text-dark mb-3">Áreas</p>
-                {% include "ofertas/partials/favoritos_block.html" with mobile=False %}
-                <a href="?rubro="
-                    class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if todas_categorias.activo %}active-sidebar{% endif %}">
-                    <span class="flex-grow-1 me-2">{{ todas_categorias.nombre|safe }}</span>
-                    <span class="badge sidebar-badge {% if todas_categorias.activo %}active-badge{% endif %}">
-                        {{ todas_categorias.total }}
-                    </span>
-                </a>
-
-                {% for cat in categorias %}
-                <a href="?rubro={{ cat.id }}"
-                    class="d-flex justify-content-between align-items-center py-2 px-2 mb-1 rounded sidebar-item {% if cat.activo %}active-sidebar{% endif %}">
-                    <span class="flex-grow-1 me-2">{{ cat.nombre|safe }}</span>
-                    <span class="badge sidebar-badge {% if cat.activo %}active-badge{% endif %}">
-                        {{ cat.total }}
-                    </span>
-                </a>
-                {% empty %}
-                <div class="text-muted small py-2">No hay categorías disponibles</div>
-                {% endfor %}
-
-                {% if rubro_seleccionado %}
-                <div class="mt-4 pt-3 border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-dark">
-                            {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre|safe }}{% endif %}{% endfor %}
+            <div class="offcanvas-body pt-3 pb-4 px-4">
+                <div class="mb-3">
+                    <p class="fw-bold text-dark mb-3 d-flex align-items-center">
+                        <i class="bi bi-tags me-2 text-secondary"></i>Áreas disponibles
+                    </p>
+                    
+                    <!-- Bloque de favoritos -->
+                    {% include "ofertas/partials/favoritos_block.html" with mobile=False %}
+                    
+                    <!-- Opción "Todas las categorías" -->
+                    <a href="?rubro="
+                        class="category-filter-link d-flex justify-content-between align-items-center py-2 {% if todas_categorias.activo %}active-filter{% endif %}">
+                        <span class="{% if todas_categorias.activo %}fw-semibold text-primary{% else %}text-dark{% endif %}">
+                            {{ todas_categorias.nombre|safe }}
                         </span>
-                        <a href="?rubro=" class="btn btn-sm btn-outline-danger">Limpiar</a>
+                        <span class="badge count-badge {% if todas_categorias.activo %}active-count{% endif %}">
+                            {{ todas_categorias.total }}
+                        </span>
+                    </a>
+
+                    <!-- Lista de categorías - LISTA SIMPLE -->
+                    <div class="categories-list mt-2">
+                        {% for cat in categorias %}
+                        <a href="?rubro={{ cat.id }}"
+                            class="category-filter-link d-flex justify-content-between align-items-center py-2 {% if cat.activo %}active-filter{% endif %}">
+                            <span class="{% if cat.activo %}fw-semibold text-primary{% else %}text-dark{% endif %}">
+                                {{ cat.nombre|safe }}
+                            </span>
+                            <span class="badge count-badge {% if cat.activo %}active-count{% endif %}">
+                                {{ cat.total }}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <div class="text-muted small py-3 text-center">
+                            <i class="bi bi-inbox me-1"></i> No hay categorías disponibles
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Filtro activo -->
+                {% if rubro_seleccionado %}
+                <div class="mt-4 pt-4 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-dark d-flex align-items-center">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Filtro aplicado:
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded bg-light border">
+                        <span class="fw-semibold text-truncate me-2">
+                            {% for cat in categorias %}
+                                {% if cat.activo %}{{ cat.nombre|safe }}{% endif %}
+                            {% endfor %}
+                        </span>
+                        <a href="?rubro=" class="btn btn-sm btn-outline-danger flex-shrink-0">
+                            <i class="bi bi-x me-1"></i>Limpiar
+                        </a>
                     </div>
                 </div>
                 {% endif %}
+            </div>
+            
+            <!-- Footer del offcanvas -->
+            <div class="offcanvas-footer border-top bg-light py-3 px-4">
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -130,17 +198,17 @@
         <div class="col-lg-9">
 
             <!-- Header con contador -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body">
+            <div class="card border-0 shadow-sm mb-4 professional-counter-card">
+                <div class="card-body p-4">
                     <div class="row align-items-center g-3">
                         <div class="col-md-6">
                             <h5 class="mb-0 fw-bold">
-                                <span class="text-primary">{{ total_ofertas }}</span>
-                                <span class="text-secondary">ofertas disponibles</span>
+                                <span class="text-primary display-6 fw-bold">{{ total_ofertas }}</span>
+                                <span class="text-secondary fs-5">ofertas disponibles</span>
                                 {% if rubro_seleccionado %}
-                                <small class="text-muted ms-2 d-block d-md-inline">
+                                <small class="text-muted ms-2 d-block d-md-inline mt-2">
                                     <i class="bi bi-funnel"></i> Filtrado por:
-                                    <span class="fw-bold">
+                                    <span class="fw-bold text-primary">
                                         {% for cat in categorias %}{% if cat.activo %}{{ cat.nombre }}{% endif %}{% endfor %}
                                     </span>
                                 </small>
@@ -150,20 +218,18 @@
                         <div class="col-md-6 text-md-end">
                             {% if rubro_seleccionado %}
                             <a href="?rubro=" class="btn btn-outline-secondary btn-sm me-2">
-                                Ver todas
+                                <i class="bi bi-x-circle me-1"></i>Ver todas
                             </a>
                             {% endif %}
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                    data-bs-toggle="dropdown">
-                                    Ordenar
+                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                                    <i class="bi bi-sort-down me-2"></i>Ordenar
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item"
-                                            href="?rubro={{ rubro_seleccionado }}&orden=reciente">Más recientes</a></li>
-                                    <li><a class="dropdown-item"
-                                            href="?rubro={{ rubro_seleccionado }}&orden=vencimiento">Próximas a
-                                            vencer</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end shadow">
+                                    <li><a class="dropdown-item" href="?rubro={{ rubro_seleccionado }}&orden=reciente">
+                                        <i class="bi bi-clock-history me-2"></i>Más recientes</a></li>
+                                    <li><a class="dropdown-item" href="?rubro={{ rubro_seleccionado }}&orden=vencimiento">
+                                        <i class="bi bi-calendar-x me-2"></i>Próximas a vencer</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -173,53 +239,60 @@
 
             <!-- Tarjetas de ofertas -->
             {% for o in ofertas %}
-            <div class="card border-0 shadow-sm mb-3 hover-card">
+            <div class="card border-0 shadow-sm mb-3 professional-job-card hover-card">
                 <div class="card-body p-4">
                     <div class="row align-items-center g-3">
                         <div class="col-auto">
-                            <div class="bg-light border rounded p-2 d-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
+                            <div class="company-logo-container rounded d-flex align-items-center justify-content-center">
                                 {% if o.empresa.logo %}
-                                <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa.nombre }}" class="img-fluid"
-                                    style="max-height: 100%; object-fit: contain;">
+                                <img src="{{ o.empresa.logo.url }}" alt="{{ o.empresa.nombre }}" class="company-logo">
                                 {% else %}
-                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50">
+                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="no-logo">
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="col">
-                            <h5 class="card-title fw-bold mb-2">{{ o.titulo }}</h5>
+                            <h5 class="card-title fw-bold mb-2 job-title">{{ o.titulo }}</h5>
                             {% if o.empresa.rubro %}
                             <div class="mb-2">
-                                <span class="badge bg-info-subtle text-info border border-info-subtle">
+                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3 py-1">
                                     {{ o.empresa.get_rubro_display }}
                                 </span>
-                                <span class="text-secondary fw-semibold ms-2">{{ o.empresa }}</span>
+                                <span class="text-secondary fw-semibold ms-2 company-name">{{ o.empresa }}</span>
                             </div>
                             {% endif %}
 
-                            <div class="d-flex flex-wrap gap-3 text-secondary small">
-                                <div><i class="bi bi-geo-alt-fill me-1"></i>{{ o.ubicacion }}</div>
-                                <div><i class="bi bi-clock-fill me-1"></i>{{ o.fecha_publicacion|date:"d/m/Y" }}</div>
+                            <div class="d-flex flex-wrap gap-3 text-secondary job-details">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-geo-alt-fill me-1"></i>
+                                    <span>{{ o.ubicacion }}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock-fill me-1"></i>
+                                    <span>{{ o.fecha_publicacion|date:"d/m/Y" }}</span>
+                                </div>
                                 {% if o.salario %}
-                                <div><i class="bi bi-cash-coin me-1"></i>${{ o.salario }}</div>
+                                <div class="d-flex align-items-center salary">
+                                    <i class="bi bi-cash-coin me-1"></i>
+                                    <span>${{ o.salario }}</span>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="col-auto botones-oferta d-flex flex-column gap-2">
                             <!-- BOTÓN FAVORITO -->
-<button
-    class="btn btn-sm favorito-btn w-100 text-center {% if o.id in favoritos_ids %}btn-warning{% else %}btn-outline-warning{% endif %}"
-    data-id="{{ o.id }}"
-    data-initial-state="{% if o.id in favoritos_ids %}saved{% else %}unsaved{% endif %}">
-    <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
-    <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
-</button>
+                            <button
+                                class="btn btn-sm favorito-btn w-100 text-center professional-favorite-btn {% if o.id in favoritos_ids %}professional-favorite-active{% else %}btn-outline-warning{% endif %}"
+                                data-id="{{ o.id }}"
+                                data-initial-state="{% if o.id in favoritos_ids %}saved{% else %}unsaved{% endif %}">
+                                <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
+                                <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
+                            </button>
 
                             <!-- BOTÓN VER OFERTA -->
-                            <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary btn-sm w-100">
+                            <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary btn-sm w-100 professional-apply-btn">
                                 Ver oferta <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
@@ -229,7 +302,7 @@
             {% empty %}
             <div class="text-center py-5">
                 <i class="bi bi-search display-1 text-muted mb-4"></i>
-                <h4 class="fw-bold">No se encontraron ofertas</h4>
+                <h4 class="fw-bold text-secondary">No se encontraron ofertas</h4>
                 <p class="text-muted">Intenta con otra categoría o regresa más tarde.</p>
             </div>
             {% endfor %}
@@ -237,32 +310,33 @@
             <!-- Paginación -->
             {% if ofertas.has_other_pages %}
             <nav class="mt-5">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination justify-content-center professional-pagination">
                     {% if ofertas.has_previous %}
                     <li class="page-item">
-                        <a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.previous_page_number }}">Anterior</a>
+                        <a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.previous_page_number }}">
+                            <i class="bi bi-chevron-left me-1"></i>Anterior
+                        </a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                    <li class="page-item disabled"><span class="page-link"><i class="bi bi-chevron-left me-1"></i>Anterior</span></li>
                     {% endif %}
 
                     {% for num in ofertas.paginator.page_range %}
                     {% if ofertas.number == num %}
                     <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                     {% else %}
-                    <li class="page-item"><a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ num }}">{{ num }}</a></li>
                     {% endif %}
                     {% endfor %}
 
                     {% if ofertas.has_next %}
                     <li class="page-item">
-                        <a class="page-link"
-                            href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.next_page_number }}">Siguiente</a>
+                        <a class="page-link" href="?{% if rubro_seleccionado %}rubro={{ rubro_seleccionado }}&{% endif %}page={{ ofertas.next_page_number }}">
+                            Siguiente<i class="bi bi-chevron-right ms-1"></i>
+                        </a>
                     </li>
                     {% else %}
-                    <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                    <li class="page-item disabled"><span class="page-link">Siguiente<i class="bi bi-chevron-right ms-1"></i></span></li>
                     {% endif %}
                 </ul>
             </nav>

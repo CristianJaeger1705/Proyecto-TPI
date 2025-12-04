@@ -194,20 +194,22 @@ class FavoritosManager {
         });
     }
     
-    updateButtonUI(button, isSaved) {
-        const icon = button.querySelector('i');
-        const textSpan = button.querySelector('span');
-        
-        if (isSaved) {
-            button.classList.replace('btn-outline-warning', 'btn-warning');
-            if (icon) icon.classList.replace('bi-star', 'bi-star-fill');
-            if (textSpan) textSpan.textContent = 'Guardado';
-        } else {
-            button.classList.replace('btn-warning', 'btn-outline-warning');
-            if (icon) icon.classList.replace('bi-star-fill', 'bi-star');
-            if (textSpan) textSpan.textContent = 'Guardar';
-        }
+updateButtonUI(button, isSaved) {
+    const icon = button.querySelector('i');
+    const textSpan = button.querySelector('span');
+    
+    if (isSaved) {
+        // CAMBIAR: Usar tu clase personalizada en lugar de btn-warning
+        button.classList.replace('btn-outline-warning', 'professional-favorite-active');
+        if (icon) icon.classList.replace('bi-star', 'bi-star-fill');
+        if (textSpan) textSpan.textContent = 'Guardado';
+    } else {
+        // CAMBIAR: Remover tu clase personalizada
+        button.classList.replace('professional-favorite-active', 'btn-outline-warning');
+        if (icon) icon.classList.replace('bi-star-fill', 'bi-star');
+        if (textSpan) textSpan.textContent = 'Guardar';
     }
+}
     
     getCsrfToken() {
         // Buscar en formularios
