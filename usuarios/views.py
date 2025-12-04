@@ -27,12 +27,12 @@ def es_admin(user):
 
 
 @solo_admin
-def listar_reseñas(request):
+def listar_resenas(request):
     if request.user.rol != "admin":
         return redirect('pagina_principal')
 
     reviews = Review.objects.select_related('candidato')
-    return render(request, 'usuarios/listar_reseñas.html', {'reviews': reviews})
+    return render(request, 'listar_resenas.html', {'reviews': reviews})
 
 
 
