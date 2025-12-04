@@ -16,7 +16,6 @@
         
         <span><i class="bi bi-heart-fill text-warning me-2"></i> Mis favoritos</span>
         
-        {# Badge con ID específico #}
         <span id="favoritos-badge-{% if mobile %}mobile{% else %}desktop{% endif %}" 
               class="badge {% if total_favoritos > 0 %}bg-success{% else %}bg-danger{% endif %} rounded-pill {% if total_favoritos == 0 %}d-none{% endif %}"
               data-badge-type="{% if mobile %}mobile{% else %}desktop{% endif %}">

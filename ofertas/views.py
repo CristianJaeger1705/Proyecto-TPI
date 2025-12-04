@@ -393,7 +393,6 @@ def ver_oferta_publica(request, oferta_id):
 # TOGGLE FAVORITOS
 # ============================================================
 def toggle_favorito(request, oferta_id):
-
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
@@ -402,6 +401,13 @@ def toggle_favorito(request, oferta_id):
 
         # --- Usuario autenticado ---
         if request.user.is_authenticated:
+            # Solo candidatos pueden guardar favoritos
+            if request.user.rol != 'candidato':
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'Solo los candidatos pueden guardar favoritos'
+                }, status=403)
+                
             fav, created = Favorito.objects.get_or_create(
                 usuario=request.user,
                 oferta=oferta
@@ -412,7 +418,7 @@ def toggle_favorito(request, oferta_id):
             else:
                 agregado = True
 
-            total = obtener_total_favoritos(request)
+            total = Favorito.objects.filter(usuario=request.user).count()
 
             return JsonResponse({
                 'success': True,
@@ -440,7 +446,8 @@ def toggle_favorito(request, oferta_id):
         response = JsonResponse({
             'success': True,
             'agregado': agregado,
-            'total': len(favoritos)
+            'total': len(favoritos),
+            'needs_login': True  # ← ESTE ES EL CAMPO IMPORTANTE
         })
 
         response.set_cookie(
@@ -455,7 +462,6 @@ def toggle_favorito(request, oferta_id):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
 
 # ============================================================
 # FAVORITOS DE CANDIDATO

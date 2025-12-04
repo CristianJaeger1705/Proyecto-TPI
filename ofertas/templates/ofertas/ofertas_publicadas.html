@@ -210,13 +210,13 @@
 
                         <div class="col-auto botones-oferta d-flex flex-column gap-2">
                             <!-- BOTÓN FAVORITO -->
-                            <button
-                                class="btn btn-sm favorito-btn w-100 text-center {% if o.id in favoritos_ids %}btn-warning{% else %}btn-outline-warning{% endif %}"
-                                data-id="{{ o.id }}"
-                                data-initial-state="{% if o.id in favoritos_ids %}saved{% else %}unsaved{% endif %}">
-                                <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
-                                <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
-                            </button>
+<button
+    class="btn btn-sm favorito-btn w-100 text-center {% if o.id in favoritos_ids %}btn-warning{% else %}btn-outline-warning{% endif %}"
+    data-id="{{ o.id }}"
+    data-initial-state="{% if o.id in favoritos_ids %}saved{% else %}unsaved{% endif %}">
+    <i class="bi {% if o.id in favoritos_ids %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
+    <span>{% if o.id in favoritos_ids %}Guardado{% else %}Guardar{% endif %}</span>
+</button>
 
                             <!-- BOTÓN VER OFERTA -->
                             <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary btn-sm w-100">

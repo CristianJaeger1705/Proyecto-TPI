@@ -23,7 +23,7 @@
                     <p class="text-secondary">{{ o.empresa }} • {{ o.ubicacion }}</p>
                 </div>
                 <div class="col-auto">
-                    <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary">Ver oferta</a>
+                    <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary">Ver oferta</a>
                 </div>
             </div>
         </div>
