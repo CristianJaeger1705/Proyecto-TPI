@@ -20,7 +20,7 @@ def dashboard_admin(request):
 
     reseñas = Review.objects.all().order_by("-fecha")
 
-    return render(request, "dashboard/dashboard_admin.html", {
+    return render(request, "dashboard_admin.html", {
         "reseñas": reseñas
     })
 #def dashboard_admin(request):
