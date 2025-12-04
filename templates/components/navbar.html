@@ -78,7 +78,7 @@
                 {% endif %}
                 {% if request.user.rol == 'admin' %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'dashboard_admin' %}"><i class="bi bi-card-list"></i> Administrativo</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'adminpanel:dashboard_admin' %}"><i class="bi bi-card-list"></i> Administrativo</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">

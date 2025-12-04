@@ -36,13 +36,8 @@ urlpatterns = [
     path('usuarios/', include('usuarios.urls')), # namespace='usuarios')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
-    path("postulaciones/", include("postulaciones.urls")),    path("solicitudes/", listar_solicitudes, name="listar_solicitudes"),
-    path("solicitudes/historial/", historial_solicitudes, name="historial_solicitudes"),
-    path("solicitud/<int:id>/aprobar/", aprobar_solicitud, name="aprobar_solicitud"),
-    path("solicitud/<int:id>/rechazar/", rechazar_solicitud, name="rechazar_solicitud"),
-    path("solicitud/<int:id>/ver/", ver_solicitud, name="ver_solicitud"),
-    
-    path('dashboard_admin', dashboard_admin, name='dashboard_admin'),
+    path("postulaciones/", include("postulaciones.urls")), 
+    path('adminpanel/', include('adminpanel.urls')), 
     path('dashboard_empresa', dashboard_empresa, name='dashboard_empresa'),
     path('mensajeria/', include('mensajeria.urls', namespace='mensajeria')),
 
