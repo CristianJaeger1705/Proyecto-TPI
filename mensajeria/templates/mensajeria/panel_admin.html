@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block title %}Panel Administrador{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =============================
+   ESTILO WHATSAPP ADMIN
+============================= */
+.whatsapp-card {
+    max-width: 700px;
+    width: 100%;
+    margin: auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.whatsapp-header {
+    background: #0a5c9c;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.chat-list {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    word-break: break-word;
+}
+
+.chat-item:hover {
+    background: #f2f6fc;
+}
+
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    background: #d1e3f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #0a5c9c;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.chat-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-info-name { 
+    font-size: 17px; 
+    font-weight: 600; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-info-participantes { 
+    color: gray; 
+    font-size: 14px; 
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sin-chats { 
+    text-align: center; 
+    padding: 20px; 
+    color: gray; 
+}
+
+.chat-notificacion {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: #007bff;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50%;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* =============================
+   ESTILO TABLA EMPRESAS
+============================= */
+.tabla-empresas-wrapper {
+    max-height: 400px;
+    overflow-x: auto;
+    overflow-y: auto;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.tabla-empresas {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+.tabla-empresas th, .tabla-empresas td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.tabla-empresas th {
+    background: #0a5c9c;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.tabla-empresas tr:hover {
+    background: #f2f6fc;
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+@media (max-width: 768px) {
+    .chat-avatar { width: 45px; height: 45px; font-size: 20px; }
+    .chat-info-name { font-size: 16px; }
+    .chat-info-participantes { font-size: 13px; }
+    .tabla-empresas th, .tabla-empresas td { font-size: 13px; padding: 8px; }
+}
+
+@media (max-width: 480px) {
+    .chat-avatar { width: 40px; height: 40px; font-size: 18px; }
+    .chat-info-name { font-size: 15px; }
+    .chat-info-participantes { font-size: 12px; }
+    .tabla-empresas th, .tabla-empresas td { font-size: 12px; padding: 6px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Panel de chats -->
+    <div class="whatsapp-card">
+        <div class="whatsapp-header">Chats del Administrador</div>
+        <div class="chat-list">
+            {% if grupos %}
+                {% for chat in grupos %}
+                    <a class="chat-item" href="{% url 'mensajeria:chat-detalle' chat.id %}" data-chat-id="{{ chat.id }}">
+                        <div class="chat-avatar">{{ chat.nombre|default:"A"|first|upper }}</div>
+                        <div class="chat-info">
+                            <div class="chat-info-name">
+                                {{ chat.nombre|default:"Chat " }}{{ chat.id }}
+                            </div>
+                            <div class="chat-info-participantes">
+                                {% for p in chat.participantes.all %}
+                                    {% if p != request.user %}
+                                        {{ p.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <span class="chat-notificacion" style="display:none;">0</span>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="sin-chats">No tienes chats activos</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Tabla de empresas registradas -->
+    <h3 class="mt-5">Últimas empresas registradas</h3>
+    {% if empresas_recientes %}
+        <div class="tabla-empresas-wrapper">
+            <table class="tabla-empresas">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Fecha de registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empresa in empresas_recientes %}
+                        <tr>
+                            <td>{{ empresa.nombre_empresa }}</td>
+                            <td>{{ empresa.usuario.username }}</td>
+                            <td>{{ empresa.usuario.email }}</td>
+                            <td>{{ empresa.fecha_creacion|date:"d/m/Y H:i"|default:"–" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No hay empresas registradas recientemente.</p>
+    {% endif %}
+
+</div>
+
+<script>
+async function actualizarNotificacionesAdmin() {
+    try {
+        const response = await fetch("{% url 'mensajeria:actualizar-notificaciones-admin' %}", {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (!response.ok) throw new Error('Error al obtener notificaciones admin');
+        const data = await response.json();
+
+        document.querySelectorAll('.chat-item').forEach(item => {
+            const chatId = item.dataset.chatId;
+            const notificacion = item.querySelector('.chat-notificacion');
+
+            const chat = data.chats.find(c => c.id == chatId);
+            if (chat && chat.mensajes_no_vistos_count > 0) {
+                notificacion.style.display = "inline-block";
+                notificacion.textContent = chat.mensajes_no_vistos_count;
+            } else {
+                notificacion.style.display = "none";
+            }
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+setInterval(actualizarNotificacionesAdmin, 2000);
+actualizarNotificacionesAdmin();
+</script>
+{% endblock %}

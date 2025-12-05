@@ -1,0 +1,22 @@
+/* Estilo especial para el botón de Mensajería */
+.mensajeria-link {
+    color: #00ff66; /* verde limón por defecto */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.mensajeria-link i {
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.mensajeria-link:hover {
+    color: #00cc33; /* verde más oscuro al pasar el puntero */
+}
+
+.mensajeria-link:hover i {
+    transform: rotate(10deg); /* un pequeño efecto divertido al icono */
+}
