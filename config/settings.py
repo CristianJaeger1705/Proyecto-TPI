@@ -175,18 +175,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # =========================
 # STORAGE: CLOUDINARY SOLO EN PRODUCCIÓN
 # =========================
-USE_CLOUDINARY = os.getenv("USE_CLOUDINARY", "False") == "True"
-
-if USE_CLOUDINARY:
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    CLOUDINARY_STORAGE = {
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'  
+CLOUDINARY_STORAGE = {
         "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
         "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
         "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
     }
-else:
-    # Local filesystem
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Whitenoise solo para estáticos
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -242,6 +245,7 @@ SOCIALACCOUNT_ADAPTER = "usuarios.adapters.GoogleAccountAdapter"
 ACCOUNT_SIGNUP_FIELDS = ['email', 'username', 'password1', 'password2']
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_METHODS = {"username"}
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
