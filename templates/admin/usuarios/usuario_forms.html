@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        {% if form.instance.pk %}
+            Editar Usuario
+        {% else %}
+            Crear Usuario
+        {% endif %}
+    </h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="card p-4">
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label"><strong>{{ field.label }}</strong></label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Guardar Cambios{% else %}Crear Usuario{% endif %}
+            </button>
+
+            <a href="{% url 'adminpanel:lista_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

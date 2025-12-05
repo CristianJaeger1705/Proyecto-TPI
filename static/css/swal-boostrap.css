@@ -1,0 +1,47 @@
+/* static/css/swal-bootstrap.css */
+.border-radius-8 {
+    border-radius: 0.5rem !important;
+}
+
+.swal2-popup {
+    font-family: 'Segoe UI', system-ui, sans-serif !important;
+    padding: 1.5rem !important;
+}
+
+.swal2-title {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.swal2-html-container {
+    margin: 1rem 0 !important;
+    font-size: 1rem !important;
+}
+
+/* Animaciones opcionales */
+@keyframes slideInDown {
+    from {
+        transform: translate3d(0, -100%, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+.animate__animated {
+    animation-duration: 0.3s;
+}
+
+.animate__fadeInDown {
+    animation-name: slideInDown;
+}
+
+.animate__fadeOutUp {
+    animation-name: slideInDown;
+    animation-direction: reverse;
+}

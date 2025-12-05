@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h3>{{ chat.nombre }}</h3>
+    <div id="chat-mensajes" style="height:400px; overflow-y:auto; border:1px solid #ccc; padding:10px;">
+        {% for mensaje in chat.mensajes.all %}
+            <div>
+                <strong>{{ mensaje.remitente.username }}:</strong> {{ mensaje.texto }}
+                <small class="text-muted">{{ mensaje.fecha_envio|date:"H:i d/m/Y" }}</small>
+            </div>
+        {% endfor %}
+    </div>
+    <form id="chat-form" class="mt-3">
+        <input type="text" id="mensaje-input" class="form-control" placeholder="Escribe un mensaje">
+        <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const chatId = "{{ chat.id }}";
+const usuarioId = "{{ request.user.id }}";
+const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+const chatSocket = new WebSocket(wsScheme + '://' + window.location.host + '/ws/chat/' + chatId + '/');
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const chatMensajes = document.getElementById('chat-mensajes');
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.innerHTML = `<strong>${data.remitente.username}:</strong> ${data.texto} <small class="text-muted">${data.fecha_envio}</small>`;
+    chatMensajes.appendChild(mensajeDiv);
+    chatMensajes.scrollTop = chatMensajes.scrollHeight;
+};
+
+document.getElementById('chat-form').onsubmit = function(e){
+    e.preventDefault();
+    const input = document.getElementById('mensaje-input');
+    const mensaje = input.value;
+    chatSocket.send(JSON.stringify({'mensaje': mensaje}));
+    input.value = '';
+};
+</script>
+{% endblock %}

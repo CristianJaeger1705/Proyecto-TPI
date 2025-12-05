@@ -12,14 +12,14 @@
                     <form method="POST">
                         {% csrf_token %}
                         <h2 class="mb-1">Recuperar Contraseña</h2>
-                        <p class="text-muted mb-4">Para continuari con la recuperacion, es indispensable ingresar el nombre de usuario asociado a su cuenta.</p>
+                        <p class="text-muted mb-4">Para continuar con la recuperacion, es indispensable ingresar el nombre de usuario asociado a su cuenta.</p>
                         <div class="input-group mb-4">
                                 <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
                                 <input type="text" name="username" placeholder="Usuario" required class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary mb-2">Verificar Usuario</button>
                         <p class="mb-0">¿No recuerda su usuario?
-                                <a href="{% url 'hola_mundo' %}" class="fw-bold text-dark text-decoration-none">
+                                <a href="{% url 'usuarios:login' %}" class="fw-bold text-dark text-decoration-none">
                                     Contactese con nosotros aqui!
                                 </a>
                         </p>

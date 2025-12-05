@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Completa tu Perfil - Laburo SV{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-plus"></i> Completa tu Perfil de Candidato
+                    </h3>
+                    <p class="mb-0 mt-2 small">Llena la información para que las empresas puedan encontrarte</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Información Personal -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-person"></i> Información Personal
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.telefono.id_for_label }}" class="form-label">
+                                        {{ form.telefono.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.telefono }}
+                                    {% if form.telefono.errors %}
+                                        <div class="text-danger small">{{ form.telefono.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label">
+                                        {{ form.fecha_nacimiento.label }}
+                                    </label>
+                                    {{ form.fecha_nacimiento }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.departamento.id_for_label }}" class="form-label">
+                                        {{ form.departamento.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.departamento }}
+                                    {% if form.departamento.errors %}
+                                        <div class="text-danger small">{{ form.departamento.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.municipio.id_for_label }}" class="form-label">
+                                        {{ form.municipio.label }}
+                                    </label>
+                                    {{ form.municipio }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.foto_perfil.id_for_label }}" class="form-label">
+                                        {{ form.foto_perfil.label }}
+                                    </label>
+                                    {{ form.foto_perfil }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.direccion.id_for_label }}" class="form-label">
+                                    {{ form.direccion.label }}
+                                </label>
+                                {{ form.direccion }}
+                            </div>
+                        </div>
+
+                        <!-- Información Profesional -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-briefcase"></i> Información Profesional
+                            </h5>
+                            <div class="mb-3">
+                                <label for="{{ form.profesion.id_for_label }}" class="form-label">
+                                    {{ form.profesion.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.profesion }}
+                                {% if form.profesion.errors %}
+                                    <div class="text-danger small">{{ form.profesion.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.biografia.id_for_label }}" class="form-label">
+                                    {{ form.biografia.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.biografia }}
+                                {% if form.biografia.errors %}
+                                    <div class="text-danger small">{{ form.biografia.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.habilidades.id_for_label }}" class="form-label">
+                                    {{ form.habilidades.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.habilidades }}
+                                <small class="form-text text-muted">{{ form.habilidades.help_text }}</small>
+                                {% if form.habilidades.errors %}
+                                    <div class="text-danger small">{{ form.habilidades.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Módulo de Experiencias Laborales -->
+                            <div class="mb-3">
+                                <label class="form-label">Experiencia Laboral</label>
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        {% if perfil.experiencias.all %}
+                                            <div class="list-group list-group-flush">
+                                                {% for exp in perfil.experiencias.all %}
+                                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <i class="bi bi-briefcase text-primary"></i>
+                                                            <strong>{{ exp.titulo_cargo }}</strong>
+                                                            <small class="text-muted ms-2">· {{ exp.empresa }}</small>
+                                                        </div>
+                                                        <div class="btn-group btn-group-sm">
+                                                            <a href="{% url 'usuarios:editar_experiencia' exp.id %}?next={% url 'usuarios:completar_perfil_candidato' %}" 
+                                                               class="btn btn-outline-primary" 
+                                                               title="Editar">
+                                                                <i class="bi bi-pencil"></i>
+                                                            </a>
+                                                            <a href="{% url 'usuarios:eliminar_experiencia' exp.id %}?next={% url 'usuarios:completar_perfil_candidato' %}" 
+                                                               class="btn btn-outline-danger" 
+                                                               title="Eliminar">
+                                                                <i class="bi bi-trash"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <p class="text-muted text-center mb-0">No has agregado experiencias laborales aún.</p>
+                                        {% endif %}
+                                        
+                                        <div class="text-center mt-3">
+                                            <a href="{% url 'usuarios:agregar_experiencia' %}?next={% url 'usuarios:completar_perfil_candidato' %}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-plus-circle"></i> Agregar Experiencia
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Educación -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-mortarboard"></i> Educación
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.nivel_educacion.id_for_label }}" class="form-label">
+                                        {{ form.nivel_educacion.label }}
+                                    </label>
+                                    {{ form.nivel_educacion }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.institucion_educativa.id_for_label }}" class="form-label">
+                                        {{ form.institucion_educativa.label }}
+                                    </label>
+                                    {{ form.institucion_educativa }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Archivos -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-file-earmark"></i> Archivos
+                            </h5>
+                            <div class="mb-3">
+                                <label for="{{ form.cv.id_for_label }}" class="form-label">
+                                    {{ form.cv.label }}
+                                </label>
+                                {{ form.cv }}
+                                <small class="form-text text-muted">Formato PDF recomendado</small>
+                            </div>
+                        </div>
+
+                        <!-- Preferencias -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2 mb-3">
+                                <i class="bi bi-gear"></i> Preferencias Laborales
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.disponibilidad.id_for_label }}" class="form-label">
+                                        {{ form.disponibilidad.label }}
+                                    </label>
+                                    {{ form.disponibilidad }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.salario_esperado.id_for_label }}" class="form-label">
+                                        {{ form.salario_esperado.label }}
+                                    </label>
+                                    {{ form.salario_esperado }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'usuarios:mi_perfil_candidato' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Guardar Perfil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Filtrado dinámico de municipios según departamento
+document.addEventListener('DOMContentLoaded', function() {
+    const departamentoSelect = document.getElementById('id_departamento');
+    const municipioInput = document.getElementById('id_municipio');
+    
+    if (departamentoSelect && municipioInput) {
+        // Guardar el valor original del municipio (para edición)
+        const municipioOriginal = municipioInput.value;
+        
+        // Convertir input a select
+        const municipioSelect = document.createElement('select');
+        municipioSelect.id = 'id_municipio';
+        municipioSelect.name = 'municipio';
+        municipioSelect.className = municipioInput.className;
+        municipioSelect.required = municipioInput.required;
+        
+        // Reemplazar input por select
+        municipioInput.parentNode.replaceChild(municipioSelect, municipioInput);
+        
+        function cargarMunicipios(departamento, valorSeleccionado = '') {
+            if (!departamento) {
+                municipioSelect.innerHTML = '<option value="">Primero selecciona un departamento</option>';
+                return;
+            }
+            
+            // Hacer petición AJAX para obtener municipios
+            fetch(`/usuarios/api/municipios/${departamento}/`)
+                .then(response => response.json())
+                .then(data => {
+                    municipioSelect.innerHTML = '<option value="">Selecciona un municipio</option>';
+                    data.municipios.forEach(municipio => {
+                        const option = document.createElement('option');
+                        option.value = municipio;
+                        option.textContent = municipio;
+                        if (municipio === valorSeleccionado) {
+                            option.selected = true;
+                        }
+                        municipioSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar municipios:', error);
+                    municipioSelect.innerHTML = '<option value="">Error al cargar municipios</option>';
+                });
+        }
+        
+        // Evento al cambiar departamento
+        departamentoSelect.addEventListener('change', function() {
+            cargarMunicipios(this.value);
+        });
+        
+        // Cargar municipios al inicio si hay un departamento seleccionado
+        if (departamentoSelect.value) {
+            cargarMunicipios(departamentoSelect.value, municipioOriginal);
+        }
+    }
+});
+</script>
+{% endblock %}

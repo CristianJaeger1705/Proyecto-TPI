@@ -1,0 +1,95 @@
+<form action="" enctype="multipart/form-data" method="post" id="{% if es_modal %}{% if es_creacion %}form-crear-oferta{% else %}form-editar-oferta{% endif %}{% else %}form-normal-oferta{% endif %}">
+    {% csrf_token %}
+    
+    {% for campo in formulario %}
+    <div class="mb-3">
+        <label for="id_{{ campo.name }}" class="form-label">{{ campo.label }}</label>
+        
+        {% if campo.field.choices %}
+            <!-- Campo con opciones (SELECT) -->
+            <select 
+                id="id_{{ campo.name }}"
+                class="form-select {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                aria-describedby="helpId">
+                <option value="">--- Seleccione {{ campo.label }} ---</option>
+                {% for value, label in campo.field.choices %}
+                    <option value="{{ value }}"
+                        {% if campo.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% elif campo.name == 'salario' %}
+        <input 
+        id="id_{{ campo.name }}"
+        type="number" 
+        class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+        name="{{ campo.name }}"
+        placeholder="{{ campo.label }}"
+        step="0.01"
+        min="0"
+        value="{% if campo.value %}{{ campo.value|floatformat:'.2f' }}{% endif %}">
+        {% elif campo.field.widget.input_type == 'textarea' %}
+            <!-- Campo de texto largo -->
+            <textarea 
+                id="id_{{ campo.name }}"
+                class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                placeholder="{{ campo.label }}"
+                rows="4">{{ campo.value | default:'' }}</textarea>
+
+        {% elif campo.name == 'fecha_expiracion' %}
+    <!-- Campo de fecha OPIONAL -->
+    <div class="mb-3">
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="bi bi-calendar-event"></i>
+            </span>
+            <input 
+                type="date"
+                id="id_{{ campo.name }}"
+                class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                value="{% if campo.value %}{{ campo.value|date:'Y-m-d' }}{% endif %}"
+                min="{% now 'Y-m-d' %}"
+            >
+        <!--NO ES NECESARIO PERO POR SI ACASO SE IMPLEMENTA FUNCION PARA AGREGAR ARCHIVOS-->
+        <!--#############################################################################-->
+        {% elif campo.field.widget.input_type == 'file' %}
+            <!-- Campo para archivos -->
+            <input 
+                id="id_{{ campo.name }}"
+                type="file" 
+                class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                aria-describedby="helpId">
+        {% else %}
+            <!-- Campos de input normales -->
+            <input 
+                id="id_{{ campo.name }}"
+                type="{{ campo.field.widget.input_type }}" 
+                class="form-control {% if campo.errors %}is-invalid{% endif %}" 
+                name="{{ campo.name }}"
+                placeholder="{{ campo.label }}"
+                value="{{ campo.value | default:'' }}">
+        {% endif %}
+        
+        <!-- Mostrar errores -->
+        {% if campo.errors %}
+        <div class="invalid-feedback">
+            {% for error in campo.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Texto de ayuda -->
+        {% if campo.help_text %}
+        <div class="form-text">{{ campo.help_text }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+
+</form>

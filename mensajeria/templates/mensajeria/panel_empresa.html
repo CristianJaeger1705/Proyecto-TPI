@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Panel Empresa{% endblock %}
+
+{% block content %}
+<style>
+/* ----------------------------- */
+/*   ESTILO WHATSAPP EMPRESARIAL */
+/* ----------------------------- */
+.panel-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.list-group-item {
+    border-radius: 10px !important;
+    margin-bottom: 12px;
+    background: #fafafa;
+    border: none;
+    padding: 15px;
+    transition: all 0.3s;
+}
+
+.list-group-item:hover {
+    background: #f0f7ff;
+}
+
+.badge-notif {
+    background: #0084ff;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    margin-left: 6px;
+    position: relative;
+    top: -2px;
+}
+
+.btn-sm, .btn-abrir-chat, .btn-crear-grupo {
+    border-radius: 8px;
+}
+
+.btn-abrir-chat, .btn-crear-grupo {
+    background-color: #0084ff;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.3s;
+    text-decoration: none;
+}
+
+.btn-abrir-chat:hover, .btn-crear-grupo:hover {
+    background-color: #006fcc;
+    color: white;
+    text-decoration: none;
+}
+
+.modal-member-card {
+    transition: transform 0.2s;
+}
+.modal-member-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 576px) {
+    .list-group-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+    .list-group-item .d-flex.gap-1 {
+        flex-wrap: wrap;
+    }
+}
+
+/* Ocultar botones Editar y Eliminar para grupos automáticos con admin */
+.grupo-automatico-admin .btn-warning,
+.grupo-automatico-admin .btn-danger {
+    display: none !important;
+}
+
+
+</style>
+
+<div class="container my-4">
+    <div class="panel-card">
+        <h2 class="text-center mb-4">Panel de Grupos de Empresa</h2>
+
+        <div class="mb-3 text-end">
+            <a href="{% url 'mensajeria:grupos-empresa' %}" class="btn-crear-grupo">
+                + Crear grupo propio
+            </a>
+        </div>
+
+        <ul class="list-group">
+            {% for grupo in grupos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap
+                {% if grupo.es_automatico and grupo.tiene_admin %}grupo-automatico-admin{% endif %}">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <strong>{{ grupo.nombre|default:"Grupo" }}</strong>
+                    {% if grupo.mensajes_no_vistos_count > 0 %}
+                        <span class="badge-notif">{{ grupo.mensajes_no_vistos_count }}</span>
+                    {% endif %}
+                    <div class="text-muted small">· {{ grupo.participantes.count }} miembros</div>
+                </div>
+
+                <div class="d-flex gap-1 flex-wrap">
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#modalMiembros{{ grupo.id }}">Ver miembros</button>
+
+                    <a href="{% url 'mensajeria:chat-detalle' grupo.id %}" class="btn-abrir-chat">Abrir Chat</a>
+
+                    {% if not grupo.es_automatico or not grupo.tiene_admin %}
+                        <a class="btn btn-warning btn-sm" href="{% url 'mensajeria:editar-grupo' grupo.id %}">Editar</a>
+                        <a class="btn btn-danger btn-sm"
+                        href="{% url 'mensajeria:eliminar-grupo' grupo.id %}"
+                        onclick="return confirm('¿Seguro que quieres eliminar este grupo?');">
+                            Eliminar
+                        </a>
+                    {% endif %}
+                </div>
+            </li>
+
+
+            <!-- Modal miembros -->
+            <div class="modal fade" id="modalMiembros{{ grupo.id }}" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Miembros de {{ grupo.nombre|default:"Grupo" }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 450px; overflow-y: auto;">
+                            <div class="row g-3">
+                                {% for p in grupo.participantes.all %}
+                                <div class="col-12 col-sm-6 col-md-4">
+                                    <div class="card modal-member-card shadow-sm p-3 text-center">
+                                        <div class="fw-bold">{{ p.username }}</div>
+                                        <div class="text-muted small">{{ p.email }}</div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <p>No hay miembros en este grupo.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <li class="list-group-item text-center text-muted">No hay grupos disponibles</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* Mantener pestaña activa */
+const tabs = document.querySelectorAll('#panelTabs button[data-bs-toggle="tab"]');
+tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function (event) {
+        localStorage.setItem('activeTab', event.target.id);
+    });
+});
+const activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+    const tabTrigger = new bootstrap.Tab(document.getElementById(activeTab));
+    tabTrigger.show();
+}
+
+/* Función para editar nombre de chat */
+function editarNombreChat(chatId, nombreActual) {
+    const nuevoNombre = prompt("Ingrese el nuevo nombre del chat:", nombreActual);
+    if (nuevoNombre !== null && nuevoNombre.trim() !== "") {
+        window.location.href = `/mensajeria/chats/${chatId}/editar/`;
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-person-vcard"></i>
+                Detalle de Usuario
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Rol dinámico -->
+            <p><strong>Rol:</strong> {{ usuario.get_rol_display }}</p>
+
+            {% if usuario.rol == "empresa" %}
+                <p><strong>Nombre de la Empresa:</strong> {{ usuario.first_name }}</p>
+            {% else %}
+                <p><strong>Nombre:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+            {% endif %}
+
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+
+            <p><strong>Estado:</strong>
+                {% if usuario.is_active %}
+                    <span class="text-success"><i class="bi bi-check-circle-fill"></i> Activo</span>
+                {% else %}
+                    <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Inactivo</span>
+                {% endif %}
+            </p>
+
+            <p><strong>Verificado:</strong>
+                {% if usuario.verificado %}
+                    <span class="text-success"><i class="bi bi-patch-check-fill"></i> Verificado</span>
+                {% else %}
+                    <span class="text-danger"><i class="bi bi-x-circle-fill"></i> No Verificado</span>
+                {% endif %}
+            </p>
+
+        </div>
+
+        <div class="card-footer text-end">
+            <a href="{{ volver_url }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

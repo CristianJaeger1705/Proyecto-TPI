@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <div class="row"> 
+        <div class="col-md-3 col-lg-2">
+            <div class="list-group shadow-sm">
+                <a href="#" class="list-group-item active py-2">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+                <a href="{% url 'adminpanel:listar_solicitudes' %}" class="list-group-item py-2">
+                    <i class="bi bi-building-add me-2"></i> Solicitudes de Empresa
+                </a>
+                <a href="{% url 'usuarios:listar_resenas' %}" class="list-group-item py-2">
+                    <i class="bi bi-chat-square-quote me-2"></i> Reseñas
+                </a>
+                <a href="{% url 'adminpanel:listar_candidatos' %}" class="list-group-item py-2">
+                    <i class="bi bi-people-fill me-2"></i> Candidatos
+                </a>
+                <a href="{% url 'adminpanel:listar_empresas' %}" class="list-group-item py-2">
+                    <i class="bi bi-building me-2"></i> Empresas
+                </a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="col-md-9 col-lg-10">
+            <h2 class="fw-bold mb-4">Panel Administrativo</h2>
+
+            <div class="row g-4">
+
+                <!-- Tarjeta: Solicitudes -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-building-add me-2 text-primary"></i>Solicitudes de Registro
+                            </h5>
+                            <p class="card-text">
+                                Revisa y aprueba las solicitudes enviadas por empresas.
+                            </p>
+                             <p class="card-text">
+                                Solicitudes pendientes: {{ total_solicitudes }}
+                            </p>
+                            <a href="{% url 'adminpanel:listar_solicitudes' %}" class="btn btn-primary w-100">
+                                Ver solicitudes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Reseñas -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-chat-square-quote me-2 text-warning"></i> Reseñas del Sitio
+                            </h5>
+                            <p class="card-text">
+                                Visualiza y modera las reseñas realizadas por los candidatos.
+                            </p>
+                            <p class="card-text">
+                                Reseñas: 
+                            </p>
+
+                            <a href="{% url 'usuarios:listar_resenas' %}" class="btn btn-warning w-100 text-white">
+                                Ver reseñas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Candidatos Registrados -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-people-fill me-2 text-success"></i> Candidatos Registrados
+                            </h5>
+                            <p class="card-text">
+                                Consulta todos los usuarios registrados como candidatos.
+                            </p>
+                            <p class="card-text">
+                                Registrados: {{ total_candidatos }}
+                            </p>
+                            <a href="{% url 'adminpanel:listar_candidatos' %}" class="btn btn-success w-100">
+                                Ver candidatos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Empresas Registradas -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-building me-2 text-info"></i> Empresas Registradas
+                            </h5>
+                            <p class="card-text">
+                                Consulta todas las empresas actualmente registradas.
+                            </p>
+                            <p class="card-text">
+                                Registradas: {{ total_empresas }}
+                            </p>
+                            <a href="{% url 'adminpanel:listar_empresas' %}" class="btn btn-info w-100 text-white">
+                                Ver empresas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
