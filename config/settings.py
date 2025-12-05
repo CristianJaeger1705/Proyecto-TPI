@@ -61,12 +61,12 @@ INSTALLED_APPS = [
 ]
 
 # CLOUDINARY
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'dw0yzjfts'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '274171125148962'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', 'XbpyyllJ1xZBfhPjLSBRHYpuODc'),
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
 MEDIA_URL = '/media/'  # NO USAR MEDIA_ROOT
@@ -243,3 +243,12 @@ SOCIALACCOUNT_PROVIDERS = {
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
