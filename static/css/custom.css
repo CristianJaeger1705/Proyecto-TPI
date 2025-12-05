@@ -192,461 +192,50 @@ body{
 
 .hover-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
 }
 
 .list-group-item-action:hover {
     background-color: rgba(13, 110, 253, 0.05);
     border-left: 3px solid var(--bs-primary);
     padding-left: 0.75rem !important;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 main {
     flex: 1;
 }
+/* =============================== */
+/*   HERO / BANNER PROFESIONAL     */
+/* =============================== */
 
-/* BANNER PROFESIONAL */
 .professional-banner {
-    background: linear-gradient(135deg, #0a4a7a 0%, #1a6ca8 50%, #2d8fd6 100%);
-    color: white;
-    padding: 4rem 0;
+    width: 100%;
+    height: 420px; /* Ajustable */
+    background: url("/static/img/banner.jpg") center center / cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
+    border-radius: 12px;
     overflow: hidden;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Oscurecer la imagen para mejor lectura */
 .professional-banner::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="100" height="100"/><path fill="rgba(255,255,255,0.05)" d="M20,20 Q50,5 80,20 T100,50 T80,80 T50,95 T20,80 T0,50 T20,20 Z"/></svg>');
-    background-size: 150px;
-    opacity: 0.4;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1;
 }
 
-.banner-content {
+/* Contenido del HERO */
+.professional-banner .container {
     position: relative;
     z-index: 2;
-}
-
-.banner-title {
-    font-weight: 700;
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    letter-spacing: 0.5px;
-}
-
-.banner-subtitle {
-    font-size: 1.3rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
-}
-
-.highlight-text {
-    color: #FFD700;
-    font-weight: bold;
-}
-
-.job-icon-container {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    margin-bottom: 1.5rem;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.job-icon {
-    font-size: 2rem;
-}
-
-.banner-features {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    font-size: 0.95rem;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-}
-
-.feature-icon {
-    margin-right: 0.5rem;
-    font-size: 1.1rem;
-}
-
-/* ESTILOS PROFESIONALES PARA BOLSA DE TRABAJO */
-.container.mb-5.mt-4 {
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Tarjeta de filtros profesional */
-.professional-filter-card {
-    border: 1px solid #e1e5e9 !important;
-    border-radius: 12px !important;
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-}
-
-.professional-filter-card .card-header {
-    background: linear-gradient(135deg, #f8fafc, #eef2f7);
-    border-bottom: 1px solid #e1e5e9;
-    border-radius: 12px 12px 0 0 !important;
-}
-
-/* Tarjeta de contador profesional */
-.professional-counter-card {
-    background: linear-gradient(135deg, #ffffff, #f8fafc);
-    border: 1px solid #e1e5e9;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.professional-counter-card .display-6 {
-    font-size: 2.5rem;
-    background: linear-gradient(135deg, #4299e1, #3182ce);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Tarjetas de empleo profesionales */
-.professional-job-card {
-    border: 1px solid #e1e5e9 !important;
-    border-radius: 12px !important;
-    background: white;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.professional-job-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 0;
-    background: linear-gradient(to bottom, #4299e1, #3182ce);
-    transition: height 0.3s ease;
-}
-
-.professional-job-card:hover::before {
-    height: 100%;
-}
-
-.professional-job-card:hover {
-    border-color: #4299e1 !important;
-    box-shadow: 0 8px 24px rgba(66, 153, 225, 0.15) !important;
-    transform: translateY(-4px);
-}
-
-/* Logo de empresa */
-.company-logo-container {
-    width: 90px;
-    height: 90px;
-    background: linear-gradient(135deg, #f7fafc, #edf2f7);
-    border: 1px solid #e1e5e9;
-    padding: 12px;
-    transition: all 0.3s ease;
-}
-
-.professional-job-card:hover .company-logo-container {
-    transform: scale(1.05);
-    border-color: #4299e1;
-    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.2);
-}
-
-.company-logo {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    filter: grayscale(0.2);
-    transition: all 0.3s ease;
-}
-
-.professional-job-card:hover .company-logo {
-    filter: grayscale(0);
-    transform: scale(1.05);
-}
-
-.no-logo {
-    opacity: 0.6;
-    max-height: 70%;
-}
-
-/* Títulos y detalles */
-.job-title {
-    color: #2d3748;
-    font-size: 1.25rem;
-    line-height: 1.4;
-    transition: color 0.3s ease;
-}
-
-.professional-job-card:hover .job-title {
-    color: #2b6cb0;
-}
-
-.company-name {
-    font-size: 0.95rem;
-}
-
-.job-details {
-    font-size: 0.9rem;
-}
-
-.job-details > div {
-    padding: 4px 12px;
-    background: #f8fafc;
-    border-radius: 20px;
-    border: 1px solid #edf2f7;
-    transition: all 0.3s ease;
-}
-
-.professional-job-card:hover .job-details > div {
-    background: #ebf8ff;
-    border-color: #bee3f8;
-}
-
-.salary {
-    color: #38a169 !important;
-    font-weight: 600;
-}
-
-/* Botones profesionales */
-.professional-favorite-btn {
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.professional-favorite-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
-}
-
-.professional-favorite-active {
-    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
-    border-color: #f59e0b !important;
-    color: white !important;
-}
-
-.professional-apply-btn {
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #4299e1, #3182ce);
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.professional-apply-btn:hover {
-    background: linear-gradient(135deg, #3182ce, #2b6cb0);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
-}
-
-/* Paginación profesional */
-.professional-pagination .page-item .page-link {
-    border: 1px solid #e1e5e9;
-    color: #4a5568;
-    margin: 0 4px;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.professional-pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #4299e1, #3182ce);
-    border-color: #4299e1;
-    color: white;
-    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
-}
-
-.professional-pagination .page-item:not(.disabled):not(.active) .page-link:hover {
-    background: #f7fafc;
-    border-color: #4299e1;
-    color: #4299e1;
-    transform: translateY(-2px);
-}
-
-/* ESTILOS PARA LA LISTA SIMPLE DE CATEGORÍAS */
-.category-filter-link {
-    display: block;
-    text-decoration: none;
-    color: #4a5568;
-    transition: all 0.2s ease;
-    border-radius: 0;
-    background: transparent;
-    border: none;
-    padding: 8px 4px;
-    margin-bottom: 4px;
-    font-size: 0.8rem;
-}
-
-.category-filter-link:hover {
-    color: #0d6efd;
-    background-color: transparent;
-}
-
-.category-filter-link.active-filter {
-    color: #0d6efd !important;
-    font-weight: 600;
-    background-color: transparent;
-    border-left: 3px solid #0d6efd;
-    padding-left: 12px;
-}
-
-.count-badge {
-    background-color: #f1f3f4;
-    color: #5f6368;
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 3px 8px;
-    min-width: 30px;
-    text-align: center;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-}
-
-.count-badge.active-count {
-    background-color: #0d6efd;
-    color: white;
-}
-
-.categories-list {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 8px;
-}
-
-/* Scrollbar personalizado */
-.categories-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.categories-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.categories-list::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-}
-
-.categories-list::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* Offcanvas - solo estilos únicos */
-.offcanvas {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-}
-
-.offcanvas-header {
-    background: linear-gradient(135deg, #f8fafc, #eef2f7);
-}
-
-.offcanvas-footer {
-    background: #f8fafc;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .professional-banner {
-        padding: 2.5rem 0 !important;
-    }
-    
-    .banner-title {
-        font-size: 2rem !important;
-    }
-    
-    .banner-subtitle {
-        font-size: 1rem !important;
-    }
-    
-    .company-logo-container {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 10px;
-    }
-    
-    .botones-oferta {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .botones-oferta button,
-    .botones-oferta a {
-        width: 100%;
-        padding: 12px;
-        font-size: 1rem;
-        text-align: center;
-    }
-    
-    .professional-favorite-btn,
-    .professional-apply-btn {
-        flex: 1;
-        min-width: 120px;
-    }
-    
-    .category-filter-link {
-        padding: 10px 6px;
-        margin-bottom: 6px;
-    }
-    
-    .category-filter-link.active-filter {
-        padding-left: 14px;
-    }
-}
-
-@media (max-width: 576px) {
-    .job-details {
-        flex-direction: column;
-        gap: 8px !important;
-    }
-    
-    .job-details > div {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-.transition-all {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

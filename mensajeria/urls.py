@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path 
 from .views import (
     ChatListView,
     MensajeListView,
@@ -26,13 +26,19 @@ urlpatterns = [
     path('chats/', ChatListView.as_view(), name='chats-list'),
     path('chats/<int:chat_id>/mensajes/', MensajeListView.as_view(), name='mensajes-list'),
     path('chats/<int:chat_id>/mensajes/crear/', MensajeCreateView.as_view(), name='mensaje-crear'),
-    
+
+    # Para la URL que estaba causando 404: /mensajeria/chat/9/mensajes-json/
+    path('chat/<int:chat_id>/mensajes-json/', MensajeListView.as_view(), name='mensajes-json'),
+
     # Notificaciones
     path('notificaciones/', NotificacionListView.as_view(), name='notificaciones-list'),
 
     # Paneles
     path('empresa/panel/', panel_empresa, name='panel-empresa'),
     path('panel-candidato/', panel_candidato, name='panel-candidato'),
+
+    # Para la URL que estaba causando 404: /mensajeria/admin/panel/
+    path('admin/panel/', panel_empresa, name='admin-panel'),
 
     # Chats y grupos de empresa
     path('empresa/chats/', chats_empresa, name='chats-empresa'),
@@ -47,9 +53,9 @@ urlpatterns = [
 
     # Marcar notificación como leída
     path('empresa/notificaciones/marcar/<int:notif_id>/', marcar_notificacion_leida, name='marcar-notificacion'),
-    path('chats/<int:chat_id>/', chat_detalle, name='chat-detalle'),
 
+    # Detalle y edición de chats
+    path('chats/<int:chat_id>/', chat_detalle, name='chat-detalle'),
     path('chat/<int:chat_id>/editar/', editar_chat, name='editar-chat'),
     path('chat/<int:chat_id>/eliminar/', eliminar_chat, name='eliminar-chat'),
-
 ]
