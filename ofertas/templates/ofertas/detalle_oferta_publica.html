@@ -95,7 +95,7 @@
                             </div>
 
                             <!-- BOTONES DE ACCIÓN -->
-                            <div class="d-flex gap-3 flex-wrap">
+                            <div class="d-flex gap-2 flex-wrap">
                                 {% if not request.user.is_authenticated %}
                                 <a href="{% url 'usuarios:login' %}?next={% url 'ofertas:detalleoferta' oferta.id %}"
                                     class="btn btn-success btn-lg px-4 d-flex align-items-center">
@@ -116,7 +116,7 @@
                                 {% endif %}
                                 {% if request.user.rol != 'empresa' %}
                                 <button
-                                    class="btn btn-lg px-3 favorito-btn-detalle professional-favorite-btn {% if esta_en_favoritos %}professional-favorite-active{% else %}btn-outline-warning{% endif %}"
+                                    class="btn btn-lg px-2 favorito-btn-detalle professional-favorite-btn {% if esta_en_favoritos %}professional-favorite-active{% else %}btn-outline-warning{% endif %}"
                                     data-id="{{ oferta.id }}">
                                     <i class="bi {% if esta_en_favoritos %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
                                     {{ esta_en_favoritos|yesno:"Guardado,Guardar" }}
@@ -298,6 +298,7 @@
                     </h6>
                 </div>
                 <div class="card-body p-3">
+                    
                     <p class="text-muted small text-center mb-3">Próximamente se mostrarán ofertas similares</p>
                     <div class="text-center">
                         <i class="bi bi-search display-6 text-muted"></i>
