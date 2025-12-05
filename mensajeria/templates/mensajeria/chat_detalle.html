@@ -1,13 +1,11 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}Chat: {{ chat.nombre }}{% endblock %}
 
 {% block content %}
-
 <style>
 /* ============================= */
 /*      ESTILO WHATSAPP PRO      */
 /* ============================= */
-
 .chat-container {
     height: 80vh;
     display: flex;
@@ -16,6 +14,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    position: relative;
 }
 
 /* Modo oscuro */
@@ -30,10 +29,8 @@ body.dark-mode {
 /* Mensajes */
 #chat-mensajes {
     padding: 20px;
-    height: 100%;
     overflow-y: auto;
-    background-size: cover !important;
-
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -46,6 +43,7 @@ body.dark-mode {
     font-size: 0.95rem;
     word-wrap: break-word;
     word-break: break-word;
+    position: relative;
 }
 
 .mensaje-propio {
@@ -53,6 +51,21 @@ body.dark-mode {
     color: black;
     margin-left: auto;
     border-bottom-right-radius: 5px;
+    padding-right: 40px;
+}
+
+.mensaje-propio::after {
+    content: '✔';
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    font-size: 0.85rem;
+    color: gray;
+}
+
+.mensaje-propio.visto::after {
+    content: '✔✔';
+    color: #0084ff;
 }
 
 .mensaje-otro {
@@ -61,12 +74,15 @@ body.dark-mode {
     border-bottom-left-radius: 5px;
 }
 
-/* Input */
 .chat-input-container {
     display: flex;
     padding: 10px;
     background: #fff;
     border-top: 1px solid #ccc;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 .chat-input-container input {
@@ -75,42 +91,6 @@ body.dark-mode {
     padding-left: 15px;
 }
 
-.chat-icons button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-/* Selector fondo */
-.bg-box {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    background: #fafafa;
-    box-shadow: 0 0 10px rgba(0,0,0,0.08);
-    width: fit-content;
-}
-
-.bg-selector {
-    display: flex;
-    gap: 10px;
-}
-
-.bg-thumb {
-    width: 45px;
-    height: 45px;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.bg-thumb:hover {
-    border-color: #007bff;
-}
-
-/* BOTÓN FLOTANTE */
 #boton-volver {
     position: absolute;
     top: 20px;
@@ -131,96 +111,136 @@ body.dark-mode {
 #boton-volver:hover {
     background: #f0f0f0;
 }
+
+.chat-panel-header {
+    background: linear-gradient(90deg, #007bff, #3399ff);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    font-weight: 600;
+    font-size: 1.2rem;
+    max-width: 500px;
+    margin: 0 auto 15px auto;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        height: 70vh;
+    }
+    .mensaje {
+        max-width: 85%;
+    }
+    .chat-panel-header {
+        font-size: 1rem;
+        padding: 6px 12px;
+        max-width: 90%;
+    }
+}
 </style>
 
 <div class="container my-4 position-relative">
-
-<!-- BOTÓN VOLVER -->
-{% if request.user.rol == 'empresa' %}
-    <a href="{% url 'mensajeria:panel-empresa' %}" id="boton-volver">
+    <a href="{% url panel_url %}" id="boton-volver">
         <i class="bi bi-arrow-left"></i>
     </a>
-{% else %}
-    <a href="{% url 'mensajeria:panel-candidato' %}" id="boton-volver">
-        <i class="bi bi-arrow-left"></i>
-    </a>
-{% endif %}
 
-<h3 class="mb-3 text-center">{{ chat.nombre }}</h3>
-
-<!-- MODO OSCURO A LA DERECHA -->
-<div class="d-flex justify-content-end mb-2">
-    <button id="toggle-dark" class="btn btn-sm btn-secondary">
-        🌙 Modo oscuro
-    </button>
-</div>
-
-<!-- Selector de fondo -->
-<div class="mb-3">
-    <strong>Personalizar fondo:</strong>
-
-    <div class="bg-box mt-2">
-        <div class="bg-selector">
-            <div class="bg-thumb" style="background:#f5f5f5" data-bg="#f5f5f5"></div>
-            <div class="bg-thumb" style="background:#e0f7fa" data-bg="#e0f7fa"></div>
-            <div class="bg-thumb" style="background:#fff3e0" data-bg="#fff3e0"></div>
-            <div class="bg-thumb" style="background:#ffe0e0" data-bg="#ffe0e0"></div>
-            <div class="bg-thumb" style="background:url('https://i.imgur.com/9YF7w9G.png')" data-bg="url('https://i.imgur.com/9YF7w9G.png')"></div>
-        </div>
+    <div class="chat-panel-header">
+        <h3>{{ chat.nombre }}</h3>
     </div>
-</div>
 
-<div class="chat-container">
+    <!-- Modo oscuro -->
+    <div class="d-flex justify-content-end mb-2">
+        <button id="toggle-dark" class="btn btn-sm btn-secondary">🌙 Modo oscuro</button>
+    </div>
 
-    <!-- Mensajes -->
-    <div id="chat-mensajes">
-        {% for mensaje in mensajes %}
-            <div class="mensaje 
-                {% if mensaje.remitente == request.user %}
-                    mensaje-propio
-                {% else %}
-                    mensaje-otro
-                {% endif %}
-            ">
-                <strong>{{ mensaje.remitente.username }}:</strong><br>
-                {{ mensaje.texto }}
-                <div class="text-end mt-1" style="font-size:0.75rem; opacity:0.7;">
-                    {{ mensaje.fecha_envio|date:"H:i" }}
-                </div>
+    <!-- Selector de fondo -->
+    <div class="mb-3">
+        <strong>Personalizar fondo:</strong>
+        <div class="bg-box mt-2">
+            <div class="bg-selector">
+                <div class="bg-thumb" style="background:#f5f5f5" data-bg="#f5f5f5"></div>
+                <div class="bg-thumb" style="background:#e0f7fa" data-bg="#e0f7fa"></div>
+                <div class="bg-thumb" style="background:#fff3e0" data-bg="#fff3e0"></div>
+                <div class="bg-thumb" style="background:#ffe0e0" data-bg="#ffe0e0"></div>
+                <div class="bg-thumb" style="background:url('https://i.imgur.com/9YF7w9G.png')" data-bg="url('https://i.imgur.com/9YF7w9G.png')"></div>
             </div>
-        {% endfor %}
+        </div>
     </div>
 
-    <!-- Input -->
-    <form method="post" class="chat-input-container">
-        {% csrf_token %}
-
-        <div class="chat-icons">
-            <button type="button"><i class="bi bi-emoji-smile"></i></button>
-            <button type="button"><i class="bi bi-paperclip"></i></button>
+    <!-- Chat -->
+    <div class="chat-container">
+        <div id="chat-mensajes">
+            {% for mensaje in mensajes %}
+                <div class="mensaje {% if mensaje.remitente == request.user %}mensaje-propio {% if mensaje.visto %}visto{% endif %}{% else %}mensaje-otro{% endif %}">
+                    <strong>{{ mensaje.remitente.username }}:</strong><br>
+                    {{ mensaje.texto|safe }}
+                    <div class="text-end mt-1" style="font-size:0.75rem; opacity:0.7;">
+                        {{ mensaje.fecha_envio|date:"H:i" }}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
 
-        <input type="text" id="mensajeInput" name="mensaje" placeholder="Escribe un mensaje..." required>
-
-        <button class="btn btn-primary ms-2">Enviar</button>
-    </form>
-
+        <form method="post" class="chat-input-container" id="formMensaje">
+            {% csrf_token %}
+            <input type="text" id="mensajeInput" name="mensaje" placeholder="Escribe un mensaje..." required>
+            <button class="btn btn-primary ms-2">Enviar</button>
+        </form>
+    </div>
 </div>
-</div>
-
 {% endblock %}
 
 {% block extra_js %}
 <script>
-/* Auto Scroll */
 const chatMensajes = document.getElementById('chat-mensajes');
+const chatId = {{ chat.id }};
+
+/* Auto scroll al cargar */
 chatMensajes.scrollTop = chatMensajes.scrollHeight;
 
-/* ENTER para enviar */
+/* Función para refrescar mensajes vía AJAX */
+function actualizarMensajes() {
+    fetch("{% url 'mensajeria:chat_mensajes_ajax' chat.id %}")
+        .then(res => res.json())
+        .then(data => {
+            if(data.html) {
+                chatMensajes.innerHTML = data.html;
+                chatMensajes.scrollTop = chatMensajes.scrollHeight;
+            }
+        })
+        .catch(err => console.error(err));
+}
+
+/* Polling cada 2 segundos */
+setInterval(actualizarMensajes, 2000);
+
+/* Enviar mensaje por AJAX */
+document.getElementById("formMensaje").addEventListener("submit", function(e){
+    e.preventDefault();
+    const input = document.getElementById("mensajeInput");
+    const mensaje = input.value.trim();
+    if(!mensaje) return;
+
+    fetch("{% url 'mensajeria:chat-detalle' chat.id %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "mensaje=" + encodeURIComponent(mensaje)
+    }).then(() => {
+        input.value = "";
+        actualizarMensajes();
+    });
+});
+
+/* Enviar con Enter */
 document.getElementById("mensajeInput").addEventListener("keypress", function(e){
     if(e.key === "Enter") {
         e.preventDefault();
-        this.closest("form").submit();
+        document.getElementById("formMensaje").requestSubmit();
     }
 });
 
@@ -230,7 +250,6 @@ toggle.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
     localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
 });
-
 if (localStorage.getItem("dark-mode") === "true") {
     document.body.classList.add("dark-mode");
 }
@@ -243,7 +262,6 @@ document.querySelectorAll(".bg-thumb").forEach(t => {
         localStorage.setItem("chat-bg", fondo);
     });
 });
-
 let bgSaved = localStorage.getItem("chat-bg");
 if (bgSaved) chatMensajes.style.background = bgSaved;
 </script>

@@ -6,6 +6,7 @@ from ofertas.models import OfertaLaboral
 class Chat(models.Model):
     nombre = models.CharField(max_length=255, blank=True, null=True)
     es_grupal = models.BooleanField(default=False)
+    es_automatico = models.BooleanField(default=False)  # <-- nuevo campo
     oferta = models.ForeignKey(
         OfertaLaboral,
         on_delete=models.SET_NULL,
@@ -15,7 +16,7 @@ class Chat(models.Model):
     )
     participantes = models.ManyToManyField('usuarios.Usuario', related_name='chats')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-
+   
     def __str__(self):
         return self.nombre or f"Chat {self.id}"
 
@@ -50,6 +51,8 @@ class Mensaje(models.Model):
     texto = models.TextField()
     fecha_envio = models.DateTimeField(auto_now_add=True)
     leido_por = models.ManyToManyField(Usuario, related_name='mensajes_leidos', blank=True)
+    es_automatico = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"De {self.remitente.username} a {self.destinatario.username}"

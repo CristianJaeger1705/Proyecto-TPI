@@ -1,0 +1,9 @@
+{% for mensaje in mensajes %}
+<div class="mensaje {% if mensaje.remitente == request.user %}mensaje-propio {% if mensaje.visto %}visto{% endif %}{% else %}mensaje-otro{% endif %}">
+    <strong>{{ mensaje.remitente.username }}:</strong><br>
+    {{ mensaje.texto }}
+    <div class="text-end mt-1" style="font-size:0.75rem; opacity:0.7;">
+        {{ mensaje.fecha_envio|date:"H:i" }}
+    </div>
+</div>
+{% endfor %}

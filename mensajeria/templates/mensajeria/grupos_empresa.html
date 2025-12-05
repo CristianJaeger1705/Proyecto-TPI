@@ -2,36 +2,155 @@
 {% block title %}Grupos{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h1>Grupos</h1>
+<style>
+/* ----------------------------- */
+/* ESTILO WHATSAPP RESPONSIVE */
+/* ----------------------------- */
+.container-chat {
+    background: #e5ddd5;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+h1, h3 {
+    color: #075e54;
+}
+
+.btn-primary, .btn-back {
+    background-color: #25d366;
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: background 0.3s;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.btn-primary:hover, .btn-back:hover {
+    background-color: #128c4a;
+    color: white;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #075e54;
+}
+
+.participantes-panel {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+}
+
+.participantes-panel label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.list-group-item {
+    border-radius: 10px !important;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    transition: background 0.2s;
+    flex-wrap: wrap;
+}
+
+.list-group-item:hover {
+    background: #f0f7ff;
+}
+
+.list-group-item div strong {
+    color: #075e54;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .container-chat {
+        padding: 15px;
+    }
+
+    .participantes-panel {
+        max-height: 200px;
+    }
+
+    .list-group-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .list-group-item div:last-child {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary, .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    h1, h3 {
+        font-size: 1.5rem;
+    }
+
+    .btn-primary, .btn-back {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .participantes-panel {
+        max-height: 150px;
+    }
+}
+</style>
+
+<div class="container my-5 container-chat">
+    <!-- Botón Volver al Panel Empresa -->
+    <a href="{% url 'mensajeria:panel-empresa' %}" class="btn btn-back">← Volver al Panel Empresa</a>
+
+    <h1 class="mt-3">Grupos</h1>
 
     <h3 class="mt-4">Crear Nuevo Grupo</h3>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <!-- Nombre del grupo -->
+        <div class="mb-3">
+            {{ form.nombre.label_tag }}
+            {{ form.nombre }}
+            {{ form.nombre.errors }}
+        </div>
+
+        <!-- Participantes con panel scrollable -->
+        <div class="mb-3">
+            {{ form.participantes.label_tag }}
+            <div class="participantes-panel">
+                {% for candidato in form.participantes.field.queryset %}
+                <label>
+                    <input type="checkbox" name="participantes" value="{{ candidato.id }}">
+                    {{ candidato.username }}
+                </label>
+                {% endfor %}
+            </div>
+            {{ form.participantes.errors }}
+            <small class="text-muted d-block mt-1">Selecciona los candidatos que quieres agregar al grupo. Funciona en PC y móviles.</small>
+        </div>
+
         <button type="submit" class="btn btn-primary">Crear Grupo</button>
     </form>
 
-    <h3 class="mt-5">Grupos Existentes</h3>
-    <ul class="list-group mt-3">
-        {% for grupo in grupos %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                {% if grupo.nombre %}{{ grupo.nombre }}{% else %}Grupo {{ grupo.id }}{% endif %}
-                - Miembros: 
-                {% for p in grupo.participantes.all %}
-                    {{ p.username }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </div>
-            <div>
-                <a href="{% url 'mensajeria:editar-grupo' grupo.id %}" class="btn btn-sm btn-warning">Editar</a>
-                <a href="{% url 'mensajeria:eliminar-grupo' grupo.id %}" class="btn btn-sm btn-danger"
-                   onclick="return confirm('¿Seguro que quieres eliminar este grupo?');">Eliminar</a>
-            </div>
-        </li>
-        {% empty %}
-        <li class="list-group-item">No hay grupos creados</li>
-        {% endfor %}
-    </ul>
+    
 </div>
 {% endblock %}

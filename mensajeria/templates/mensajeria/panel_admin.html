@@ -1,251 +1,236 @@
 {% extends "base.html" %}
 {% block title %}Panel Administrador{% endblock %}
 
-{% block extra_css %}
+{% block content %}
 <style>
-/* =============================
-   ESTILO WHATSAPP ADMIN
-============================= */
-.whatsapp-card {
-    max-width: 700px;
-    width: 100%;
-    margin: auto;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
-    overflow: hidden;
-}
-
-.whatsapp-header {
-    background: #0a5c9c;
-    color: white;
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.chat-list {
-    max-height: 450px;
-    overflow-y: auto;
-}
-
-.chat-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    color: inherit;
-    position: relative;
-    word-break: break-word;
-}
-
-.chat-item:hover {
-    background: #f2f6fc;
-}
-
-.chat-avatar {
-    width: 50px;
-    height: 50px;
-    background: #d1e3f5;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: #0a5c9c;
-    font-weight: bold;
-    margin-right: 15px;
-    flex-shrink: 0;
-}
-
-.chat-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.chat-info-name { 
-    font-size: 17px; 
-    font-weight: 600; 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.chat-info-participantes { 
-    color: gray; 
-    font-size: 14px; 
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-
-.sin-chats { 
-    text-align: center; 
-    padding: 20px; 
-    color: gray; 
-}
-
-.chat-notificacion {
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    background: #007bff;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 50%;
-    min-width: 20px;
-    text-align: center;
-}
-
-/* =============================
-   ESTILO TABLA EMPRESAS
-============================= */
-.tabla-empresas-wrapper {
-    max-height: 400px;
-    overflow-x: auto;
-    overflow-y: auto;
-    margin-top: 20px;
+/* ----------------------------- */
+/*   ESTILO WHATSAPP ADMIN       */
+/* ----------------------------- */
+.panel-card {
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    padding: 25px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-.tabla-empresas {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 500px;
+.nav-tabs .nav-link {
+    font-weight: 600;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 10px 18px;
 }
 
-.tabla-empresas th, .tabla-empresas td {
-    padding: 10px;
+.list-group-item {
+    border-radius: 10px !important;
+    margin-bottom: 8px;
+    background: #fafafa;
     border: 1px solid #ddd;
-    text-align: left;
 }
 
-.tabla-empresas th {
-    background: #0a5c9c;
+.list-group-item:hover {
+    background: #f0f7ff;
+}
+
+.badge-notif {
+    background: #0084ff;
     color: white;
-    position: sticky;
-    top: 0;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    margin-left: 6px;
+    position: relative;
+    top: -2px;
 }
 
-.tabla-empresas tr:hover {
-    background: #f2f6fc;
+.btn-abrir-chat {
+    background-color: #0084ff;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-/* =============================
-   RESPONSIVE
-============================= */
-@media (max-width: 768px) {
-    .chat-avatar { width: 45px; height: 45px; font-size: 20px; }
-    .chat-info-name { font-size: 16px; }
-    .chat-info-participantes { font-size: 13px; }
-    .tabla-empresas th, .tabla-empresas td { font-size: 13px; padding: 8px; }
-}
-
-@media (max-width: 480px) {
-    .chat-avatar { width: 40px; height: 40px; font-size: 18px; }
-    .chat-info-name { font-size: 15px; }
-    .chat-info-participantes { font-size: 12px; }
-    .tabla-empresas th, .tabla-empresas td { font-size: 12px; padding: 6px; }
+.btn-abrir-chat:hover {
+    background-color: #006fcc;
+    color: white;
+    text-decoration: none;
 }
 </style>
-{% endblock %}
 
-{% block content %}
-<div class="container my-5">
+<div class="container my-4">
+    <div class="panel-card">
+        <h2 class="text-center mb-4">Panel Administrativo de Mensajería</h2>
 
-    <!-- Panel de chats -->
-    <div class="whatsapp-card">
-        <div class="whatsapp-header">Chats del Administrador</div>
-        <div class="chat-list">
-            {% if grupos %}
-                {% for chat in grupos %}
-                    <a class="chat-item" href="{% url 'mensajeria:chat-detalle' chat.id %}" data-chat-id="{{ chat.id }}">
-                        <div class="chat-avatar">{{ chat.nombre|default:"A"|first|upper }}</div>
-                        <div class="chat-info">
-                            <div class="chat-info-name">
-                                {{ chat.nombre|default:"Chat " }}{{ chat.id }}
-                            </div>
-                            <div class="chat-info-participantes">
+        <ul class="nav nav-tabs mt-4" id="panelTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="chats-tab" data-bs-toggle="tab" data-bs-target="#chats" type="button">
+                    Chats Individuales
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="grupos-tab" data-bs-toggle="tab" data-bs-target="#grupos" type="button">
+                    Grupos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="notificaciones-tab" data-bs-toggle="tab" data-bs-target="#notificaciones" type="button">
+                    Notificaciones
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="panelTabsContent">
+
+            <!-- Chats individuales -->
+            <div class="tab-pane fade show active" id="chats">
+                <ul class="list-group">
+                    {% for chat in chats_individuales %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="fw-bold d-flex align-items-center gap-2">
+                            {% if chat.nombre %}{{ chat.nombre }}
+                            {% else %}
+                                Chat con:
                                 {% for p in chat.participantes.all %}
-                                    {% if p != request.user %}
-                                        {{ p.username }}{% if not forloop.last %}, {% endif %}
-                                    {% endif %}
+                                    {% if p != request.user %}{{ p.username }}{% if not forloop.last %}, {% endif %}{% endif %}
                                 {% endfor %}
+                            {% endif %}
+                            {% if chat.mensajes_no_vistos_count > 0 %}
+                                <span class="badge-notif">{{ chat.mensajes_no_vistos_count }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'mensajeria:chat-detalle' chat.id %}" class="btn-abrir-chat">Abrir Chat</a>
+                            <button class="btn btn-warning btn-sm"
+                                onclick="editarNombreChat({{ chat.id }}, '{{ chat.nombre|default:'Chat' }}')">
+                                Editar
+                            </button>
+                            <a href="{% url 'mensajeria:eliminar-chat-admin' chat.id %}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('¿Seguro que quieres eliminar este chat?');">Eliminar</a>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted">No hay chats disponibles</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Grupos -->
+            <div class="tab-pane fade" id="grupos">
+                <ul class="list-group">
+                    {% for grupo in grupos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <strong>{{ grupo.nombre|default:"Grupo" }}</strong>
+                            {% if grupo.mensajes_no_vistos_count > 0 %}
+                                <span class="badge-notif">{{ grupo.mensajes_no_vistos_count }}</span>
+                            {% endif %}
+                            <div class="text-muted small">· {{ grupo.participantes.count }} miembros</div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#modalMiembros{{ grupo.id }}">
+                                Ver miembros
+                            </button>
+                            <a href="{% url 'mensajeria:chat-detalle' grupo.id %}" class="btn-abrir-chat">Abrir Chat</a>
+                        </div>
+                    </li>
+
+                    <!-- Modal miembros -->
+                    <div class="modal fade" id="modalMiembros{{ grupo.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Miembros de {{ grupo.nombre|default:"Grupo" }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-3">
+                                        {% for p in grupo.participantes.all %}
+                                        <div class="col-md-4">
+                                            <div class="card shadow-sm p-3 text-center">
+                                                <div class="fw-bold">{{ p.username }}</div>
+                                                <div class="text-muted small">{{ p.email }}</div>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <p>No hay miembros en este grupo.</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
                             </div>
                         </div>
-                        <span class="chat-notificacion" style="display:none;">0</span>
-                    </a>
-                {% endfor %}
-            {% else %}
-                <div class="sin-chats">No tienes chats activos</div>
-            {% endif %}
+                    </div>
+
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted">No hay grupos disponibles</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Notificaciones -->
+            <div class="tab-pane fade" id="notificaciones">
+                <ul class="list-group">
+                    {% for notif in notificaciones %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if notif.tipo == "Nuevo Grupo Automático" %}
+                                <strong>Grupo Automático:</strong> {{ notif.mensaje }}
+                            {% else %}
+                                <strong>{{ notif.usuario.username }}</strong> {{ notif.mensaje }}
+                            {% endif %}
+                            <div class="text-muted small">Fecha: {{ notif.fecha|date:"d/m/Y H:i" }}</div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            {% if not notif.leida %}
+                                <a href="{% url 'mensajeria:marcar-notificacion-leida' notif.id %}" class="btn btn-success btn-sm">
+                                    Marcar como leída
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'mensajeria:eliminar-notificacion' notif.id %}" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Deseas eliminar esta notificación?');">Eliminar</a>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">No hay notificaciones recientes</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
         </div>
     </div>
-
-    <!-- Tabla de empresas registradas -->
-    <h3 class="mt-5">Últimas empresas registradas</h3>
-    {% if empresas_recientes %}
-        <div class="tabla-empresas-wrapper">
-            <table class="tabla-empresas">
-                <thead>
-                    <tr>
-                        <th>Empresa</th>
-                        <th>Usuario</th>
-                        <th>Correo</th>
-                        <th>Fecha de registro</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for empresa in empresas_recientes %}
-                        <tr>
-                            <td>{{ empresa.nombre_empresa }}</td>
-                            <td>{{ empresa.usuario.username }}</td>
-                            <td>{{ empresa.usuario.email }}</td>
-                            <td>{{ empresa.fecha_creacion|date:"d/m/Y H:i"|default:"–" }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p>No hay empresas registradas recientemente.</p>
-    {% endif %}
-
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
-async function actualizarNotificacionesAdmin() {
-    try {
-        const response = await fetch("{% url 'mensajeria:actualizar-notificaciones-admin' %}", {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-        if (!response.ok) throw new Error('Error al obtener notificaciones admin');
-        const data = await response.json();
-
-        document.querySelectorAll('.chat-item').forEach(item => {
-            const chatId = item.dataset.chatId;
-            const notificacion = item.querySelector('.chat-notificacion');
-
-            const chat = data.chats.find(c => c.id == chatId);
-            if (chat && chat.mensajes_no_vistos_count > 0) {
-                notificacion.style.display = "inline-block";
-                notificacion.textContent = chat.mensajes_no_vistos_count;
-            } else {
-                notificacion.style.display = "none";
-            }
-        });
-    } catch (err) {
-        console.error(err);
-    }
+/* Mantener pestaña activa */
+const tabs = document.querySelectorAll('#panelTabs button[data-bs-toggle="tab"]');
+tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function (event) {
+        localStorage.setItem('activeTab', event.target.id);
+    });
+});
+const activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+    const tabTrigger = new bootstrap.Tab(document.getElementById(activeTab));
+    tabTrigger.show();
 }
 
-setInterval(actualizarNotificacionesAdmin, 2000);
-actualizarNotificacionesAdmin();
+/* Función para editar nombre de chat */
+function editarNombreChat(chatId, nombreActual) {
+    const nuevoNombre = prompt("Ingrese el nuevo nombre del chat:", nombreActual);
+    if (nuevoNombre !== null && nuevoNombre.trim() !== "") {
+        window.location.href = `/mensajeria/chats/${chatId}/editar/`;
+    }
+}
 </script>
 {% endblock %}
