@@ -245,7 +245,9 @@ SOCIALACCOUNT_ADAPTER = "usuarios.adapters.GoogleAccountAdapter"
 ACCOUNT_SIGNUP_FIELDS = ['email', 'username', 'password1', 'password2']
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_METHODS = {"username"}
+
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
