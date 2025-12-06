@@ -210,14 +210,91 @@
 </div>
 
 <script>
-// Filtrado dinámico de municipios según departamento
 document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const STORAGE_KEY = 'editar_perfil_candidato_data';
+    
+    // ============================================
+    // GUARDAR Y RESTAURAR DATOS DEL FORMULARIO
+    // ============================================
+    
+    // Función para guardar todos los campos del formulario
+    function guardarFormulario() {
+        const formData = {};
+        const inputs = form.querySelectorAll('input, select, textarea');
+        
+        inputs.forEach(input => {
+            if (input.name && input.type !== 'file' && input.name !== 'csrfmiddlewaretoken') {
+                if (input.type === 'checkbox') {
+                    formData[input.name] = input.checked;
+                } else {
+                    formData[input.name] = input.value;
+                }
+            }
+        });
+        
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        console.log('📝 Formulario guardado en sessionStorage');
+    }
+    
+    // Función para restaurar los campos del formulario
+    function restaurarFormulario() {
+        const savedData = sessionStorage.getItem(STORAGE_KEY);
+        if (!savedData) return;
+        
+        const formData = JSON.parse(savedData);
+        
+        // Esperar un momento para que el select de municipios se cree
+        setTimeout(() => {
+            Object.keys(formData).forEach(name => {
+                const input = form.querySelector(`[name="${name}"]`);
+                if (input) {
+                    if (input.type === 'checkbox') {
+                        input.checked = formData[name];
+                    } else {
+                        input.value = formData[name];
+                    }
+                }
+            });
+            console.log('✅ Formulario restaurado desde sessionStorage');
+        }, 500);
+    }
+    
+    // Limpiar datos guardados al enviar el formulario exitosamente
+    form.addEventListener('submit', function() {
+        sessionStorage.removeItem(STORAGE_KEY);
+    });
+    
+    // Guardar antes de navegar a agregar/editar experiencia
+    document.querySelectorAll('a[href*="experiencia"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            guardarFormulario();
+        });
+    });
+    
+    // Restaurar datos si venimos de agregar/editar experiencia
+    if (document.referrer.includes('experiencia')) {
+        restaurarFormulario();
+    }
+    
+    // ============================================
+    // FILTRADO DINÁMICO DE MUNICIPIOS
+    // ============================================
+    
     const departamentoSelect = document.getElementById('id_departamento');
     const municipioInput = document.getElementById('id_municipio');
     
     if (departamentoSelect && municipioInput) {
         // Guardar el valor original del municipio (para edición)
         const municipioOriginal = municipioInput.value;
+        
+        // También revisar si hay valor guardado en sessionStorage
+        const savedData = sessionStorage.getItem(STORAGE_KEY);
+        let municipioGuardado = '';
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            municipioGuardado = formData.municipio || '';
+        }
         
         // Convertir input a select
         const municipioSelect = document.createElement('select');
@@ -261,9 +338,11 @@ document.addEventListener('DOMContentLoaded', function() {
             cargarMunicipios(this.value);
         });
         
-        // Cargar municipios al inicio si hay un departamento seleccionado
+        // Cargar municipios al inicio
         if (departamentoSelect.value) {
-            cargarMunicipios(departamentoSelect.value, municipioOriginal);
+            // Priorizar: municipio guardado > municipio original
+            const valorMunicipio = municipioGuardado || municipioOriginal;
+            cargarMunicipios(departamentoSelect.value, valorMunicipio);
         }
     }
 });
