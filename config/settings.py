@@ -18,9 +18,8 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'laburosv.com',
+    'www.laburosv.com',
     'proyecto-tpi-jtgf.onrender.com',
-    'localhost',
-    '127.0.0.1'
 ]
 
 # =========================
