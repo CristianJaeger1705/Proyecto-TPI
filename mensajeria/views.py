@@ -28,6 +28,8 @@ User = get_user_model()
 
 from mensajeria.signals import crear_o_actualizar_grupo_general
 
+def laburo_info(request):
+    return render(request, 'mensajeria/laburoinfo.html')
 
   # Función actualizada que evita duplicados
 

@@ -32,6 +32,12 @@
                         Inicio
                     </a>
                 </li>
+                <!-- NUEVO BOTÓN Laburo Info -->
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'mensajeria:laburoinfo' %}">
+                        <i class="bi bi-info-circle"></i> Quienes Somos
+                    </a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto">
@@ -59,13 +65,13 @@
                                     Panel de Candidato
                                 </a>
                             </li>
-                    {% elif request.user.rol == 'admin' or request.user.is_superuser %}
-                        <li>
-                            <a class="dropdown-item" href="{% url 'mensajeria:panel-admin' %}">
-                                Panel Admin
-                            </a>
-                        </li>
-                    {% endif %}
+                        {% elif request.user.rol == 'admin' or request.user.is_superuser %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'mensajeria:panel-admin' %}">
+                                    Panel Admin
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
 

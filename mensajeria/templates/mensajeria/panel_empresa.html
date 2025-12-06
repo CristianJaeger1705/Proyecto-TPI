@@ -70,6 +70,13 @@
     <div class="panel-card">
         <h2 class="text-center mb-4">Panel Administrativo de Empresa</h2>
 
+        <!-- Botón Crear Grupo propio DIRECTO -->
+        <div class="mb-3 text-end">
+            <a href="{% url 'mensajeria:grupos-empresa' %}" class="btn-crear-grupo">
+                + Crear grupo propio
+            </a>
+        </div>
+
         <!-- Pestañas -->
         <ul class="nav nav-tabs mt-4" id="panelTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -106,14 +113,10 @@
                     {% for chat in chats_individuales %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="fw-bold d-flex align-items-center gap-2">
-                            {% if chat.nombre %}
-                                {{ chat.nombre }}
-                            {% else %}
+                            {% if chat.nombre %}{{ chat.nombre }}{% else %}
                                 Chat con: 
                                 {% for p in chat.participantes.all %}
-                                    {% if p != request.user %}
-                                        {{ p.username }}{% if not forloop.last %}, {% endif %}
-                                    {% endif %}
+                                    {% if p != request.user %}{{ p.username }}{% if not forloop.last %}, {% endif %}{% endif %}
                                 {% endfor %}
                             {% endif %}
                             {% if chat.mensajes_no_vistos_count > 0 %}
@@ -142,14 +145,6 @@
 
             <!-- Grupos -->
             <div class="tab-pane fade" id="grupos">
-
-                <!-- Botón Crear Grupo propio -->
-                <div class="mb-3 text-end">
-                    <button class="btn-crear-grupo" data-bs-toggle="modal" data-bs-target="#modalCrearGrupo">
-                        + Crear grupo propio
-                    </button>
-                </div>
-
                 <ul class="list-group">
                     {% for grupo in grupos %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -207,40 +202,6 @@
 
                     {% endfor %}
                 </ul>
-            </div>
-
-            <!-- Modal Crear Grupo -->
-            <div class="modal fade" id="modalCrearGrupo" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <form method="POST" action="{% url 'mensajeria:grupos-empresa' %}">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h5 class="modal-title">Crear Grupo Propio</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Nombre del grupo</label>
-                                    <input type="text" name="nombre" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Seleccionar candidatos</label>
-                                    <select name="candidatos" class="form-select" multiple required>
-                                        {% for candidato in candidatos %}
-                                            <option value="{{ candidato.id }}">{{ candidato.username }} - {{ candidato.email }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <small class="text-muted">Mantén presionada la tecla Ctrl (o Cmd) para seleccionar varios</small>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">Crear Grupo</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
 
             <!-- Notificaciones -->

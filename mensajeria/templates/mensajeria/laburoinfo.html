@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Título principal centrado y elegante -->
+    <h1 class="text-center display-4 fw-bold mb-4" style="color: #0d6efd; letter-spacing: 1px;">
+         LaburoSV
+    </h1>
+    
+    <!-- Texto completo en panel ocultable con efecto -->
+    <div class="info-text p-4 rounded shadow-sm mb-5">
+        <h2 class="text-center fw-semibold mb-3" style="color: #212529;">
+            La Bolsa de Empleo 100% Salvadoreña
+        </h2>
+        <p>
+            LaburoSV es una plataforma creada por estudiantes de la Universidad de El Salvador, diseñada para <strong>conectar de manera eficiente a empresas formales y MYPEs con candidatos que buscan empleo</strong>.
+        </p>
+        <p>
+            Nuestra plataforma no solo facilita los procesos de selección, sino que también abre nuevas oportunidades para quienes buscan <strong>su primer empleo, posiciones temporales, pasantías, trabajos freelance o empleos formales</strong>.
+        </p>
+        <p>
+            Lo que hace única a LaburoSV:
+            <ul>
+                <li>Comunicación directa entre candidatos y empresas dentro de la plataforma.</li>
+                <li>Interacción con administradores, asegurando un seguimiento efectivo de cada proceso de selección.</li>
+                <li>Acceso gratuito, fomentando la participación de toda la comunidad salvadoreña.</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Beneficio clave para nuestros clientes:</strong>
+            <ul>
+                <li><strong>Empresas:</strong> Reducen tiempos de selección, acceden a talento calificado y aumentan la visibilidad de sus vacantes.</li>
+                <li><strong>Candidatos:</strong> Encuentran oportunidades de primer empleo, freelance, temporales o formales, con comunicación directa y segura.</li>
+                <li><strong>Todos:</strong> Una plataforma moderna, confiable y gratuita que centraliza todo el proceso de reclutamiento en un solo lugar.</li>
+            </ul>
+        </p>
+        <p>
+            LaburoSV no es solo una propuesta: es una <strong>solución real que reduce la brecha entre la oferta y demanda laboral en El Salvador</strong>.
+        </p>
+    </div>
+
+    <!-- Visión y Misión -->
+    <div class="row mb-5">
+        <div class="col-md-6 col-12 mb-3">
+            <div class="card shadow-sm h-100 border-primary">
+                <div class="card-body">
+                    <h3 class="card-title text-primary">Visión</h3>
+                    <p>Ser la plataforma líder de empleo en El Salvador, reconocida por su innovación, eficiencia y compromiso con la comunidad laboral.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12 mb-3">
+            <div class="card shadow-sm h-100 border-success">
+                <div class="card-body">
+                    <h3 class="card-title text-success">Misión</h3>
+                    <p>Facilitar la conexión entre empresas y candidatos, agilizando los procesos de selección y ofreciendo oportunidades de empleo para todos, especialmente para jóvenes que buscan su primer trabajo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Beneficios más bonita -->
+    <h2 class="mb-3">Beneficios y Datos Relevantes</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover shadow-sm rounded overflow-hidden">
+            <thead class="table-dark">
+                <tr>
+                    <th>Problema laboral en El Salvador</th>
+                    <th>Datos aproximados</th>
+                    <th>Cómo LaburoSV lo soluciona</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jóvenes buscando primer empleo</td>
+                    <td>35% de jóvenes entre 18-25 años no encuentran trabajo</td>
+                    <td>Publicación de vacantes especiales de primer empleo</td>
+                </tr>
+                <tr>
+                    <td>Procesos largos de selección</td>
+                    <td>60% de empresas tardan más de 30 días en contratar</td>
+                    <td>Agilizamos la comunicación directa y la postulación</td>
+                </tr>
+                <tr>
+                    <td>Empleos informales</td>
+                    <td>55% de empleos son informales</td>
+                    <td>Promovemos empleos formales, temporales y freelance</td>
+                </tr>
+                <tr>
+                    <td>Falta de intercomunicación</td>
+                    <td>Comunicación dispersa por correos y redes</td>
+                    <td>Chat interno entre candidatos, empresas y administradores</td>
+                </tr>
+                <tr>
+                    <td>Escasa visibilidad de MYPEs</td>
+                    <td>70% de pequeñas empresas no logran candidatos calificados</td>
+                    <td>Publicación directa de vacantes y acceso a talentos jóvenes</td>
+                </tr>
+                <tr>
+                    <td>Alta participación de MYPEs en la economía</td>
+                    <td>Las MYPEs constituyen 99% de empresas, generan 60-70% del empleo formal y aportan 45% del PIB</td>
+                    <td>LaburoSV da visibilidad y facilita el acceso de estas empresas a talento calificado, optimizando su contratación y fortaleciendo su impacto económico</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Panel de texto ocultable con efecto suave */
+.info-text {
+    max-height: 8em;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.info-text:hover {
+    max-height: 100em;
+    opacity: 1;
+}
+
+.info-text::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3em;
+    background: linear-gradient(rgba(248,249,250,0), #f8f9fa);
+}
+
+/* Títulos centrados y modernos */
+h1.display-4 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h2.text-center {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.8rem;
+}
+
+/* Tabla */
+.table thead {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+    .info-text {
+        max-height: 10em;
+    }
+    .info-text:hover {
+        max-height: 100em;
+    }
+}
+</style>
+{% endblock %}

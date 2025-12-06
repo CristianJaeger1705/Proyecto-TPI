@@ -24,11 +24,15 @@ from .views import (
     eliminar_notificacion,
     obtener_mensajes_no_vistos,
     chat_mensajes_ajax,
+    laburo_info,
 )
 
 app_name = 'mensajeria'
 
 urlpatterns = [
+
+    path('laburoinfo/', laburo_info, name='laburoinfo'),
+
     # -----------------------
     # API Chats y Mensajes
     # -----------------------
@@ -73,8 +77,6 @@ urlpatterns = [
     path('empresa/notificaciones/eliminar/<int:notif_id>/', eliminar_notificacion, name='eliminar-notificacion'),
     path('chat/<int:chat_id>/ajax/', chat_mensajes_ajax, name='chat_mensajes_ajax'),
 
-
-
     # -----------------------
     # Edición y eliminación de chats
     # -----------------------
@@ -93,8 +95,6 @@ urlpatterns = [
 
 
     path('api/mensajes-no-vistos/', obtener_mensajes_no_vistos, name='api-mensajes-no-vistos'),
-
-
 
     # -----------------------
     # Notificaciones admin
