@@ -422,7 +422,7 @@ def solicitar_empresa(request):
             solicitante=request.user if request.user.is_authenticated else None
         )
 
-        messages.success(request, "Solicitud enviada. Será revisada por un administrador.")
+        messages.success(request, "Solicitud enviada. Pronto Recibira actualizacion en su correo.")
         return redirect("usuarios:login")
 
     return render(request, "registration/solicitar_empresa.html")

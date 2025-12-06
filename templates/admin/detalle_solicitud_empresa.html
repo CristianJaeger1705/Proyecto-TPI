@@ -42,7 +42,7 @@
         {% if solicitud.estado == "pendiente" %}
             <a href="{% url 'adminpanel:aprobar_solicitud' solicitud.id %}" class="btn btn-success">Aprobar</a>
             <a href="{% url 'adminpanel:rechazar_solicitud' solicitud.id %}" class="btn btn-danger">Rechazar</a>
-            <a href="{% url 'listar_solicitudes' %}" class="btn btn-secondary">Volver</a>
+            <a href="{% url 'adminpanel:listar_solicitudes' %}" class="btn btn-secondary">Volver</a>
         {% else %}
             <a href="{% url 'adminpanel:historial_solicitudes' %}" class="btn btn-secondary">Volver</a>
         {% endif %}
