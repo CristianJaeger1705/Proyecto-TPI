@@ -306,6 +306,34 @@ def iniciar_chat(request, oferta_id):
 
     return redirect('mensajeria:chat-detalle', chat.id)
 
+@login_required
+def iniciar_chat_con_postulante(request, oferta_id, postulante_id):
+    if request.user.rol != 'empresa':
+        return redirect('/')
+
+    oferta = get_object_or_404(OfertaLaboral, id=oferta_id, empresa=request.user.perfil_empresa)
+    empresa = oferta.empresa.usuario
+    postulante = get_object_or_404(Usuario, id=postulante_id, rol='candidato')
+
+    chat = Chat.objects.filter(
+        es_grupal=False,
+        oferta=oferta,
+        participantes=postulante
+    ).filter(
+        participantes=empresa
+    ).first()
+
+    if not chat:
+        chat = Chat.objects.create(
+            es_grupal=False,
+            nombre=f'Chat con {empresa.username}',
+            oferta=oferta
+        )
+        chat.participantes.add(postulante, empresa)
+        chat.save()
+
+    return redirect('mensajeria:chat-detalle', chat.id)
+
 
 # =========================
 # DETALLE DE CHAT
@@ -331,7 +359,7 @@ def chat_detalle(request, chat_id):
         'candidato': 'mensajeria:panel-candidato'
     }.get(request.user.rol, 'mensajeria:panel-empresa')
 
-    if not chat.mensajes.filter(es_automatico=True).exists():
+    if not chat.mensajes.filter(es_automatico=True).exists() and request.user.rol == 'candidato':
         remitente_auto = chat.participantes.exclude(id=request.user.id).first()
         if remitente_auto:
             Mensaje.objects.create(

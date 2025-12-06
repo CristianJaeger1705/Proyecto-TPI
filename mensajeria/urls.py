@@ -4,6 +4,7 @@ from .views import (
     MensajeListView,
     MensajeCreateView,
     NotificacionListView,
+    iniciar_chat_con_postulante,
    
     panel_empresa,
     panel_candidato,
@@ -54,6 +55,7 @@ urlpatterns = [
     path('empresa/chats/', chats_empresa, name='chats-empresa'),
    # Para template de empresa
     path('iniciar-chat/<int:oferta_id>/', iniciar_chat, name='iniciar_chat'),
+    path('iniciar-chat/<int:oferta_id>/<int:postulante_id>/', iniciar_chat_con_postulante, name='iniciar_chat_candidato'),
     path('empresa/grupos/', grupos_empresa, name='grupos-empresa'),
     path('empresa/grupos/eliminar/<int:grupo_id>/', eliminar_grupo, name='eliminar-grupo'),
     path('empresa/grupos/editar/<int:grupo_id>/', editar_grupo, name='editar-grupo'),

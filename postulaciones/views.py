@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.views import login_required
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
-from mensajeria.models import Chat
 from ofertas.models import OfertaLaboral
 from perfiles.models import PerfilCandidato, PerfilEmpresa
 from postulaciones.models import Postulacion
@@ -164,12 +163,6 @@ def ver_postulaciones_pendientes(request, id = None):
     else:
         postulaciones = Postulacion.objects.filter(oferta__empresa=empresa, estado="pendiente").select_related('candidato__usuario')
 
-    for postulacion in postulaciones:
-        postulacion.chat_id = Chat.objects.filter(
-            oferta__empresa=empresa,
-            oferta=postulacion.oferta,
-        ).values_list('id', flat=True).first()
-        postulacion.tiene_chat = postulacion.chat_id is not None
 
     contexto = {
         'postulaciones': postulaciones,

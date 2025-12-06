@@ -31,11 +31,10 @@ Empresa{% endblock %} {% block content %}
           <p class="mb-4">
             Fecha de Postulación: {{ postulacion.fecha_postulacion }}
           </p>
-          {% if postulacion.tiene_chat %}
-          <a class="btn btn-primary" href="{% url 'mensajeria:chat-detalle' postulacion.chat_id %}">
-            Abrir Chat de Oferta
+          <a class="btn btn-primary"
+            href="{% url 'mensajeria:iniciar_chat_candidato' postulacion.oferta.id postulacion.candidato.id %}">
+            Abrir Chat con Candidato
           </a>
-          {% endif %}
         </div>
         {% endfor %}
       </div>
