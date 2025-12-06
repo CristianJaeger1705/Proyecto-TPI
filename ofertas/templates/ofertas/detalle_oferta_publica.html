@@ -1,6 +1,51 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} {{ oferta.titulo }} - LaburoSv {% endblock %}
+{% load l10n %}
+{% block title %}{{ oferta.titulo }} - {{ oferta.empresa }} | LaburoSV{% endblock %}
+
+{% block meta_description %}Se busca {{ oferta.titulo }} en {{ oferta.ubicacion }}. Salario: {{ oferta.salario }}. Aplica hoy mismo en LaburoSV.{% endblock %}
+
+{% block og_image %}
+    {% if oferta.empresa.logo %}
+        {{ request.scheme }}://{{ request.get_host }}{{ oferta.empresa.logo.url }}
+    {% else %}
+        {{ request.scheme }}://{{ request.get_host }}{% static 'img/preview_social.png' %}
+    {% endif %}
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "{{ oferta.titulo }}",
+  "description": "{{ oferta.descripcion|striptags }}",
+  "datePosted": "{{ oferta.fecha_publicacion|date:'Y-m-d' }}",
+  "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "USD",
+    "value": {
+      "@type": "QuantitativeValue",
+      "value": "{{ oferta.salario|unlocalize|default:0 }}",
+      "unitText": "MONTH"
+    }
+  },
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "{{ oferta.empresa.nombre_empresa }}",
+    "logo": "{% if oferta.empresa.logo %}{{ request.scheme }}://{{ request.get_host }}{{ oferta.empresa.logo.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo_default.png' %}{% endif %}" 
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ oferta.ubicacion }}",
+      "addressCountry": "SV"
+    }
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <div class="container py-5">
