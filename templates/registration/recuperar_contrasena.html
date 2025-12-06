@@ -3,6 +3,7 @@
 {% block title %}Recuperar Contraseña{% endblock %}
 
 {% block meta_description %}Página de recuperar contraseña{% endblock %}
+
 {% block content %}
 <div class="container py-4">
     <div class="row">
@@ -12,21 +13,46 @@
                     <form method="POST">
                         {% csrf_token %}
                         <h2 class="mb-1">Recuperar Contraseña</h2>
-                        <p class="text-muted mb-4">Para continuar con la recuperacion, es indispensable ingresar el nombre de usuario asociado a su cuenta.</p>
+                        <p class="text-muted mb-4">Para continuar con la recuperación, es indispensable ingresar el nombre de usuario asociado a su cuenta.</p>
                         <div class="input-group mb-4">
-                                <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
-                                <input type="text" name="username" placeholder="Usuario" required class="form-control">
+                            <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                            <input type="text" name="username" placeholder="Usuario" required class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary mb-2">Verificar Usuario</button>
                         <p class="mb-0">¿No recuerda su usuario?
-                                <a href="{% url 'usuarios:login' %}" class="fw-bold text-dark text-decoration-none">
-                                    Contactese con nosotros aqui!
-                                </a>
+                            <a href="#" class="fw-bold text-dark text-decoration-none" data-bs-toggle="modal" data-bs-target="#contactoModal">
+                                Contáctese con nosotros aquí!
+                            </a>
                         </p>
                     </form>
-                  </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="contactoModal" tabindex="-1" aria-labelledby="contactoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contactoModalLabel">Contáctanos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Correo: <span id="correoModal">laburosv@gmail.com</span></p>
+        <button id="copiarCorreo" class="btn btn-success" data-bs-dismiss="modal">Copiar y cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById("copiarCorreo").addEventListener("click", function(){
+    const correo = document.getElementById("correoModal").innerText;
+    navigator.clipboard.writeText(correo).catch(function(err) {
+        console.error('Error al copiar: ', err);
+    });
+});
+</script>
 {% endblock %}

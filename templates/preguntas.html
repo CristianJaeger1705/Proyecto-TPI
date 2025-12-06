@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Preguntas Frecuentes - LaburoSV{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h1 class="text-center mb-4">Preguntas Frecuentes (FAQ)</h1>
+            <p class="text-center text-muted">Aquí encontrarás respuestas a las dudas más comunes sobre LaburoSV.</p>
+
+            <div class="accordion" id="faqAccordion">
+
+                <!-- Pregunta 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                            ¿Cómo me registro como candidato?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Para registrarte, haz clic en el botón "Registrarse" en la página principal, completa tus datos personales y de cuenta, y acepta nuestros Términos y Política de Privacidad.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                            ¿Cómo puedo publicar ofertas como empresa?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Primero debes solicitar tu registro como empresa. Una vez aprobado, podrás crear, editar y gestionar tus ofertas de trabajo directamente desde tu panel de empresa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                            ¿Puedo postularme a varias ofertas al mismo tiempo?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Sí, puedes postularte a tantas ofertas como desees. Solo asegúrate de que tu perfil esté completo y actualizado para aumentar tus posibilidades de ser contactado.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                            ¿LaburoSV cobra alguna comisión por usar la plataforma?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            No, LaburoSV es completamente gratuito para candidatos y empresas. No se cobra ningún tipo de tarifa por registrarse, postularse o publicar ofertas.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeading5">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                            ¿Qué hago si olvidé mi contraseña?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Puedes hacer clic en "Olvidé mi contraseña" en la página de login. Recibirás un correo con instrucciones para restablecerla.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

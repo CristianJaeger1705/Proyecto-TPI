@@ -18,8 +18,10 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'laburosv.com',
-    'www.laburosv.com',
     'proyecto-tpi-jtgf.onrender.com',
+    'www.laburosv.com',
+    'localhost',
+    '127.0.0.1'
 ]
 
 # =========================
@@ -72,6 +74,7 @@ MIDDLEWARE = [
 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'usuarios.middleware.RedirectDjangoLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -214,9 +217,11 @@ MESSAGE_TAGS = {
 # =========================
 # LOGIN
 # =========================
-LOGIN_URL = 'usuarios:login'
-LOGIN_REDIRECT_URL = 'pagina_principal'
-LOGOUT_REDIRECT_URL = 'pagina_principal'
+from django.urls import reverse_lazy
+
+LOGIN_URL = reverse_lazy('usuarios:login')
+LOGIN_REDIRECT_URL = reverse_lazy('pagina_principal')
+LOGOUT_REDIRECT_URL = reverse_lazy('pagina_principal')
 
 # =========================
 # EMAIL

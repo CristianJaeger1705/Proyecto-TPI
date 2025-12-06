@@ -37,11 +37,190 @@
                         <div class="input-group mb-4">
                             <textarea class="form-control" aria-label="With textarea" name="descripcion" placeholder="Opcional"></textarea>
                         </div>         
-                        <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+                        <div class="form-check mb-2 text-start">
+                            <input class="form-check-input" type="checkbox" id="acepto" required>
+                            <label class="form-check-label" for="acepto">
+                                Acepto los 
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#terminosModal">Términos y Condiciones</a>
+                                y la 
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#privacidadModal">Política de Privacidad</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-50 mb-2" id="btn-registrarse" disabled>Eviar Solicitud</button>
                     </form>
                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal Términos y Condiciones -->
+<div class="modal fade" id="terminosModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="termsModalLabel">Términos y Condiciones de Uso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Contenido completo de Términos y Condiciones -->
+        <div>
+            <p class="text-muted">Última actualización: 06 de diciembre de 2025</p>
+            <div class="alert-danger p-2 mb-3">
+                LEA ESTOS TÉRMINOS Y CONDICIONES CUIDADOSAMENTE ANTES DE UTILIZAR NUESTRO SERVICIO.
+            </div>
+
+            <h3>1. Acuerdo General</h3>
+            <p>Estos Términos y Condiciones ("Términos") rigen el uso del sitio web LaburoSV, accesible en <a href="https://laburosv.com/">https://laburosv.com/</a>. LaburoSV actúa únicamente como un intermediario y no es parte en ninguna relación laboral o contractual entre Candidatos y Empresas.</p>
+
+            <h3>2. Definiciones Clave</h3>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Candidato:</strong> Usuario que busca y aplica a ofertas laborales a través del Servicio.</li>
+                <li class="list-group-item"><strong>Empresa:</strong> Usuario que publica ofertas laborales y busca candidatos a través del Servicio.</li>
+                <li class="list-group-item"><strong>Contenido del Usuario:</strong> Información que usted envíe o cargue al Servicio.</li>
+                <li class="list-group-item"><strong>Servicio:</strong> Sitio web LaburoSV y todas sus funcionalidades.</li>
+                <li class="list-group-item"><strong>Datos Personales:</strong> Información que permite identificar al usuario.</li>
+            </ul>
+
+            <h3>3. Cuentas de Usuario y Registro</h3>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Elegibilidad:</strong> Debe tener al menos 18 años.</li>
+                <li class="list-group-item"><strong>Veracidad de la Información:</strong> Información completa y actualizada.</li>
+                <li class="list-group-item"><strong>Seguridad de la Cuenta:</strong> Responsable de su contraseña y actividades.</li>
+                <li class="list-group-item"><strong>Tipos de Cuentas:</strong> Candidato y Empresa.</li>
+            </ul>
+
+            <h3>4. Contenido del Usuario y Normas de Uso</h3>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Licencia de Contenido:</strong> LaburoSV puede usar el contenido para operar y mejorar el Servicio.</li>
+                <li class="list-group-item"><strong>Contenido Prohibido:</strong> Información falsa, discriminatoria o ilegal.</li>
+                <li class="list-group-item"><strong>Derecho de Eliminación:</strong> LaburoSV puede eliminar contenido inapropiado.</li>
+                <li class="list-group-item"><strong>Derecho a Denunciar:</strong> Los usuarios pueden reportar contenido inapropiado.</li>
+            </ul>
+
+            <h3>5. Rol y Limitación de Responsabilidad</h3>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Plataforma Intermediaria:</strong> Conecta Candidatos y Empresas, no garantiza información.</li>
+                <li class="list-group-item"><strong>Exclusión de Responsabilidad Laboral:</strong> No garantizamos colocación laboral ni contratación.</li>
+                <li class="list-group-item"><strong>Interacciones con Usuarios:</strong> Riesgos asumidos por el usuario.</li>
+                <li class="list-group-item"><strong>Disponibilidad del Servicio:</strong> Puede estar temporalmente inactivo.</li>
+                <li class="list-group-item"><strong>Casos de Fuerza Mayor:</strong> No responsables por eventos fuera de nuestro control.</li>
+            </ul>
+
+            <h3>6. Terminación</h3>
+            <p>LaburoSV puede rescindir o suspender su cuenta inmediatamente por incumplimiento de los Términos.</p>
+
+            <h3>7. Exclusión de Garantías</h3>
+            <p>El Servicio se proporciona "TAL CUAL" y "SEGÚN DISPONIBILIDAD". LaburoSV no garantiza disponibilidad ni precisión.</p>
+
+            <h3>8. Ley Aplicable y Jurisdicción</h3>
+            <p>Estos Términos se rigen por las leyes de El Salvador. Las disputas se someten a tribunales de El Salvador.</p>
+
+            <h3>9. Cambios a los Términos</h3>
+            <p>LaburoSV puede modificar estos Términos y usted acepta los términos revisados al continuar usando el Servicio.</p>
+
+            <h3>10. Contacto</h3>
+            <p>Correo electrónico: <strong>laburosv@gmail.com</strong></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Política de Privacidad -->
+<div class="modal fade" id="privacidadModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="privacyModalLabel">Política de Privacidad</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Contenido completo de Política de Privacidad -->
+        <div>
+            <p class="text-muted">Última actualización: 06 de diciembre de 2025</p>
+            <div class="alert-info p-2 mb-3">
+                Esta Política de Privacidad describe nuestras políticas y procedimientos sobre la recopilación, uso y divulgación de su información cuando utiliza el Servicio.
+            </div>
+            <p>Al utilizar el Servicio, usted acepta la recopilación y el uso de información de acuerdo con esta Política.</p>
+
+            <h3>Interpretación y Definiciones</h3>
+            <h4>Interpretación</h4>
+            <p>Las palabras con mayúscula inicial tienen significados definidos. Las definiciones se aplican igual en singular o plural.</p>
+
+            <h4>Definiciones</h4>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Cuenta:</strong> Cuenta única creada para acceder al Servicio.</li>
+                <li class="list-group-item"><strong>Afiliada:</strong> Entidad que controla, es controlada o bajo control común.</li>
+                <li class="list-group-item"><strong>Compañía:</strong> LaburoSV.</li>
+                <li class="list-group-item"><strong>Cookies:</strong> Archivos pequeños que almacenan datos de navegación.</li>
+                <li class="list-group-item"><strong>País:</strong> El Salvador.</li>
+                <li class="list-group-item"><strong>Dispositivo:</strong> Cualquier dispositivo que acceda al Servicio.</li>
+                <li class="list-group-item"><strong>Datos Personales:</strong> Información que identifica o puede identificar a un individuo.</li>
+                <li class="list-group-item"><strong>Servicio:</strong> Sitio web LaburoSV.</li>
+                <li class="list-group-item"><strong>Proveedor de Servicios:</strong> Personas o empresas que procesan datos en nombre de LaburoSV.</li>
+                <li class="list-group-item"><strong>Datos de Uso:</strong> Datos recopilados automáticamente durante el uso del Servicio.</li>
+                <li class="list-group-item"><strong>Sitio Web:</strong> LaburoSV, accesible desde <a href="https://laburosv.com/" target="_blank">https://laburosv.com/</a></li>
+                <li class="list-group-item"><strong>Usted:</strong> La persona que accede o utiliza el Servicio.</li>
+            </ul>
+
+            <h3>Recopilación y Uso de Sus Datos Personales</h3>
+            <h4>Tipos de Datos Recopilados</h4>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Datos Personales:</strong> Correo electrónico, nombre, teléfono, Datos de Uso.</li>
+                <li class="list-group-item"><strong>Datos de Uso:</strong> Dirección IP, tipo de navegador, páginas visitadas, tiempo en página, etc.</li>
+            </ul>
+
+            <h4>Tecnologías de Seguimiento y Cookies</h4>
+            <ul class="list-group mb-2">
+                <li class="list-group-item"><strong>Cookies:</strong> Persistentes o de sesión, usadas para autenticación, preferencias y funcionalidad.</li>
+                <li class="list-group-item"><strong>Web Beacons:</strong> Balizas usadas para medir visitas y rendimiento del Servicio.</li>
+            </ul>
+
+            <h3>Uso de Sus Datos Personales</h3>
+            <ul class="list-group mb-2">
+                <li class="list-group-item">Proporcionar y mantener el Servicio.</li>
+                <li class="list-group-item">Gestionar su cuenta.</li>
+                <li class="list-group-item">Contactarlo sobre funcionalidades y servicios.</li>
+                <li class="list-group-item">Análisis y mejora del Servicio.</li>
+                <li class="list-group-item">Compartir con Proveedores de Servicios o Afiliadas.</li>
+            </ul>
+
+            <h3>Retención, Transferencia y Eliminación de Datos</h3>
+            <p>Retenemos Datos Personales solo mientras sea necesario. Podemos transferir datos entre jurisdicciones respetando la seguridad y la ley. Usted puede solicitar eliminación de sus Datos Personales cuando corresponda.</p>
+
+            <h3>Seguridad y Divulgación</h3>
+            <p>Nos esforzamos por proteger sus datos, pero ningún método es 100% seguro. Podemos divulgar datos para cumplir la ley, proteger derechos o durante transacciones comerciales.</p>
+
+            <h3>Privacidad de los Niños</h3>
+            <p>El Servicio no se dirige a menores de 13 años. Eliminamos cualquier dato recopilado sin consentimiento parental.</p>
+
+            <h3>Enlaces a Otros Sitios Web</h3>
+            <p>No somos responsables de sitios de terceros. Revise sus políticas de privacidad antes de interactuar.</p>
+
+            <h3>Cambios a esta Política</h3>
+            <p>Podemos actualizar esta Política. La fecha de "Última actualización" se modificará y se notificará a los usuarios cuando corresponda.</p>
+
+            <h3>Contacto</h3>
+            <p>Correo electrónico: <strong>laburosv@gmail.com</strong></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const checkbox = document.getElementById('acepto');
+    const boton = document.getElementById('btn-registrarse');
+
+    checkbox.addEventListener('change', function() {
+        boton.disabled = !this.checked; // habilita si está marcado, deshabilita si no
+    });
+</script>
 {% endblock %}

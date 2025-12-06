@@ -39,6 +39,9 @@ urlpatterns = [
     path("postulaciones/", include("postulaciones.urls")), 
     path('adminpanel/', include('adminpanel.urls')), 
     path('dashboard_empresa', dashboard_empresa, name='dashboard_empresa'),
+    path('politicas-de-privacidad/', politicas, name='politicas_de_privacidad'),
+    path('terminos-y-condiciones/', terminos, name='terminos_condiciones'),
+    path('preguntas-frecuentes/', preguntas, name='preguntas_frecuentes'),
     path('mensajeria/', include('mensajeria.urls', namespace='mensajeria')),
 
 ]
@@ -46,3 +49,5 @@ urlpatterns = [
 # Servir archivos media en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = custom_404

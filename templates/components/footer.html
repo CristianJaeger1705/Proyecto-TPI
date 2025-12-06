@@ -1,9 +1,51 @@
+
 <footer class="bg-dark text-light py-4 mt-5">
     <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <p class="mb-0">&copy; 2025 LaburoSV. Todos los derechos reservados.</p>
+        <div class="row text-center">
+
+            <div class="col-12 mb-2">
+                <p class="mb-1">&copy; 2025 LaburoSV. Todos los derechos reservados.</p>
+                <p class="small mb-1">Plataforma salvadoreña para búsqueda de empleo.</p>
             </div>
+
+            <div class="col-12 mb-2">
+                <p class="mb-0">
+                    <strong>Contacto:</strong>
+                    <a href="#" id="copyEmail" class="text-light text-decoration-underline">
+                        laburosv@gmail.com
+                    </a>
+                </p>
+                <p class="small mb-0">San Salvador, El Salvador</p>
+            </div>
+
+            <div class="col-12 mt-3">
+                <ul class="list-inline mb-2">
+                    <li class="list-inline-item"><a href="{% url 'terminos_condiciones' %}" class="text-light">Términos</a></li>
+                    <li class="list-inline-item"><a href="{% url 'politicas_de_privacidad' %}" class="text-light">Privacidad</a></li>
+                    <li class="list-inline-item"><a href="{% url 'preguntas_frecuentes' %}" class="text-light">Ayuda</a></li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <div class="social-links">
+                    <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+
         </div>
     </div>
+
+    <!-- Script para copiar correo al portapapeles -->
+    <script>
+        document.getElementById('copyEmail').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = 'laburosv@gmail.com';
+            navigator.clipboard.writeText(email).then(function() {
+                alert('Correo copiado al portapapeles: ' + email);
+            }, function(err) {
+                console.error('Error al copiar: ', err);
+            });
+        });
+    </script>
 </footer>
