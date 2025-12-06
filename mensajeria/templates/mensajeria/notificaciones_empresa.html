@@ -12,7 +12,7 @@
             <small class="text-muted d-block">{{ notif.fecha }}</small>
         </div>
         {% if not notif.leida %}
-        <a href="{% url 'mensajeria:marcar-notificacion' notif.id %}" class="btn btn-sm btn-success">Marcar como leída</a>
+        <a href="{% url 'mensajeria:marcar-notificacion-leida' notif.id %}" class="btn btn-sm btn-success">Marcar como leída</a>
         {% endif %}
     </li>
     {% empty %}
