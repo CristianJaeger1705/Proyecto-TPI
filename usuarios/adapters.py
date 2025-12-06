@@ -9,7 +9,8 @@ class GoogleAccountAdapter(DefaultSocialAccountAdapter):
 
         user.first_name = data.get("given_name", "")
         user.last_name = data.get("family_name", "")
-        user.rol = "candidato"
-        user.verificado = True
+        if not sociallogin.is_existing:
+            user.rol = "candidato"
+        user.verificado = False
 
         return user
