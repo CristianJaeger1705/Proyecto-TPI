@@ -20,6 +20,7 @@ staticfiles/
 # Entornos virtuales
 venv/
 env/
+venv_prueba/
 .venv/
 
 # Archivos del sistema

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //Funciones para el boton de favoritos  
+//Funciones para el boton de favoritos  
 class FavoritosManager {
     constructor() {
         this.basePath = '/ofertas';
@@ -69,15 +70,8 @@ class FavoritosManager {
             const data = await res.json();
             
             if (data.success) {
-                // Si necesita login
-                if (data.needs_login) {
-                    const confirmar = confirm('Para guardar favoritos permanentemente, necesitas iniciar sesión. ¿Quieres iniciar sesión ahora?');
-                    if (confirmar) {
-                        localStorage.setItem('pending_favorito', id);
-                        window.location.href = `/usuarios/login/?next=${window.location.pathname}`;
-                        return;
-                    }
-                }
+                // ACTUALIZACIÓN: Sin confirmación de login
+                // Los usuarios no autenticados guardan en cookies sin interrupción
                 
                 // Actualizar botón clickeado
                 this.updateButtonUI(btn, data.agregado);
@@ -85,7 +79,7 @@ class FavoritosManager {
                 // Sincronizar todos los botones con mismo ID
                 this.syncAllButtons(id, data.agregado);
                 
-                // Actualizar TODA la UI de favoritos (¡INCLUYENDO BLOQUES!)
+                // Actualizar UI con el total devuelto por el servidor
                 this.updateFavoritosUI(data.total);
                 
             } else {
@@ -100,17 +94,25 @@ class FavoritosManager {
         }
     }
     
-    // NUEVO: Actualizar UI inicial
+    // Actualizar UI inicial desde badge existente
     updateInitialUI() {
-        // Calcular favoritos actuales desde botones
-        const savedButtons = document.querySelectorAll('.favorito-btn.btn-warning, .favorito-btn-detalle.btn-warning');
-        const count = savedButtons.length;
+        // Leer el total inicial del badge existente (si hay)
+        const initialBadge = document.getElementById('favoritos-badge-desktop') || 
+                            document.getElementById('favoritos-badge-mobile');
         
-        // Actualizar UI
-        this.updateFavoritosUI(count);
+        if (initialBadge) {
+            const initialCount = parseInt(initialBadge.textContent) || 0;
+            console.log('Count inicial del badge:', initialCount);
+            this.updateFavoritosUI(initialCount);
+        } else {
+            // Fallback: contar botones activos
+            const savedButtons = document.querySelectorAll('.favorito-btn.btn-warning, .favorito-btn-detalle.btn-warning');
+            const count = savedButtons.length;
+            this.updateFavoritosUI(count);
+        }
     }
     
-    // NUEVO: Actualizar TODA la UI (badges + bloques)
+    // Actualizar TODA la UI (badges + bloques)
     updateFavoritosUI(count) {
         console.log('Actualizando favoritos UI con count:', count);
         
@@ -138,6 +140,7 @@ class FavoritosManager {
                 badge.className = 'badge bg-danger rounded-pill';
                 badge.style.display = 'none';
             }
+            console.log('Badge actualizado:', badge.id, '->', count);
         });
     }
     
@@ -170,14 +173,12 @@ class FavoritosManager {
     
     checkIfUserIsCandidato() {
         // Buscar cualquier enlace de favoritos
-        const links = [
-            document.getElementById('favoritos-link-desktop'),
-            document.getElementById('favoritos-link-mobile')
-        ].filter(link => link !== null);
+        const link = document.getElementById('favoritos-link-desktop') || 
+                     document.getElementById('favoritos-link-mobile');
         
-        if (links.length > 0) {
-            // Si algún enlace NO es "#", entonces es candidato
-            return links.some(link => link.getAttribute('href') !== '#');
+        if (link) {
+            const href = link.getAttribute('href');
+            return href !== '#';
         }
         
         return false;
@@ -193,44 +194,67 @@ class FavoritosManager {
         });
     }
     
-    updateButtonUI(button, isSaved) {
-        const icon = button.querySelector('i');
-        const textSpan = button.querySelector('span');
-        
-        if (isSaved) {
-            button.classList.replace('btn-outline-warning', 'btn-warning');
-            if (icon) icon.classList.replace('bi-star', 'bi-star-fill');
-            if (textSpan) textSpan.textContent = 'Guardado';
-        } else {
-            button.classList.replace('btn-warning', 'btn-outline-warning');
-            if (icon) icon.classList.replace('bi-star-fill', 'bi-star');
-            if (textSpan) textSpan.textContent = 'Guardar';
+updateButtonUI(button, isSaved) {
+    const icon = button.querySelector('i');
+    const textSpan = button.querySelector('span');
+    
+    if (isSaved) {
+        // CAMBIAR: Usar tu clase personalizada en lugar de btn-warning
+        button.classList.replace('btn-outline-warning', 'professional-favorite-active');
+        if (icon) icon.classList.replace('bi-star', 'bi-star-fill');
+        if (textSpan) textSpan.textContent = 'Guardado';
+    } else {
+        // CAMBIAR: Remover tu clase personalizada
+        button.classList.replace('professional-favorite-active', 'btn-outline-warning');
+        if (icon) icon.classList.replace('bi-star-fill', 'bi-star');
+        if (textSpan) textSpan.textContent = 'Guardar';
+    }
+}
+    
+    getCsrfToken() {
+        // Buscar en formularios
+        const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfTokenElement) {
+            return csrfTokenElement.value;
         }
+        
+        // Buscar en cookies
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
     
     async autoTransferirFavoritos() {
         // ... (mantén tu código de transferencia) ...
     }
-    
-    getCsrfToken() {
-        // ... (mantén tu código CSRF) ...
-    }
 }
 
-// Función global
+// Función global para click en enlace de favoritos
 function handleFavoritosClick(event) {
     event.preventDefault();
-    const badges = [
-        document.getElementById('favoritos-badge-desktop'),
-        document.getElementById('favoritos-badge-mobile')
-    ].filter(badge => badge !== null);
     
-    const count = badges.length > 0 ? parseInt(badges[0].textContent) : 0;
+    // Obtener el total actual del primer badge que encontremos
+    const badge = document.getElementById('favoritos-badge-desktop') || 
+                  document.getElementById('favoritos-badge-mobile');
+    
+    let count = 0;
+    if (badge && badge.textContent) {
+        count = parseInt(badge.textContent) || 0;
+    }
     
     if (count === 0) {
         alert('No tienes favoritos guardados. Primero guarda algunas ofertas como favoritas.');
     } else {
-        
         window.location.href = `/usuarios/login/?next=/ofertas/mis-favoritos/`;
     }
 }

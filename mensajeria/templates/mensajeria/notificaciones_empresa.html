@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Notificaciones{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1>Notificaciones</h1>
+   <ul class="list-group mt-3">
+    {% for notif in notificaciones %}
+    <li class="list-group-item d-flex justify-content-between align-items-center {% if not notif.leida %}list-group-item-warning{% endif %}">
+        <div>
+            <strong>{{ notif.tipo }}</strong>: {{ notif.mensaje }}
+            <small class="text-muted d-block">{{ notif.fecha }}</small>
+        </div>
+        {% if not notif.leida %}
+        <a href="{% url 'mensajeria:marcar-notificacion-leida' notif.id %}" class="btn btn-sm btn-success">Marcar como leída</a>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">No hay notificaciones</li>
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}

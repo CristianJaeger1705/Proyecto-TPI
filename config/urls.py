@@ -22,6 +22,8 @@ from aplicaciones.views import *
 #from ofertas.views import obtener_datos_visualizacion
 from ofertas.views import lista_ofertas_publicas
 from django.conf import settings
+#from aplicaciones.views import test_brevo, debug_smtp
+
 
 
 urlpatterns = [
@@ -30,18 +32,15 @@ urlpatterns = [
     path('', lista_ofertas_publicas, name='pagina_principal'),  # La página de prueba será nuestra página principal por ahora
     #quien haga el login tiene que cambiar el hola mundo por la del login
     #Urls necesaria para el funcionamiento del modulo ofertas
-    path('ofertas/',include('ofertas.urls')),
-    path('usuarios/', include('usuarios.urls', namespace='usuarios')),
+    path('ofertas/',include('ofertas.urls', namespace='ofertas')),
+    path('usuarios/', include('usuarios.urls')), # namespace='usuarios')),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
-    path("postulaciones/", include("postulaciones.urls")),
-    path("solicitudes/", listar_solicitudes, name="listar_solicitudes"),
-    path("solicitudes/historial/", historial_solicitudes, name="historial_solicitudes"),
-    path("solicitud/<int:id>/aprobar/", aprobar_solicitud, name="aprobar_solicitud"),
-    path("solicitud/<int:id>/rechazar/", rechazar_solicitud, name="rechazar_solicitud"),
-    path("solicitud/<int:id>/ver/", ver_solicitud, name="ver_solicitud"),
+    path("postulaciones/", include("postulaciones.urls")), 
+    path('adminpanel/', include('adminpanel.urls')), 
+    path('dashboard_empresa', dashboard_empresa, name='dashboard_empresa'),
+    path('mensajeria/', include('mensajeria.urls', namespace='mensajeria')),
 
-    
 ]
 
 # Servir archivos media en desarrollo

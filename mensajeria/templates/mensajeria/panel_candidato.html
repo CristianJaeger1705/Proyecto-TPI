@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}Panel Candidato{% endblock %}
+
+{% block content %}
+<style>
+/* ----------------------------- */
+/*   ESTILO WHATSAPP CANDIDATO   */
+/* ----------------------------- */
+.whatsapp-card {
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.whatsapp-header {
+    background: #128C7E;
+    color: white;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative; /* necesario para posicionar la burbuja */
+}
+
+.chat-item:hover {
+    background: #f5f5f5;
+}
+
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    background: #cfe4dd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #128C7E;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.chat-info-name {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.chat-info-participantes {
+    color: gray;
+    font-size: 14px;
+}
+
+.sin-chats {
+    text-align: center;
+    padding: 20px;
+    color: gray;
+}
+
+.contador-burbuja {
+    background: red;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: none;
+}
+
+.btn-abrir-chat {
+    background-color: #0084ff;
+    color: white;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-abrir-chat:hover {
+    background-color: #006fcc;
+    color: white;
+    text-decoration: none;
+}
+</style>
+
+<div class="container my-5">
+    <div class="whatsapp-card">
+        <div class="whatsapp-header">Mis Chats</div>
+
+        {% if request.user.chats.all %}
+            {% for chat in request.user.chats.all %}
+                <a class="chat-item" href="{% url 'mensajeria:chat-detalle' chat.id %}" data-chat-id="{{ chat.id }}">
+                    <div class="chat-avatar">{{ chat.nombre|default:"C"|first|upper }}</div>
+                    <div>
+                        <div class="chat-info-name">
+                            {% if chat.nombre %}{{ chat.nombre }}{% else %}Chat {{ chat.id }}{% endif %}
+                        </div>
+                        <div class="chat-info-participantes">
+                            {% for p in chat.participantes.all %}
+                                {% if p != request.user %}
+                                    {{ p.username }}{% if not forloop.last %}, {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <span class="contador-burbuja"></span>
+                </a>
+            {% endfor %}
+        {% else %}
+            <div class="sin-chats">No tienes chats activos</div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+function actualizarMensajesNoVistos() {
+    fetch("{% url 'mensajeria:api-mensajes-no-vistos' %}")
+    .then(response => response.json())
+    .then(data => {
+        data.chats.forEach(chat => {
+            const chatElem = document.querySelector(`.chat-item[data-chat-id='${chat.chat_id}']`);
+            if (chatElem) {
+                const burbuja = chatElem.querySelector('.contador-burbuja');
+                if (chat.mensajes_no_vistos_count > 0) {
+                    burbuja.style.display = 'inline';
+                    burbuja.textContent = chat.mensajes_no_vistos_count;
+                } else {
+                    burbuja.style.display = 'none';
+                }
+            }
+        });
+    })
+    .catch(err => console.error('Error al obtener mensajes no vistos:', err));
+}
+
+// Actualiza cada 5 segundos
+setInterval(actualizarMensajesNoVistos, 5000);
+document.addEventListener('DOMContentLoaded', actualizarMensajesNoVistos);
+</script>
+
+{% endblock %}

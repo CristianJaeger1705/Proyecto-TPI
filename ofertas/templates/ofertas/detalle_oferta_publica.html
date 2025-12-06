@@ -1,135 +1,411 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} Ver oferta {% endblock %}
+{% block title %} {{ oferta.titulo }} - LaburoSv {% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container py-5">
     <div class="row">
+        <!-- CONTENIDO PRINCIPAL -->
         <div class="col-lg-8">
-            <!-- HEADER DE LA OFERTA -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start gap-3 mb-4">
-                        <div class="bg-light border rounded p-2" style="width: 100px; height: 100px;">
-                            {% if oferta.empresa.logo %}
-                                <img src="{{ oferta.empresa.logo.url }}" alt="{{ oferta.empresa.logo.url }}" class="img-fluid">
-                            {% else %}
-                                <img src="{% static 'img/no-logo.png' %}" alt="Sin logo" class="img-fluid opacity-50">
-                            {% endif %}
+            <!-- HEADER PROFESIONAL DE LA OFERTA -->
+            <div class="card border-0 shadow-lg mb-5 professional-offer-header">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <!-- LOGO DE EMPRESA -->
+                        <div class="col-auto">
+                            <div class="company-logo-large bg-white border rounded-3 p-3 d-flex align-items-center justify-content-center shadow-sm">
+                                {% if oferta.empresa.logo %}
+                                <img src="{{ oferta.empresa.logo.url }}" alt="{{ oferta.empresa.nombre }}" 
+                                    class="img-fluid" style="max-height: 80px; max-width: 120px;">
+                                {% else %}
+                                <div class="text-center">
+                                    <i class="bi bi-building display-6 text-muted"></i>
+                                    <p class="small text-muted mt-2 mb-0">Sin logo</p>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
-                        
-                        <div class="flex-grow-1">
-                            <h1 class="h3 fw-bold mb-2">{{ oferta.titulo }}</h1>
-                            <h5 class="text-primary mb-3">{{ oferta.empresa }}</h5>
+
+                        <!-- INFORMACIÓN PRINCIPAL -->
+                        <div class="col">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-primary-subtle text-primary border border-primary rounded-pill px-3 py-1 me-3">
+                                    {{ oferta.empresa.get_rubro_display|default:"General" }}
+                                </span>
+                                <span class="text-muted small">
+                                    <i class="bi bi-calendar me-1"></i>{{ oferta.fecha_publicacion|date:"d/m/Y" }}
+                                </span>
+                            </div>
                             
-                            <div class="d-flex flex-wrap gap-3 text-muted">
-                                <div>
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    {{ oferta.ubicacion }}
+                            <h1 class="h2 fw-bold mb-2 text-dark">{{ oferta.titulo }}</h1>
+                            <h3 class="h5 text-primary mb-4">{{ oferta.empresa.nombre }}</h3>
+
+                            <!-- DETALLES RÁPIDOS -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container bg-primary-subtle rounded-circle p-2 me-3">
+                                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Ubicación</small>
+                                            <strong class="text-dark">{{ oferta.ubicacion }}</strong>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    {% if oferta.fecha_expiracion %}
-                                    <i class="bi bi-clock-fill"></i>
-                                    Expira {{ oferta.fecha_expiracion|date:"d/m/Y" }}
-                                    {% else %}
-                                      <i class="bi bi-clock-fill"></i>
-                                    Expira : no especificado
-                                    {% endif %}
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container bg-success-subtle rounded-circle p-2 me-3">
+                                            <i class="bi bi-cash-coin text-success"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Salario</small>
+                                            <strong class="text-dark">{{ oferta.salario|default:"A convenir" }}</strong>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container bg-info-subtle rounded-circle p-2 me-3">
+                                            <i class="bi bi-briefcase-fill text-info"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Tipo de empleo</small>
+                                            <strong class="text-dark">{{ oferta.tipo_empleo|default:"No especificado" }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container bg-warning-subtle rounded-circle p-2 me-3">
+                                            <i class="bi bi-clock-fill text-warning"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block">Expiración</small>
+                                            <strong class="text-dark">
+                                                {% if oferta.fecha_expiracion %}
+                                                {{ oferta.fecha_expiracion|date:"d/m/Y" }}
+                                                {% else %}
+                                                No especificado
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTONES DE ACCIÓN -->
+                            <div class="d-flex gap-3 flex-wrap">
+                                {% if not request.user.is_authenticated %}
+                                <a href="{% url 'usuarios:login' %}?next={% url 'ofertas:detalleoferta' oferta.id %}"
+                                    class="btn btn-success btn-lg px-4 d-flex align-items-center">
+                                    <i class="bi bi-send me-2"></i> Inicia sesión para postularte
+                                </a>
+                                {% endif %}
+                                {% if acciones.puedePostular %}
+                                <a href="{% url 'postular_con_id' oferta.id %}" 
+                                    class="btn btn-success btn-lg px-4 d-flex align-items-center">
+                                    <i class="bi bi-send me-2"></i> Postularme
+                                </a>
+                                {% endif %}
+                                {% if acciones.puedeCancelarPostulacion %}
+                                <a href="{% url 'cancelar_postulacion' oferta.id %}" 
+                                    class="btn btn-outline-danger btn-lg px-4 d-flex align-items-center">
+                                    <i class="bi bi-x-circle me-2"></i> Cancelar postulación
+                                </a>
+                                {% endif %}
+                                {% if request.user.rol != 'empresa' %}
+                                <button
+                                    class="btn btn-lg px-3 favorito-btn-detalle professional-favorite-btn {% if esta_en_favoritos %}professional-favorite-active{% else %}btn-outline-warning{% endif %}"
+                                    data-id="{{ oferta.id }}">
+                                    <i class="bi {% if esta_en_favoritos %}bi-star-fill{% else %}bi-star{% endif %} me-2"></i>
+                                    {{ esta_en_favoritos|yesno:"Guardado,Guardar" }}
+                                </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex gap-2">
-                        {% if not request.user.is_authenticated %}
-                          <a href="{% url 'usuarios:login' %}?next={% url 'detalleoferta' oferta.id %}" class="btn btn-success btn-lg flex-grow-1">
-                            <i class="bi bi-send me-1"></i> Inicia sesión para postularte
-                          </a>
-                        {% endif %}
-                        {% if acciones.puedePostular %}
-                          <a href="{% url 'postular_con_id' oferta.id %}"  class="btn btn-success btn-lg flex-grow-1">
-                              <i class="bi bi-send me-1"></i> Postularme a esta oferta
-                          </a>
-                        {% endif %}
-                        {% if acciones.puedeCancelarPostulacion %}
-                          <a href="{% url 'cancelar_postulacion' oferta.id %}" class="btn btn-success btn-lg flex-grow-1">
-                              <i class="bi bi-x-circle me-1"></i> Cancelar mi postulación
-                          </a>
-                        {% endif %}
-<button class="btn btn-lg favorito-btn-detalle {% if esta_en_favoritos %}btn-warning{% else %}btn-outline-warning{% endif %}"
-        data-id="{{ oferta.id }}">
-    <i class="bi {% if esta_en_favoritos %}bi-star-fill{% else %}bi-star{% endif %}"></i>
-</button>
-                    </div>
                 </div>
             </div>
-            
-            <!-- DESCRIPCIÓN -->
+
+            <!-- DESCRIPCIÓN DEL PUESTO -->
             <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-file-text text-primary me-2"></i>Descripción del puesto
+                    </h5>
+                </div>
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">Descripción del puesto</h5>
-                    <div class="text-secondary">
+                    <div class="job-description-content text-secondary">
                         {{ oferta.descripcion|linebreaks }}
                     </div>
                 </div>
             </div>
-            <!--POR SI SE ACTUALIZA LA BD CON OTRO CAMPO REQUISITO-->
+
             <!-- REQUISITOS -->
             {% if oferta.requisitos %}
             <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-list-check text-primary me-2"></i>Requisitos
+                    </h5>
+                </div>
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">Requisitos</h5>
-                    <div class="text-secondary">
+                    <div class="job-requirements-content text-secondary">
                         {{ oferta.requisitos|linebreaks }}
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            {% if postulantes %}
+            <!-- POSTULANTES (SOLO VISIBLE PARA EMPRESAS) -->
+            {% if postulantes and request.user.empresa == oferta.empresa %}
             <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body p-4">
-                  <h5 class="fw-bold mb-3">Postulantes</h5>
-                  <ul class="list-group">
-                    {% for postulante in postulantes %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ postulante.candidato.usuario.get_full_name }} ({{ postulante.candidato.usuario.email }})
-                        <span class="badge bg-primary rounded-pill">{{ postulante.fecha_postulacion|date:"d/m/Y" }}</span>
-                      </li>
-                      {% empty %}
-                      <li class="list-group-item">No hay postulantes aún.</li>
-                      {% endfor %}
-                  </ul>
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-people text-primary me-2"></i>Postulantes
+                        <span class="badge bg-primary ms-2">{{ postulantes|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for postulante in postulantes %}
+                        <div class="list-group-item border-0 py-3 px-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">{{ postulante.candidato.usuario.get_full_name }}</h6>
+                                    <p class="text-muted small mb-0">{{ postulante.candidato.usuario.email }}</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-light text-dark">
+                                        <i class="bi bi-calendar me-1"></i>{{ postulante.fecha_postulacion|date:"d/m/Y" }}
+                                    </span>
+                                    {% if request.user.empresa == oferta.empresa %}
+                                    <a href="{% url 'mensajeria:iniciar_chat_con' postulante.candidato.usuario.id %}" 
+                                        class="btn btn-sm btn-outline-primary ms-2">
+                                        <i class="bi bi-chat me-1"></i>Contactar
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-people display-4 text-muted mb-3"></i>
+                            <p class="text-muted">No hay postulantes aún.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             {% endif %}
         </div>
 
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR DERECHO -->
         <div class="col-lg-4">
-            <!-- INFORMACIÓN ADICIONAL -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold mb-3">Información adicional</h6>
-                    
-                    <div class="mb-3">
-                        <small class="text-muted d-block mb-1">Salario</small>
-                        <strong>{{ oferta.salario|default:"A convenir" }}</strong>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <small class="text-muted d-block mb-1">Tipo de empleo</small>
-                        <strong>{{ oferta.tipo_empleo|default:"No especificado" }}</strong>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <small class="text-muted d-block mb-1">Publicado</small>
-                        <strong>{{ oferta.fecha_publicacion|date:"d/m/Y" }}</strong>
+            <!-- ACCIONES RÁPIDAS -->
+            <div class="card border-0 shadow-sm mb-4" style="top: 20px;">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-lightning-charge text-primary me-2"></i>Acciones rápidas
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="d-grid gap-2">
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'mensajeria:iniciar_chat' oferta.id %}" 
+                            class="btn btn-primary d-flex align-items-center justify-content-center py-3">
+                            <i class="bi bi-chat-left-text me-2 fs-5"></i>
+                            <span>Solicitar información</span>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'usuarios:login' %}?next={% url 'ofertas:detalleoferta' oferta.id %}"
+                            class="btn btn-primary d-flex align-items-center justify-content-center py-3">
+                            <i class="bi bi-chat-left-text me-2 fs-5"></i>
+                            <span>Solicitar información</span>
+                        </a>
+                        {% endif %}
+                        
+                        <a href="#" class="btn btn-outline-secondary d-flex align-items-center justify-content-center py-3">
+                            <i class="bi bi-share me-2 fs-5"></i>
+                            <span>Compartir oferta</span>
+                        </a>
                     </div>
                 </div>
             </div>
 
+            <!-- INFORMACIÓN DE LA EMPRESA -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-building text-primary me-2"></i>Sobre la empresa
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="text-center mb-3">
+                        {% if oferta.empresa.logo %}
+                        <img src="{{ oferta.empresa.logo.url }}" alt="{{ oferta.empresa.nombre }}" 
+                            class="img-fluid rounded mb-3" style="max-height: 60px;">
+                        {% endif %}
+                        <h5 class="fw-bold mb-1">{{ oferta.empresa.nombre }}</h5>
+                        <p class="text-muted small mb-3">{{ oferta.empresa.rubro|default:"Sin rubro especificado" }}</p>
+                    </div>
+                    
+                    <div class="company-info">
+                        {% if oferta.empresa.descripcion %}
+                        <p class="small text-secondary">{{ oferta.empresa.descripcion|truncatewords:30 }}</p>
+                        {% endif %}
+                        
+                        <div class="mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm w-100">
+                                <i class="bi bi-eye me-1"></i>Ver más ofertas de esta empresa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESTADÍSTICAS (SOLO PARA EMPRESA) -->
+            {% if request.user.empresa == oferta.empresa %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-graph-up text-primary me-2"></i>Estadísticas
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Postulantes</span>
+                        <span class="fw-bold fs-5 text-primary">{{ postulantes|length }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Vistas</span>
+                        <span class="fw-bold fs-5 text-info">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Días activa</span>
+                        <span class="fw-bold fs-5 text-success">{{ oferta.dias_activa }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- OFERTAS SIMILARES -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="fw-bold mb-0 d-flex align-items-center">
+                        <i class="bi bi-briefcase text-primary me-2"></i>Ofertas similares
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <p class="text-muted small text-center mb-3">Próximamente se mostrarán ofertas similares</p>
+                    <div class="text-center">
+                        <i class="bi bi-search display-6 text-muted"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+/* ESTILOS PARA DETALLE DE OFERTA PROFESIONAL */
+.professional-offer-header {
+    border-radius: 16px;
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border: 1px solid #e1e5e9;
+}
+
+.company-logo-large {
+    width: 140px;
+    height: 140px;
+    transition: all 0.3s ease;
+}
+
+.company-logo-large:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.job-description-content,
+.job-requirements-content {
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.job-description-content ul,
+.job-requirements-content ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.job-description-content li,
+.job-requirements-content li {
+    margin-bottom: 0.5rem;
+}
+
+.sticky-sidebar {
+    position: sticky;
+    z-index: 100;
+}
+
+/* Botón de favoritos específico para detalle */
+.favorito-btn-detalle {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .professional-offer-header .card-body {
+        padding: 2rem !important;
+    }
+    
+    .company-logo-large {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .icon-container {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .job-description-content,
+    .job-requirements-content {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .professional-offer-header .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .company-logo-large {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .d-flex.gap-3.flex-wrap {
+        flex-direction: column;
+    }
+    
+    .d-flex.gap-3.flex-wrap .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}

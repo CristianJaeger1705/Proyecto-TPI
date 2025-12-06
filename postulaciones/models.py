@@ -1,7 +1,8 @@
-# Create your models here.
 from django.db import models
 from perfiles.models import PerfilCandidato
 from ofertas.models import OfertaLaboral
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Postulacion(models.Model):
     ESTADOS = [
@@ -20,3 +21,11 @@ class Postulacion(models.Model):
 
     def __str__(self):
         return f"{self.candidato.usuario.username} → {self.oferta.titulo}"
+
+
+@receiver(post_save, sender=Postulacion)
+def crear_grupo_y_notificacion(sender, instance, created, **kwargs):
+    if created:
+        # Importamos aquí para evitar circular import
+        from mensajeria.models import Chat
+        Chat.crear_o_actualizar_grupo_por_postulacion(instance)

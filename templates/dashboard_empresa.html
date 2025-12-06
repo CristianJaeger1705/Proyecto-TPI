@@ -1,0 +1,73 @@
+ {% extends "base.html" %}
+{% block title %}Dashboard Empresa{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <div class="row"> 
+
+        <!-- SIDEBAR EMPRESA -->
+        <div class="col-md-3 col-lg-2">
+            <div class="list-group shadow-sm">
+                <a href="#" class="list-group-item active py-2">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+
+                <a href="{% url 'ofertas:ofertas' %}" class="list-group-item py-2">
+                    <i class="bi bi-briefcase-fill me-2"></i> Mis Ofertas
+                </a>
+
+                <a href="{% url 'postulaciones_empresa' %}" class="list-group-item py-2">
+                    <i class="bi bi-layout-text-window-reverse me-2"></i> Postulaciones
+                </a>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="col-md-9 col-lg-10">
+            <h2 class="fw-bold mb-4">Panel de Empresa</h2>
+
+            <div class="row g-4">
+
+                <!-- TARJETA MIS OFERTAS -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-briefcase-fill me-2 text-primary"></i> Mis Ofertas
+                            </h5>
+                            <p class="card-text">
+                                Administra, agrega y edita las ofertas laborales de tu empresa.
+                            </p>
+                            <a href="{% url 'ofertas:ofertas' %}" class="btn btn-primary w-100">
+                                Administrar ofertas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TARJETA PLANTILLAS -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-layout-text-window-reverse me-2 text-info"></i> Postulaciones
+                            </h5>
+                            <p class="card-text">
+                                Revisa y gestiona las postulaciones recibidas para tus ofertas laborales.
+                            </p>
+
+                            <a href="{% url 'postulaciones_empresa' %}" class="btn btn-info w-100 text-white">
+                                Ver postulaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- row -->
+        </div> <!-- col principal -->
+
+    </div> <!-- row general -->
+</div> <!-- container -->
+
+{% endblock %}

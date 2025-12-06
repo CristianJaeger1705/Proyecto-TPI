@@ -1,0 +1,7 @@
+{% for i in "12345"|make_list %}
+    {% if i|add:"0" <= calificacion|stringformat:"s" %}
+        <i class="bi bi-star-fill text-warning"></i>
+    {% else %}
+        <i class="bi bi-star text-warning"></i>
+    {% endif %}
+{% endfor %}

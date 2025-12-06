@@ -22,8 +22,8 @@
                     <h5 class="fw-bold">{{ o.titulo }}</h5>
                     <p class="text-secondary">{{ o.empresa }} • {{ o.ubicacion }}</p>
                 </div>
-                <div class="col-auto">
-                    <a href="{% url 'detalleoferta' o.id %}" class="btn btn-primary">Ver oferta</a>
+                <div class="col-auto">    //esta parte causaba error al dar click en ver favoritos
+                    <a href="{% url 'ofertas:detalleoferta' o.id %}" class="btn btn-primary">Ver oferta</a>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
     <div class="text-center py-5 text-muted">
         <i class="bi bi-heart display-1"></i>
         <p>Aún no has guardado ninguna oferta.</p>
-        <a href="{% url 'lista_ofertas_publicas' %}" class="btn btn-primary">Explorar ofertas</a>
+        <a href="{% url 'ofertas:lista_ofertas_publicas' %}" class="btn btn-primary">Explorar ofertas</a>
     </div>
     {% endfor %}
 </div>

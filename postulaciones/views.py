@@ -53,7 +53,8 @@ def postular_con_id(request, id):
         return redirect("usuarios:redirigir")
 
     messages.success(request, "Postulación creada exitosamente.")
-    return redirect("detalleoferta", oferta_id=oferta.id)
+    messages.warning(request,"Fuiste agregad@ a un grupo de consulta"),
+    return redirect("ofertas:detalleoferta", oferta_id=oferta.id)
 
 def cancelar_postulacion(request, id):
     try:
@@ -98,7 +99,7 @@ def cancelar_postulacion(request, id):
         return redirect("usuarios:redirigir")
 
     messages.success(request, "Postulación cancelada exitosamente.")
-    return redirect("detalleoferta", oferta_id=oferta.id)
+    return redirect("ofertas:detalleoferta", oferta_id=oferta.id)
 
 def obtener_postulantes_de_oferta(request, oferta_id):
     try:
@@ -126,6 +127,50 @@ def obtener_postulantes_de_oferta(request, oferta_id):
     postulaciones = Postulacion.objects.filter(oferta=oferta).select_related('candidato__usuario')
 
     return postulaciones;
+
+@login_required
+def ver_postulaciones_pendientes(request, id = None):
+    empresa = None
+    if not request.user.is_authenticated or request.user.rol != "empresa":
+        messages.error(request, "Solo las empresas pueden ver las postulaciones.")
+        return redirect("usuarios:redirigir")
+
+    empresa = PerfilEmpresa.objects.filter(usuario_id=request.user.id).first()
+    if empresa is None:
+        messages.error(request, "No se encontró el perfil de la empresa.")
+        return redirect("usuarios:redirigir")
+
+    ofertas_activas = OfertaLaboral.objects.filter(empresa=empresa, estado="activa")
+
+    if id is not None:
+        try:
+            id = int(id)
+        except ValueError:
+            messages.error(request, "ID de vacante inválido.")
+            return redirect("usuarios:redirigir")
+
+        oferta = None
+        try:
+            oferta = OfertaLaboral.objects.get(id=id, empresa=empresa)
+        except OfertaLaboral.DoesNotExist:
+            oferta = None
+
+        if oferta is None:
+            messages.error(request, "La vacante no existe o no pertenece a tu empresa.")
+            return redirect("usuarios:redirigir")
+
+        postulaciones = Postulacion.objects.filter(oferta=oferta, estado="pendiente").select_related('candidato__usuario')
+    else:
+        postulaciones = Postulacion.objects.filter(oferta__empresa=empresa, estado="pendiente").select_related('candidato__usuario')
+
+
+    contexto = {
+        'postulaciones': postulaciones,
+        'ofertas_activas': ofertas_activas,
+    }
+
+    return render(request, 'postulaciones/postulaciones_pendientes.html', contexto)
+
 
 
 @login_required
