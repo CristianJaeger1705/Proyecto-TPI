@@ -54,6 +54,7 @@ def postular_con_id(request, id):
         return redirect("usuarios:redirigir")
 
     messages.success(request, "Postulación creada exitosamente.")
+    messages.warning(request,"Fuiste agregad@ a un grupo de consulta"),
     return redirect("ofertas:detalleoferta", oferta_id=oferta.id)
 
 def cancelar_postulacion(request, id):
